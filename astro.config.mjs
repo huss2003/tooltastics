@@ -79,14 +79,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
     build: {
       cssMinify: 'lightningcss',
-      rollupOptions: {
-        output: {
-          assetFileNames: (asset) => {
-            if (asset.name?.endsWith('.woff2')) return 'fonts/[name][extname]'
-            return 'assets/[hash][extname]'
-          },
-        },
-      },
     },
     ssr: {
       noExternal: ['@fontsource/inter'],
