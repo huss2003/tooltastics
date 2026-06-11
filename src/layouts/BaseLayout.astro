@@ -1,0 +1,41 @@
+---
+import type { Metadata } from '@lib/seo/metadata'
+import { organization } from '@lib/seo/schema'
+import Schema from '@components/seo/Schema.astro'
+import MetaTags from '@components/seo/MetaTags.astro'
+import Analytics from '@components/seo/Analytics.astro'
+import SkipToContent from '@components/common/SkipToContent.astro'
+import Header from '@components/common/Header.astro'
+import Footer from '@components/common/Footer.astro'
+import '@/styles/global.css'
+
+export interface Props {
+  metadata: Metadata
+  lang?: string
+  dir?: string
+}
+
+const { metadata } = Astro.props
+const lang = Astro.props.lang ?? metadata.lang
+const dir = Astro.props.dir ?? metadata.dir
+---
+
+<!doctype html>
+<html lang={lang} dir={dir} class="scroll-smooth">
+  <head>
+    <meta charSet="utf-8" />
+    <meta name="generator" content={Astro.generator} />
+    <MetaTags metadata={metadata} />
+    <Analytics />
+    <Schema schemas={[...metadata.schema, organization()]} />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <SkipToContent />
+    <Header metadata={metadata} />
+    <main id="main-content" class="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-8" tabIndex={-1}>
+      <slot />
+    </main>
+    <Footer locale={metadata.locale} />
+  </body>
+</html>

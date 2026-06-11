@@ -1,0 +1,51 @@
+{
+  "name": "rulerkit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Highest-quality online ruler and screen measurement website",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro build && wrangler pages dev dist",
+    "deploy": "astro build && wrangler pages deploy dist",
+    "lint": "eslint . --report-unused-disable-directives",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "check": "astro check",
+    "clean": "rm -rf dist .astro node_modules",
+    "prepare": "astro telemetry disable"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.2.0",
+    "@astrojs/mdx": "^4.1.0",
+    "@astrojs/sitemap": "^3.3.0",
+    "@fontsource/inter": "^5.2.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "@vite-pwa/astro": "^1.2.0",
+    "astro": "^5.6.0",
+    "sharp": "^0.34.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.8.0",
+    "vite-plugin-pwa": "^0.21.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.30.0",
+    "@typescript-eslint/parser": "^8.30.0",
+    "eslint": "^9.25.0",
+    "eslint-plugin-astro": "^1.3.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "playwright": "^1.60.0",
+    "prettier": "^3.5.0",
+    "prettier-plugin-astro": "^0.14.0",
+    "prettier-plugin-tailwindcss": "^0.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "volta": {
+    "node": "22.14.0"
+  }
+}

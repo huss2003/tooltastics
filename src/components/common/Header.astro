@@ -1,0 +1,64 @@
+---
+import type { Metadata } from '@lib/seo/metadata'
+import { SITE } from '@config/site'
+import { NAVIGATION } from '@config/navigation'
+import ThemeToggle from './ThemeToggle.astro'
+import LanguageSelect from './LanguageSelect.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Props {
+  metadata: Metadata
+}
+
+const { metadata } = Astro.props
+const currentPath = Astro.url.pathname.replace(/^\/[a-z]{2}(-[A-Z]+)?\//, '/')
+const t = (key: string): string => en[key as keyof typeof en] ?? key
+---
+
+<header class="sticky top-0 z-30 border-b bg-white/80 backdrop-blur-sm dark:bg-surface-950/80">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8" aria-label="Main">
+    <a
+      href={`/${metadata.locale}`}
+      class="flex items-center gap-2 text-lg font-bold text-primary-600 hover:text-primary-700 dark:text-primary-400"
+      aria-label={`${SITE.name} — Home`}
+    >
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="2" y="6" width="24" height="4" rx="1" fill="currentColor" />
+        <rect x="2" y="14" width="24" height="4" rx="1" fill="currentColor" opacity="0.6" />
+        <rect x="2" y="20" width="24" height="2" rx="1" fill="currentColor" opacity="0.3" />
+        <circle cx="26" cy="8" r="2" fill="currentColor" />
+      </svg>
+      <span>{SITE.name}</span>
+    </a>
+
+    <div class="flex items-center gap-4">
+      <div class="hidden items-center gap-1 md:flex">
+        {NAVIGATION.map((section) => (
+          <div class="relative group" key={section.headingKey}>
+            <button
+              class="rounded-md px-3 py-1.5 text-sm text-surface-600 transition-colors hover:bg-surface-100 hover:text-surface-900 dark:text-surface-300 dark:hover:bg-surface-800 dark:hover:text-surface-50"
+              aria-expanded="false"
+            >
+              {t(section.headingKey)}
+            </button>
+            <div class="invisible absolute right-0 top-full z-20 mt-1 w-48 rounded-lg border border-surface-200 bg-white p-2 shadow-lg opacity-0 transition-all group-hover:visible group-hover:opacity-100 dark:border-surface-700 dark:bg-surface-900">
+              {section.items.map((item) => (
+                <a
+                  href={`/${metadata.locale}${item.href}`}
+                  class="block rounded-md px-3 py-2 text-sm text-surface-600 transition-colors hover:bg-surface-100 hover:text-surface-900 dark:text-surface-300 dark:hover:bg-surface-800 dark:hover:text-surface-50"
+                >
+                  {t(item.labelKey)}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="flex items-center gap-2">
+        <LanguageSelect currentLocale={metadata.locale} currentPath={currentPath} />
+        <ThemeToggle />
+      </div>
+    </div>
+  </nav>
+</header>

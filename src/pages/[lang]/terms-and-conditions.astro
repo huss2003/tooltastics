@@ -1,0 +1,107 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const metadata = createMetadata({
+  title: 'Terms and Conditions — RulerKit',
+  description:
+    'Terms and conditions for using RulerKit\'s online measurement tools. Free to use, no registration required, all tools provided as-is.',
+  locale,
+  path: '/terms-and-conditions',
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Terms and Conditions', url: `${SITE.url}/${locale}/terms-and-conditions` },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>Terms and Conditions — RulerKit</h1>
+  </div>
+
+  <p class="lead text-lg">Effective Date: January 1, 2025</p>
+  <p>Welcome to RulerKit. By accessing or using our website and online measurement tools (the "Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree with any part of these Terms, you must not use the Service.</p>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#acceptance">Acceptance of Terms</a></li>
+      <li><a href="#description">Description of Service</a></li>
+      <li><a href="#intellectual-property">Intellectual Property</a></li>
+      <li><a href="#user-responsibilities">User Responsibilities</a></li>
+      <li><a href="#disclaimer">Disclaimer of Warranties</a></li>
+      <li><a href="#liability">Limitation of Liability</a></li>
+      <li><a href="#governing-law">Governing Law</a></li>
+      <li><a href="#changes">Changes to These Terms</a></li>
+      <li><a href="#contact">Contact Information</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="acceptance">1. Acceptance of Terms</h2>
+  <p>By using RulerKit, you confirm that you have read, understood, and agree to be bound by these Terms. If you are using the Service on behalf of an organization, you represent that you have the authority to bind that organization to these Terms. The Service is available only to individuals who are at least 13 years of age. If you are under 13, you may use RulerKit only with the involvement and consent of a parent or legal guardian.</p>
+  <p>These Terms constitute a legally binding agreement between you and RulerKit. They apply to all users of the Service, including without limitation users who are browsers, vendors, customers, merchants, and contributors of content.</p>
+
+  <h2 id="description">2. Description of Service</h2>
+  <p>RulerKit provides free online measurement tools that run entirely in your web browser. These tools include, but are not limited to: an online ruler, a pixel ruler, a protractor, a ring sizer, an L-square, an image measurement tool, a printable ruler generator, and a unit converter. All tools are client-side web applications that execute within your browser using HTML5, CSS, and JavaScript. No software download, installation, or user registration is required to use the Service.</p>
+  <p>RulerKit is provided for general informational and measurement purposes. While we strive for accuracy, the tools should not be relied upon as the sole basis for decisions where precise measurement is critical, such as medical, legal, engineering, construction, or safety applications. For critical measurements, always verify with a calibrated physical measuring instrument.</p>
+
+  <h2 id="intellectual-property">3. Intellectual Property</h2>
+  <p>The RulerKit name, logo, design, user interface, and all software code (including HTML, CSS, JavaScript, TypeScript, and Astro components) are the intellectual property of RulerKit and are protected by applicable copyright, trademark, and other intellectual property laws. The source code for RulerKit is publicly available under an open source license as indicated in our GitHub repository. You are permitted to view, fork, and modify the source code in accordance with the terms of that license.</p>
+  <p>You may not reproduce, distribute, modify, create derivative works from, publicly display, or commercially exploit any portion of the Service outside the terms of the applicable open source license without our prior written consent. The RulerKit trademark may not be used in connection with any product or service that is not affiliated with RulerKit without permission.</p>
+
+  <h2 id="user-responsibilities">4. User Responsibilities</h2>
+  <p>As a user of RulerKit, you agree to:</p>
+  <ul>
+    <li>Use the Service only for lawful purposes and in accordance with these Terms.</li>
+    <li>Not attempt to disrupt, damage, or impair the Service, including through the introduction of viruses, malware, or any other harmful code.</li>
+    <li>Not attempt to reverse engineer, decompile, or disassemble the client-side code beyond what is necessary to understand and use the tools as intended.</li>
+    <li>Not use the Service in any manner that could overload, damage, or impair the underlying hosting infrastructure.</li>
+    <li>Not use automated means (bots, scrapers, crawlers) to access the Service in a manner that generates excessive traffic or disrupts service for other users.</li>
+    <li>Not use the Service for any fraudulent or deceptive purpose.</li>
+  </ul>
+  <p>You are responsible for maintaining the confidentiality of any device-specific settings (such as calibration values) that you configure through the Service. You acknowledge that these settings are stored locally in your browser and are your responsibility to manage.</p>
+
+  <h2 id="disclaimer">5. Disclaimer of Warranties</h2>
+  <p>THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. RULERKIT MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, REGARDING THE OPERATION OR AVAILABILITY OF THE SERVICE, OR THE INFORMATION, CONTENT, AND MATERIALS INCLUDED THEREIN.</p>
+  <p>TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, RULERKIT DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. RULERKIT DOES NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE, OR THAT ANY DEFECTS WILL BE CORRECTED.</p>
+  <p>RULERKIT DOES NOT WARRANT THE ACCURACY, RELIABILITY, OR COMPLETENESS OF ANY MEASUREMENT OBTAINED THROUGH THE SERVICE. THE MEASUREMENT TOOLS ARE PROVIDED FOR CONVENIENCE AND GENERAL REFERENCE ONLY. THEY ARE NOT A SUBSTITUTE FOR PROFESSIONAL MEASUREMENT EQUIPMENT OR METHODOLOGIES.</p>
+  <p>NO ADVICE OR INFORMATION, WHETHER ORAL OR WRITTEN, OBTAINED BY YOU FROM RULERKIT OR THROUGH THE SERVICE SHALL CREATE ANY WARRANTY NOT EXPRESSLY STATED IN THESE TERMS.</p>
+
+  <h2 id="liability">6. Limitation of Liability</h2>
+  <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL RULERKIT, ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, OR LICENSORS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF OR INABILITY TO USE THE SERVICE.</p>
+  <p>THIS LIMITATION OF LIABILITY APPLIES WHETHER THE CLAIM IS BASED ON WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY, OR ANY OTHER LEGAL THEORY, AND EVEN IF RULERKIT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+  <p>BECAUSE SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES, THE ABOVE LIMITATION MAY NOT APPLY TO YOU. IN SUCH JURISDICTIONS, RULERKIT'S LIABILITY IS LIMITED TO THE GREATEST EXTENT PERMITTED BY LAW.</p>
+  <p>IN NO EVENT SHALL RULERKIT'S TOTAL LIABILITY TO YOU FOR ALL CLAIMS ARISING FROM OR RELATING TO THESE TERMS OR YOUR USE OF THE SERVICE EXCEED ONE HUNDRED DOLLARS ($100.00).</p>
+
+  <h2 id="governing-law">7. Governing Law</h2>
+  <p>These Terms and any separate agreements whereby we provide you the Service shall be governed by and construed in accordance with the laws of the United States of America and the State of California, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be resolved in the courts located in San Francisco, California.</p>
+  <p>We make no representation that the Service is appropriate or available for use in locations outside the United States. Users who access the Service from outside the United States do so on their own initiative and are responsible for compliance with local laws, if and to the extent local laws are applicable.</p>
+
+  <h2 id="changes">8. Changes to These Terms</h2>
+  <p>We reserve the right to update, modify, or replace these Terms at any time. Changes will be effective immediately upon posting to this page. We will indicate the date of the most recent revision at the top of this page. For material changes, we will provide additional notice through the Service or our GitHub repository.</p>
+  <p>Your continued use of the Service following the posting of changes constitutes your acceptance of those changes. If you do not agree with the modified Terms, you must discontinue use of the Service. We encourage you to review these Terms periodically for any updates.</p>
+
+  <h2 id="contact">9. Contact Information</h2>
+  <p>If you have any questions, concerns, or requests regarding these Terms, please contact us:</p>
+  <ul>
+    <li>By opening an issue on our <a href="https://github.com/rulerkit/rulerkit/issues" rel="external nofollow">GitHub repository</a></li>
+    <li>By email: legal@rulerkit.com</li>
+  </ul>
+  <p>We will acknowledge receipt of your inquiry within 5 business days and strive to resolve any concerns promptly.</p>
+</ContentLayout>

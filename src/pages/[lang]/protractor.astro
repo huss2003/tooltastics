@@ -1,0 +1,126 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import ProtractorPanel from '@components/tools/protractor/ProtractorPanel.astro'
+import ProtractorCanvas from '@components/tools/protractor/ProtractorCanvas.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('protractor')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  webApplication(toolName, toolDesc, {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <ProtractorPanel />
+  </div>
+  <div slot="canvas">
+    <ProtractorCanvas />
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#measuring-angles-digitally">Measuring Angles Digitally</a></li>
+      <li><a href="#use-cases">Use Cases for an Online Protractor</a></li>
+      <li><a href="#how-to-use">How to Use the Protractor Tool</a></li>
+      <li><a href="#degrees-vs-radians">Degrees vs. Radians</a></li>
+      <li><a href="#accuracy-tips">Accuracy Tips for Angle Measurement</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="measuring-angles-digitally">Measuring Angles Digitally</h2>
+  <p>An online protractor does the same job as the plastic half-circle you used in geometry class, but it works on your screen. You can measure any angle displayed on your monitor by placing the protractor's center point at the vertex of the angle and aligning its baseline with one side. The second side tells you the angle in degrees.</p>
+  <p>Digital angle measurement has advantages over physical tools. You can zoom in for finer precision, measure angles on images and screenshots, and switch between degrees and radians instantly. RulerKit's protractor tool draws a crisp, scalable protractor graphic on your screen with marked intervals from 0 to 360 degrees.</p>
+
+  <h2 id="use-cases">Use Cases for an Online Protractor</h2>
+  <p>Angle measurement comes up in more fields than most people realize. In geometry and math education, students measure triangle angles, verify theorems, and check their homework. Woodworkers and carpenters check miter saw angles, measure corner fits, and plan joinery cuts. Designers measure the rotation of elements, the angle of diagonal lines, and the orientation of typographic baselines.</p>
+  <p>DIY home improvement projects often require angle checks. Need to cut trim for a non-square corner? The protractor tells you the exact angle so your miter saw settings are correct. Photographers use the tool to check horizon alignment and composition angles. Artists and illustrators measure reference photo angles before sketching. Even gamers use it to measure field-of-view angles or map out strategies in grid-based games.</p>
+
+  <h2 id="how-to-use">How to Use the Protractor Tool</h2>
+  <p>Open the protractor tool and position your browser window so the angle you want to measure is visible on screen. The protractor overlay appears as a transparent circle with degree markings. Click and drag the center point to place it exactly on the vertex of the angle. Rotate the protractor to align the zero-degree line with one side of the angle. Read the measurement where the second side crosses the protractor scale.</p>
+  <h3>Measuring reflex angles</h3>
+  <p>For angles larger than 180 degrees (reflex angles), the tool displays both the interior and exterior readings. You can toggle between them in the sidebar panel.</p>
+  <h3>Comparing multiple angles</h3>
+  <p>The tool remembers your last three measurements and displays them in a list. This is helpful when you need to compare angles in a polygon or verify that multiple cuts are consistent.</p>
+
+  <h2 id="degrees-vs-radians">Degrees vs. Radians</h2>
+  <p>Degrees divide a circle into 360 parts. A right angle is 90 degrees, a straight line is 180 degrees, and a full circle is 360 degrees. Radians are an alternative unit based on the radius of the circle. One full circle equals 2&#960; radians (approximately 6.283). A right angle is &#960;/2 radians.</p>
+  <p>Most practical measurement — carpentry, design, photography, general DIY — uses degrees. Radians are standard in higher mathematics, physics, and programming (especially in trigonometry functions). RulerKit's protractor lets you switch between the two with a single click. The sidebar shows the current reading in both units simultaneously so you do not need to do the conversion yourself.</p>
+
+  <h2 id="accuracy-tips">Accuracy Tips for Angle Measurement</h2>
+  <p>Getting an accurate angle reading depends on precise placement of the protractor center. Zoom your browser to 100% and make sure the screen is at eye level to reduce parallax. If the object whose angle you are measuring is an image, make sure the image is not distorted or stretched. For the most precise work, use the millimeter overlay grid to cross-check your protractor alignment.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is the online protractor?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">With careful alignment, accuracy is within 1 degree. The tool uses your screen resolution to draw precise tick marks, so the limiting factor is how accurately you position the center and baseline.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I measure angles larger than 180 degrees?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The protractor covers a full 360-degree circle and shows both the interior and reflex angle readings simultaneously.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does it work on mobile devices?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">It works on tablets and large phones, but precision is harder to achieve on small touch screens. A desktop or laptop with a mouse gives the best results.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Do I need to calibrate the protractor?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">No calibration is needed. The protractor uses pixel-based rendering and is accurate relative to your screen resolution. It works immediately on any display.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I measure the angle of an image I uploaded?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">For uploaded images, use the Measure Image tool instead. It includes angle measurement as part of its annotation features.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What is the difference between degrees and radians on the tool?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Degrees split a circle into 360 parts; radians use the circle's radius. The tool shows both values so you can work in whichever unit suits your project.</div>
+      </div>
+    </div>
+  </div>
+</div>

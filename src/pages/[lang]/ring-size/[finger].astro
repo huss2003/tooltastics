@@ -1,0 +1,121 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+import { RING_SIZE_ENTRIES } from '@lib/data/programmatic/ringSizes'
+
+export interface Params { lang: string; finger: string }
+
+export function getStaticPaths() {
+  const paths: { params: Params; props: { locale: Locale } }[] = []
+  for (const locale of SITE.locales) {
+    for (const entry of RING_SIZE_ENTRIES) {
+      paths.push({ params: { lang: locale.code, finger: entry.slug }, props: { locale: locale.code, entry } })
+    }
+  }
+  return paths
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const { entry } = Astro.props as { entry: typeof RING_SIZE_ENTRIES[0] }
+
+if (!entry) return Astro.redirect(`/${locale}/404`, 404)
+
+const canonical = `${SITE.url}/${locale}/ring-size/${entry.slug}`
+const title = `${entry.finger} Ring Size Guide: Find Your Perfect Fit | RulerKit`
+const sizeDesc = entry.averageSizeUs ? ` Average: US ${entry.averageSizeUs}` : ''
+const description = `${entry.finger} ring size guide${entry.averageSizeMm ? ` — ${entry.averageSizeMm} mm inner circumference` : ''}.${sizeDesc} ${entry.description} Use our online ring sizer tool.`
+
+const otherEntries = RING_SIZE_ENTRIES.filter(e => e.slug !== entry.slug).slice(0, 5)
+
+const metadata = createMetadata({
+  title, description, locale, path: `/ring-size/${entry.slug}`, ogType: 'article',
+  schema: [
+    article(title, description, { locale, canonical, image: `${SITE.url}/og/default.png` }),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Ring Size Guide', url: `${SITE.url}/${locale}/ring-size` },
+      { name: entry.finger, url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: entry.finger, url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1 class="text-3xl font-bold tracking-tight text-surface-900 dark:text-white">{entry.finger} Ring Size Guide</h1>
+    <p class="mt-2 text-sm text-surface-500">Find your ring size with confidence</p>
+  </div>
+
+  <div class="not-prose mb-8 rounded-xl border border-surface-200 bg-surface-50 p-6 dark:border-surface-700 dark:bg-surface-800/50">
+    <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+      {entry.averageSizeMm ? (
+        <div><p class="text-xs font-medium uppercase tracking-wide text-surface-500">Circumference</p><p class="text-2xl font-bold text-surface-900 dark:text-white">{entry.averageSizeMm} mm</p></div>
+      ) : null}
+      {entry.diameterMm ? (
+        <div><p class="text-xs font-medium uppercase tracking-wide text-surface-500">Diameter</p><p class="text-2xl font-bold text-surface-900 dark:text-white">{entry.diameterMm} mm</p></div>
+      ) : null}
+      {entry.averageSizeUs ? (
+        <div><p class="text-xs font-medium uppercase tracking-wide text-surface-500">US Size</p><p class="text-2xl font-bold text-surface-900 dark:text-white">{entry.averageSizeUs}</p></div>
+      ) : null}
+    </div>
+    <a href={`/${locale}/ring-sizer`} class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700">Use Online Ring Sizer →</a>
+  </div>
+
+  <h2 id="about">{entry.finger} Ring Size Overview</h2>
+  <p>{entry.description}</p>
+  {entry.sizingTip ? <p><strong>Sizing Tip:</strong> {entry.sizingTip}</p> : null}
+
+  <h2 id="measure">How to Measure Your {entry.finger} Size</h2>
+  <ol>
+    <li><strong>Use RulerKit&rsquo;s online ring sizer</strong> &mdash; Open our <a href={`/${locale}/ring-sizer`}>online ring sizer tool</a> and follow the on-screen instructions. The tool works without printing, using your screen&rsquo;s calibration to measure accurately.</li>
+    <li><strong>Paper strip method</strong> &mdash; Cut a thin strip of paper about 6 mm wide. Wrap it around the base of your {entry.finger.toLowerCase() === 'thumb' ? 'thumb' : entry.finger.toLowerCase().includes('finger') ? entry.finger.toLowerCase() : 'finger'}. Mark where the ends meet and measure the length against a ruler.</li>
+    <li><strong>String method</strong> &mdash; Similar to the paper method, use a piece of string or floss. Wrap around the finger, mark, and measure against a ruler.</li>
+    <li><strong>Printable ring sizer</strong> &mdash; <a href={`/${locale}/print/ring-sizer`}>Download our printable ring sizer</a> for a physical reference that you can wrap around your finger.</li>
+    <li><strong>Use an existing ring</strong> &mdash; If you have a ring that fits, measure its inner diameter with a ruler or use our <a href={`/${locale}/print/ring-sizer-mandrel`}>printable ring mandrel</a> to find the size.</li>
+  </ol>
+
+  <h2 id="size-chart">{entry.finger} Size Reference</h2>
+  {entry.averageSizeUs ? (
+    <>
+      <p>The average {entry.finger.toLowerCase()} ring size is <strong>US {entry.averageSizeUs}</strong> with an inner circumference of approximately <strong>{entry.averageSizeMm} mm</strong> and a diameter of <strong>{entry.diameterMm} mm</strong>.</p>
+      {entry.gender ? (
+        <p>This average is based on {entry.gender === 'male' ? 'men\'s' : entry.gender === 'female' ? 'women\'s' : ''} ring size data. Individual measurements may vary based on finger shape, temperature, and time of day.</p>
+      ) : null}
+    </>
+  ) : null}
+
+  <h2 id="tips">Sizing Tips for Best Results</h2>
+  <ul>
+    <li><strong>Measure at the end of the day</strong> &mdash; Fingers swell during the day due to activity and heat. Measuring in the evening gives the most comfortable fit.</li>
+    <li><strong>Account for temperature</strong> &mdash; Cold fingers are smaller, hot fingers are larger. Measure at room temperature for the best average size.</li>
+    <li><strong>Consider knuckle size</strong> &mdash; If your knuckle is significantly larger than the base of your finger, measure both and choose a size that passes the knuckle but fits the base snugly.</li>
+    <li><strong>Measure multiple times</strong> &mdash; Take 3 measurements on different days and use the average for the most accurate result.</li>
+    <li><strong>Width matters</strong> &mdash; Wider bands fit tighter. If your ring band is wider than 6 mm, consider going up half a size.</li>
+  </ul>
+
+  {otherEntries.length > 0 ? (
+    <>
+      <h2 id="other-fingers">Other Ring Size Guides</h2>
+      <ul>
+        {otherEntries.map(e => (
+          <li><a href={`/${locale}/ring-size/${e.slug}`}>{e.finger} Ring Size</a></li>
+        ))}
+      </ul>
+    </>
+  ) : null}
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <h3>How accurate is the online ring sizer?</h3>
+  <p>RulerKit&rsquo;s online ring sizer is accurate to within approximately 0.5 mm when properly calibrated. For best results, calibrate using the credit card method before measuring.</p>
+  <h3>What if I&rsquo;m between ring sizes?</h3>
+  <p>If you&rsquo;re between sizes, choose the larger size for comfort. A slightly loose ring can be resized down, while a tight ring is uncomfortable. For wide bands (over 6 mm), always go up half a size.</p>
+  <h3>Is the ring sizer tool free?</h3>
+  <p>Yes, all RulerKit tools are completely free to use with no registration, no ads, and no limits. Measure as many fingers as you need.</p>
+</ContentLayout>

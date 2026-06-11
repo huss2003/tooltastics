@@ -1,0 +1,237 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { faqPage, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/faq`
+
+const faqItems = [
+  {
+    question: 'How accurate is the online ruler?',
+    answer: 'With proper calibration, our online ruler is accurate to within ±0.5mm. Use the credit card or auto-detect calibration method for best results.',
+  },
+  {
+    question: 'Do I need to download any software?',
+    answer: 'No. RulerKit runs entirely in your browser. No downloads, plugins, or installations are required.',
+  },
+  {
+    question: 'What units does RulerKit support?',
+    answer: 'RulerKit supports centimeters, millimeters, inches, and pixels. You can switch between units at any time.',
+  },
+  {
+    question: 'How do I calibrate the ruler for my screen?',
+    answer: 'You can calibrate using auto-detect (based on your device specifications), screen diagonal (enter your screen size), or by placing a credit card on the screen.',
+  },
+  {
+    question: 'Is RulerKit free to use?',
+    answer: 'Yes, RulerKit is completely free to use. No registration, no subscription, no hidden fees.',
+  },
+  {
+    question: 'Can I measure in multiple units at once?',
+    answer: 'RulerKit displays the primary unit on the ruler scale, but you can instantly switch between centimeters, millimeters, inches, and pixels. The conversion is automatic and does not require recalibration. For quick reference, the tool shows the current measurement in all supported units in the display panel.',
+  },
+  {
+    question: 'Why does my ruler look different on another device?',
+    answer: 'Different screens have different pixel densities (PPI). A phone display typically has 300-500 PPI, while a laptop has 100-200 PPI. Even with calibration, the visual appearance of the ruler changes because pixels are physically smaller on the phone. The measurement values will match if both devices are calibrated correctly — the ruler just looks different because the pixels are a different size.',
+  },
+  {
+    question: 'How do I reset calibration?',
+    answer: 'To reset calibration, open the ruler tool and click the "Calibrate" button in the settings panel. From there you can choose "Reset" or re-calibrate using a different method. This clears the stored PPI value from your browser and lets you start fresh.',
+  },
+  {
+    question: 'Is the ruler accurate for printing?',
+    answer: 'The online screen ruler is calibrated for your display, not your printer. For accurate printed measurements, use our Printable Ruler tool which generates a PDF with precise scaling for your chosen paper size. When printing the PDF, ensure your printer is set to "Actual Size" or 100% scale — not "Fit to Page" — to preserve the correct dimensions.',
+  },
+  {
+    question: 'Can I use RulerKit offline?',
+    answer: 'Yes, after the initial page load, all RulerKit measurement tools work offline because they run entirely as client-side JavaScript. Your browser caches the page assets, so if you visit RulerKit while online and then lose your connection, the tools continue to function normally. This is a direct benefit of our server-free architecture.',
+  },
+  {
+    question: 'What browsers are supported?',
+    answer: 'RulerKit supports all modern browsers: Chrome (version 90+), Firefox (version 90+), Safari (version 15+), Edge (version 90+), and Opera (version 76+). The tools require HTML5 Canvas support, which is available in all modern browsers. Internet Explorer is not supported.',
+  },
+  {
+    question: 'How do I measure angles with the protractor?',
+    answer: 'Open the protractor tool, then click and drag from the vertex point to create the first arm of the angle. Drag again to create the second arm. The protractor displays the angle measurement in degrees in real time. You can also use the L-square tool for measuring and marking right angles (90 degrees).',
+  },
+  {
+    question: 'Can I save my measurements?',
+    answer: 'RulerKit does not have a built-in save or export feature because all data stays on your device. You can take a screenshot of your measurement, note the values manually, or use your browser\'s print function to capture the screen. Calibration settings are automatically saved in your browser\'s local storage.',
+  },
+  {
+    question: 'Do you support mobile devices?',
+    answer: 'Yes, RulerKit works on iOS and Android mobile devices. The interface adapts responsively to smaller screens, though measurement accuracy on phones depends on proper calibration. Mobile users may find the credit card calibration method most practical since screen size specifications can be harder to find on phones. Touch interaction is fully supported across all tools.',
+  },
+]
+
+const metadata = createMetadata({
+  title: 'FAQ — Frequently Asked Questions About Online Rulers',
+  description:
+    'Answers to common questions about online rulers, screen calibration, measurement accuracy, and RulerKit\'s free measurement tools.',
+  locale,
+  path: '/faq',
+  schema: [
+    faqPage(faqItems, {
+      locale,
+      canonical,
+      title: 'FAQ — Frequently Asked Questions About Online Rulers',
+      description:
+        'Answers to common questions about online rulers, screen calibration, measurement accuracy, and RulerKit\'s free measurement tools.',
+    }),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'FAQ', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'FAQ', url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>FAQ — Frequently Asked Questions About Online Rulers</h1>
+  </div>
+
+  <p class="lead text-lg">Find answers to common questions about using RulerKit, calibrating your screen, measuring in different units, and more. If you cannot find what you are looking for, <a href="./contact">contact us</a>.</p>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#getting-started">Getting Started</a></li>
+      <li><a href="#accuracy">Accuracy &amp; Calibration</a></li>
+      <li><a href="#tools">Using the Tools</a></li>
+      <li><a href="#technical">Technical Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="getting-started">Getting Started</h2>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Do I need to download any software?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">No. RulerKit runs entirely in your browser. No downloads, plugins, or installations are required. Just open the page and start measuring.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Is RulerKit free to use?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">Yes, RulerKit is completely free to use. No registration, no subscription, no hidden fees. All tools are free forever.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What units does RulerKit support?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">RulerKit supports centimeters, millimeters, inches, and pixels. You can switch between units at any time. The conversion is automatic and does not require recalibration.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can I use RulerKit offline?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">Yes, after the initial page load, all RulerKit measurement tools work offline because they run entirely as client-side JavaScript. Your browser caches the page assets, so the tools continue to function even without an internet connection.</div>
+    </div>
+  </div>
+
+  <h2 id="accuracy">Accuracy &amp; Calibration</h2>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How accurate is the online ruler?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">With proper calibration, our online ruler is accurate to within ±0.5mm. Use the credit card or auto-detect calibration method for best results. Accuracy depends on your screen's pixel density being correctly identified.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I calibrate the ruler for my screen?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">You can calibrate using auto-detect (based on your device specifications), screen diagonal (enter your screen size), or by placing a credit card on the screen. Auto-detect is the easiest method — just click "Calibrate" and select auto-detect. For maximum accuracy, use a physical credit card as a reference.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Why does my ruler look different on another device?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">Different screens have different pixel densities (PPI). A phone typically has 300-500 PPI, while a laptop has 100-200 PPI. The ruler markings are physically smaller on high-PPI screens, but the measurement values will match if both devices are calibrated correctly.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I reset calibration?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">To reset calibration, open the ruler tool and click the "Calibrate" button in the settings panel. From there you can choose "Reset" or re-calibrate using a different method. This clears the stored PPI value from your browser's local storage.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Is the ruler accurate for printing?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">The online screen ruler is calibrated for your display, not your printer. For accurate printed measurements, use our Printable Ruler tool which generates a PDF with precise scaling for your paper size. When printing, set your printer to "Actual Size" or 100% scale — not "Fit to Page."</div>
+    </div>
+  </div>
+
+  <h2 id="tools">Using the Tools</h2>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can I measure in multiple units at once?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">RulerKit displays the primary unit on the ruler scale, but you can instantly switch between units. The tool shows the current measurement in all supported units in the display panel, so you can reference cm, inches, mm, and pixels simultaneously.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I measure angles with the protractor?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">Open the protractor tool, then click and drag to create the first arm of the angle. Drag again to create the second arm. The protractor displays the angle measurement in degrees in real time. The L-square tool is also available for right-angle measurements.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can I save my measurements?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">RulerKit does not have a built-in save feature since all data stays on your device. You can take a screenshot, note the values manually, or use your browser's print function. Calibration settings are automatically saved in your browser's local storage.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Do you support mobile devices?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">Yes, RulerKit works on iOS and Android mobile devices. The interface adapts responsively to smaller screens, and touch interaction is fully supported. Mobile users may find the credit card calibration method most practical for accuracy.</div>
+    </div>
+  </div>
+
+  <h2 id="technical">Technical Questions</h2>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What browsers are supported?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">RulerKit supports Chrome (90+), Firefox (90+), Safari (15+), Edge (90+), and Opera (76+). The tools require HTML5 Canvas support. Internet Explorer is not supported. We recommend keeping your browser updated for best performance.</div>
+    </div>
+  </div>
+
+  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Does RulerKit collect my data?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <div itemprop="text">No. RulerKit is privacy-first by design. All tools run entirely in your browser. No measurements, images, or personal data are sent to any server. We do not use analytics, tracking cookies, or third-party scripts. Your privacy is built into the architecture.</div>
+    </div>
+  </div>
+</ContentLayout>

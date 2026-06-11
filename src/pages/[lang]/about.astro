@@ -1,0 +1,115 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/about`
+
+const metadata = createMetadata({
+  title: 'About RulerKit — Precision Measurement Tools for Everyone',
+  description:
+    'Learn about RulerKit, the free online measurement toolkit. Our mission is to provide accurate, accessible measurement tools that work entirely in your browser.',
+  locale,
+  path: '/about',
+  schema: [
+    webApplication(
+      'RulerKit',
+      'Learn about RulerKit, the free online measurement toolkit. Our mission is to provide accurate, accessible measurement tools that work entirely in your browser.',
+      {
+        locale,
+        canonical,
+        title: 'About RulerKit — Precision Measurement Tools for Everyone',
+        description:
+          'Learn about RulerKit, the free online measurement toolkit. Our mission is to provide accurate, accessible measurement tools that work entirely in your browser.',
+      },
+    ),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'About', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'About', url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>About RulerKit — Precision Measurement Tools for Everyone</h1>
+  </div>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#mission">Our Mission</a></li>
+      <li><a href="#story">The RulerKit Story</a></li>
+      <li><a href="#different">What Makes RulerKit Different</a></li>
+      <li><a href="#technology">Built for the Browser</a></li>
+      <li><a href="#values">Our Values</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="mission">Our Mission</h2>
+  <p>RulerKit exists to solve a simple problem: everyone needs to measure things, but not everyone has a physical ruler nearby. Whether you are a designer checking pixel dimensions, a student measuring for a project, a DIYer verifying furniture dimensions before buying, or someone who simply wants to know how big their screen is, you should have access to precise measurement tools without jumping through hoops.</p>
+  <p>Our mission is to make accurate measurement tools available to anyone with a web browser. No downloads, no installations, no registration, no cost. Just open the tool, calibrate for your screen, and measure in your preferred units. We believe that measurement is a fundamental need that should not require specialized software, expensive hardware, or technical expertise.</p>
+  <p>We are committed to keeping RulerKit free forever, privacy-first by design, and accessible in as many languages as possible. Every tool we build runs entirely on the client side. Your data never touches a server. Your measurements stay on your device, because that is how it should be.</p>
+
+  <h2 id="story">The RulerKit Story</h2>
+  <p>RulerKit started with a frustration. As a designer working across multiple devices, I often needed to check whether a design element would appear at the right physical size. Opening a design tool just to measure something was cumbersome. Searching for "online ruler" returned dozens of results, but most were ad-laden, required Flash (remember that?), did not work properly on high-DPI displays, or had no calibration system whatsoever.</p>
+  <p>The ones that did attempt calibration used crude methods. A few assumed every screen was 72 DPI, a relic from old Macintosh standards that has not been accurate for decades. Others tried to detect screen size through browser APIs that either did not work or returned incorrect values. None of them gave me confidence that the measurement on screen matched reality.</p>
+  <p>So I built my own. The first version was a simple JavaScript ruler that read the screen's logical resolution and guessed at the PPI. It was not great, but it worked for rough estimates. I shared it with a few colleagues, and they shared it with others. Soon the feedback rolled in: people wanted centimeters, not just inches. They wanted a protractor. They wanted to measure images. They wanted it to work on phones and tablets.</p>
+  <p>Each request was a chance to make the tool better. The credit card calibration method came from a user who worked in shipping and needed to measure packages but never had a ruler. The auto-detect feature came from users who found manual calibration confusing. The printable ruler came from teachers who wanted their students to have measurement tools at home during remote learning.</p>
+  <p>RulerKit grew from a personal utility into a full suite of measurement tools used by thousands of people every day. What started as a single ruler is now eight tools: an online ruler, a pixel ruler, a protractor, a ring sizer, an L-square, a measure-image tool, a printable ruler generator, and a unit converter. All of them free, all of them private, all of them built with the same philosophy.</p>
+
+  <h2 id="different">What Makes RulerKit Different</h2>
+  <p>There is no shortage of online rulers on the web. But RulerKit stands apart in several meaningful ways.</p>
+  <ul>
+    <li><strong>Privacy First</strong> &mdash; RulerKit runs entirely in your browser. Nothing you measure is sent to a server, logged, tracked, or stored. There are no analytics scripts, no tracking cookies, no data collection. Your measurements are yours alone. This is not a feature we added later; privacy is the foundation of the entire application.</li>
+    <li><strong>No Installation</strong> &mdash; There is no app to download, no plugin to install, no software to configure. RulerKit works in any modern browser on any operating system. Open the page and start measuring. It is that simple.</li>
+    <li><strong>Free Forever</strong> &mdash; RulerKit is and always will be free. There is no freemium tier, no premium subscription, no one-time purchase, no ads. We do not sell your data. We do not show you ads. The tools are free because we believe measurement is a basic utility, not a product to be monetized.</li>
+    <li><strong>Multi-Tool Suite</strong> &mdash; Unlike most online rulers that offer a single measurement mode, RulerKit gives you a complete toolkit. Measure in centimeters, millimeters, inches, or pixels. Measure straight lines, angles, rings, or images. Generate printable rulers for offline use. Convert between units. Everything you need for measurement, all in one place.</li>
+    <li><strong>Multi-Language Support</strong> &mdash; RulerKit is available in English, Spanish, French, German, Portuguese, Japanese, Chinese, Russian, Arabic, and Hindi. We are adding more languages to make measurement tools accessible to a global audience.</li>
+  </ul>
+
+  <h2 id="technology">Built for the Browser</h2>
+  <p>RulerKit is a client-side web application built with Astro and TypeScript. Every measurement tool uses the HTML5 Canvas API to render precise graphics directly in the browser. There is no backend server processing measurements, no database storing user data, and no API calls handling measurement logic. The entire application is static JavaScript, HTML, and CSS.</p>
+  <p>When you calibrate your screen, the PPI value is stored in your browser's local storage. Nothing is sent to a server. When you switch units, the conversion happens in JavaScript on your device. When you measure an image, the image never leaves your computer. This architecture has two major benefits: your privacy is guaranteed by the technology itself, and the tools work fast because there is no network latency.</p>
+  <p>The site is hosted on Cloudflare Pages, which serves static files from their global CDN. Cloudflare's network brings RulerKit close to users in over 300 cities worldwide. We use Cloudflare's standard caching and DDoS protection, but none of their analytics or tracking features are enabled on our site. The hosting provider sees only that a page was requested, not what you measured or how you used the tools.</p>
+  <p>We support all modern browsers: Chrome, Firefox, Safari, Edge, and Opera. RulerKit works on desktop, tablet, and phone. The responsive design adapts the interface to your screen size while maintaining measurement accuracy. Keyboard navigation and screen reader compatibility are maintained across all tools.</p>
+
+  <h2 id="values">Our Values</h2>
+  <p>Three principles guide every decision we make at RulerKit.</p>
+  <p><strong>Privacy is non-negotiable.</strong> We do not collect personal information. We do not use analytics. We do not track users across sessions. We do not embed third-party scripts that might compromise your privacy. The only data stored is calibration settings in your browser's local storage, and you can clear that at any time. If a feature cannot be built without compromising privacy, we do not build it.</p>
+  <p><strong>Accuracy matters.</strong> Measurement tools are useless if they are not accurate. We invest significant effort in calibration algorithms, testing on hundreds of different devices and screen configurations. We provide multiple calibration methods because no single approach works perfectly for every screen. We are transparent about the expected accuracy of each method and the factors that can affect it.</p>
+  <p><strong>Accessibility for all.</strong> Measurement should not require technical expertise, expensive devices, or language proficiency. We design our tools to be intuitive for first-time users while offering advanced features for power users. We support multiple languages, high-contrast modes, screen readers, and keyboard navigation. We keep the interface clean and focused on the task at hand, without clutter or distractions.</p>
+
+  <h2 id="try-tools">Try RulerKit Today</h2>
+  <p>Ready to measure something? No sign-up required. No download needed. No cost involved. Choose a tool and start measuring in seconds.</p>
+  <ul>
+    <li><a href="./ruler">Online Ruler</a> &mdash; Measure anything on your screen in cm, mm, or inches.</li>
+    <li><a href="./protractor">Protractor</a> &mdash; Measure angles precisely.</li>
+    <li><a href="./ring-sizer">Ring Sizer</a> &mdash; Find your ring size at home.</li>
+    <li><a href="./printable-ruler">Printable Ruler</a> &mdash; Generate a ruler to print and cut out.</li>
+    <li><a href="./pixel-ruler">Pixel Ruler</a> &mdash; Measure screen elements in pixels.</li>
+    <li><a href="./measure-image">Measure Image</a> &mdash; Upload an image and measure objects within it.</li>
+    <li><a href="./l-square">L-Square</a> &mdash; Measure right angles and draw perpendicular lines.</li>
+    <li><a href="./unit-converter">Unit Converter</a> &mdash; Convert between cm, mm, inches, and pixels.</li>
+  </ul>
+</ContentLayout>

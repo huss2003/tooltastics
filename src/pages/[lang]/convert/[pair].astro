@@ -1,0 +1,161 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+import { CONVERSION_PAIRS, getConversionPair } from '@lib/data/programmatic/conversions'
+
+export interface Params { lang: string; pair: string }
+
+export function getStaticPaths() {
+  const paths: { params: Params; props: { locale: Locale } }[] = []
+  for (const locale of SITE.locales) {
+    for (const conv of CONVERSION_PAIRS) {
+      paths.push({ params: { lang: locale.code, pair: conv.slug }, props: { locale: locale.code } })
+    }
+  }
+  return paths
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const { pair: pairSlug } = Astro.params
+const conv = getConversionPair(pairSlug!)
+if (!conv) return Astro.redirect(`/${locale}/404`, 404)
+
+const fromUpper = conv.fromLabel
+const toUpper = conv.toLabel
+const fromLower = fromUpper.charAt(0).toLowerCase() + fromUpper.slice(1)
+const toLower = toUpper.charAt(0).toLowerCase() + toUpper.slice(1)
+const canonical = `${SITE.url}/${locale}/convert/${conv.slug}`
+const title = `${fromUpper} to ${toUpper} Converter: Free Online Conversion Tool | RulerKit`
+const description = `Convert ${conv.fromUnit} to ${conv.toUnit} instantly with our free online converter. ${conv.formula}. Accurate ${fromLower} to ${toLower} conversion for ${conv.description.toLowerCase()}`
+
+const allConversions = CONVERSION_PAIRS
+const reverseConv = allConversions.find(c => c.fromUnit === conv.toUnit && c.toUnit === conv.fromUnit)
+const relatedConv = allConversions.filter(c => c.slug !== conv.slug && c.slug !== reverseConv?.slug && (c.category === conv.category || c.fromUnit === conv.toUnit || c.toUnit === conv.fromUnit)).slice(0, 6)
+
+const commonValues: { from: number; to: number }[] = []
+for (let i = 1; i <= 20; i++) {
+  let toVal = 0
+  if (conv.fromUnit === 'cm' && conv.toUnit === 'in') toVal = i / 2.54
+  else if (conv.fromUnit === 'in' && conv.toUnit === 'cm') toVal = i * 2.54
+  else if (conv.fromUnit === 'cm' && conv.toUnit === 'mm') toVal = i * 10
+  else if (conv.fromUnit === 'mm' && conv.toUnit === 'cm') toVal = i / 10
+  else if (conv.fromUnit === 'in' && conv.toUnit === 'mm') toVal = i * 25.4
+  else if (conv.fromUnit === 'mm' && conv.toUnit === 'in') toVal = i / 25.4
+  else if (conv.fromUnit === 'm' && conv.toUnit === 'ft') toVal = i * 3.281
+  else if (conv.fromUnit === 'ft' && conv.toUnit === 'm') toVal = i / 3.281
+  else if (conv.fromUnit === 'm' && conv.toUnit === 'cm') toVal = i * 100
+  else if (conv.fromUnit === 'cm' && conv.toUnit === 'm') toVal = i / 100
+  else if (conv.fromUnit === 'km' && conv.toUnit === 'mi') toVal = i / 1.609
+  else if (conv.fromUnit === 'mi' && conv.toUnit === 'km') toVal = i * 1.609
+  else if (conv.fromUnit === 'ft' && conv.toUnit === 'in') toVal = i * 12
+  else if (conv.fromUnit === 'in' && conv.toUnit === 'ft') toVal = i / 12
+  else if (conv.fromUnit === 'mm' && conv.toUnit === 'm') toVal = i / 1000
+  else if (conv.fromUnit === 'm' && conv.toUnit === 'mm') toVal = i * 1000
+  else if (conv.fromUnit === 'm' && conv.toUnit === 'yd') toVal = i * 1.094
+  else if (conv.fromUnit === 'yd' && conv.toUnit === 'm') toVal = i / 1.094
+  else if (conv.fromUnit === 'ft' && conv.toUnit === 'cm') toVal = i * 30.48
+  else if (conv.fromUnit === 'cm' && conv.toUnit === 'ft') toVal = i / 30.48
+  else if (conv.fromUnit === 'yd' && conv.toUnit === 'ft') toVal = i * 3
+  else if (conv.fromUnit === 'ft' && conv.toUnit === 'yd') toVal = i / 3
+  else if (conv.fromUnit === 'km' && conv.toUnit === 'm') toVal = i * 1000
+  else if (conv.fromUnit === 'm' && conv.toUnit === 'km') toVal = i / 1000
+  commonValues.push({ from: i, to: Math.round(toVal * 100) / 100 })
+}
+
+const metadata = createMetadata({
+  title, description, locale, path: `/convert/${conv.slug}`, ogType: 'article',
+  schema: [
+    article(title, description, { locale, canonical, image: `${SITE.url}/og/default.png` }),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Unit Conversion', url: `${SITE.url}/${locale}/convert` },
+      { name: `${fromUpper} to ${toUpper}`, url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: `${fromUpper} to ${toUpper}`, url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1 class="text-3xl font-bold tracking-tight text-surface-900 dark:text-white">{fromUpper} to {toUpper} Converter</h1>
+    <p class="mt-2 text-sm text-surface-500">Free online conversion tool &middot; Instant results</p>
+  </div>
+
+  <div class="not-prose mb-8 rounded-xl border border-surface-200 bg-surface-50 p-6 dark:border-surface-700 dark:bg-surface-800/50">
+    <p class="mb-4 text-sm text-surface-600 dark:text-surface-400"><strong>Formula:</strong> {conv.formula}</p>
+    <a href={`/${locale}/unit-converter`} class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700">Use RulerKit Unit Converter →</a>
+  </div>
+
+  <h2 id="conversion-formula">{fromUpper} to {toUpper} Conversion Formula</h2>
+  <p>To convert <strong>{fromLower}</strong> to <strong>{toLower}</strong>, use the following formula:</p>
+  <div class="not-prose my-4 rounded-lg bg-surface-100 p-4 font-mono text-sm dark:bg-surface-800">{conv.formula}</div>
+  <p>For example, if you have 10 {conv.fromUnit} and want to convert to {conv.toUnit}, the calculation would be: 10 {conv.formula} = {commonValues[9]?.to ?? 0} {conv.toUnit}. This {conv.description.toLowerCase()}.</p>
+
+  <h2 id="conversion-table">Quick Conversion Table: {fromUpper} to {toUpper}</h2>
+  <div class="not-prose overflow-x-auto">
+    <table class="min-w-full divide-y divide-surface-200 dark:divide-surface-700">
+      <thead><tr class="bg-surface-100 dark:bg-surface-800"><th class="px-4 py-2 text-left text-sm font-medium text-surface-700 dark:text-surface-300">{fromUpper} ({conv.fromUnit})</th><th class="px-4 py-2 text-left text-sm font-medium text-surface-700 dark:text-surface-300">{toUpper} ({conv.toUnit})</th></tr></thead>
+      <tbody class="divide-y divide-surface-200 dark:divide-surface-700">
+        {commonValues.slice(0, 20).map(v => (
+          <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">{v.from} {conv.fromUnit}</td><td class="px-4 py-2 text-sm">{v.to} {conv.toUnit}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="use-cases">Common Use Cases for {fromUpper} to {toUpper}</h2>
+  <p>{conv.description}</p>
+  <ul>
+    {conv.category === 'length' ? (
+      <>
+        <li><strong>DIY and Home Improvement</strong> &mdash; Converting measurements for furniture, flooring, and construction projects that use different unit systems.</li>
+        <li><strong>Education</strong> &mdash; Students learning unit conversion in math and science classes often need to convert between {fromLower} and {toLower}.</li>
+        <li><strong>International Trade</strong> &mdash; Products manufactured in metric countries need imperial measurements for US markets, and vice versa.</li>
+        <li><strong>Travel and Navigation</strong> &mdash; Understanding distances and dimensions when traveling between countries using different measurement systems.</li>
+      </>
+    ) : (
+      <>
+        <li><strong>Web Design</strong> &mdash; Converting screen measurements for responsive design across different devices and resolutions.</li>
+        <li><strong>Print Production</strong> &mdash; Translating digital designs to physical print dimensions with accurate scale.</li>
+        <li><strong>UI/UX Development</strong> &mdash; Ensuring consistent element sizing across different screen densities and PPI values.</li>
+        <li><strong>Photography</strong> &mdash; Converting image dimensions for print output at specific DPI settings.</li>
+      </>
+    )}
+  </ul>
+
+  <h2 id="how-to-convert">How to Convert {fromUpper} to {toUpper}</h2>
+  <ol>
+    <li><strong>Use RulerKit&rsquo;s converter</strong> &mdash; Enter your value above for instant conversion. Our tool handles the calculation automatically.</li>
+    <li><strong>Manual calculation</strong> &mdash; Apply the formula {conv.formula} to your value. Multiply or divide as shown.</li>
+    <li><strong>Use the reference table</strong> &mdash; Find your value in the quick conversion table above for common measurements.</li>
+    <li><strong>Verify with multiple methods</strong> &mdash; Cross-check your result using a different conversion method to ensure accuracy.</li>
+  </ol>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <h3>How accurate is this {fromLower} to {toLower} converter?</h3>
+  <p>Our converter provides results accurate to two decimal places for standard measurements. The conversion formula {conv.formula} follows the international standard for unit conversion established by NIST.</p>
+  <h3>Is the {fromLower} to {toLower} conversion free?</h3>
+  <p>Yes, RulerKit&rsquo;s unit converters are completely free with no registration, no ads, and no usage limits. Convert as many values as you need.</p>
+  <h3>Can I convert from {conv.toUnit} to {conv.fromUnit} as well?</h3>
+  <p>Yes. Use our <a href={`/${locale}/convert/${reverseConv?.slug ?? `${conv.toUnit}-to-${conv.fromUnit}`}`}>{toUpper} to {fromUpper} converter</a> for the reverse conversion, or use the <a href={`/${locale}/unit-converter`}>main unit converter</a> for bidirectional conversion.</p>
+  <h3>What other unit conversions does RulerKit support?</h3>
+  <p>RulerKit supports {allConversions.length} different unit conversion pairs across length and digital measurement categories. Browse the related conversions below.</p>
+
+  {relatedConv.length > 0 ? (
+    <>
+      <h2 id="related-conversions">Related Unit Conversions</h2>
+      <div class="not-prose grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {relatedConv.map(r => (
+          <a href={`/${locale}/convert/${r.slug}`} class="rounded-lg border border-surface-200 px-4 py-3 text-sm transition-colors hover:border-primary-300 hover:bg-surface-50 dark:border-surface-700 dark:hover:border-primary-700 dark:hover:bg-surface-800">{r.fromLabel} to {r.toLabel} &rarr;</a>
+        ))}
+      </div>
+    </>
+  ) : null}
+</ContentLayout>

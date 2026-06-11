@@ -1,0 +1,123 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import PrintableRulerPanel from '@components/tools/printable-ruler/PrintableRulerPanel.astro'
+import PrintableRulerCanvas from '@components/tools/printable-ruler/PrintableRulerCanvas.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('printable-ruler')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  webApplication(toolName, toolDesc, {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <PrintableRulerPanel />
+  </div>
+  <div slot="canvas">
+    <PrintableRulerCanvas />
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#when-you-need-physical-ruler">When You Need a Physical Ruler</a></li>
+      <li><a href="#print-actual-size">How to Print at Actual Size</a></li>
+      <li><a href="#inch-vs-cm">Inch vs. Centimeter Templates</a></li>
+      <li><a href="#paper-size-settings">Paper Size and Printer Settings</a></li>
+      <li><a href="#printing-tips">Printing Tips for Best Results</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="when-you-need-physical-ruler">When You Need a Physical Ruler</h2>
+  <p>Sometimes a screen ruler is not the right tool for the job. You might be cutting fabric, measuring a package for shipping, checking furniture dimensions at a store, or helping a child with homework that requires a real ruler. A printable ruler gives you a physical measuring tool you can hold, bend, and mark with a pencil. RulerKit's printable ruler templates are designed to print at actual size so the markings on paper match real-world measurements.</p>
+
+  <h2 id="print-actual-size">How to Print at Actual Size</h2>
+  <p>Printing a ruler at actual size requires attention to three settings. First, set your PDF viewer to print at 100% scale (also labeled "Actual Size" in most print dialogs). The default "Fit to Page" setting will scale your ruler down or up, making it inaccurate. Second, make sure your paper size matches the template — select A4 for the metric template and Letter for the inch template. Third, under page scaling options, choose "None" rather than "Shrink oversized pages."</p>
+  <p>After printing, verify accuracy by measuring the printed ruler against a known standard: a credit card (85.6 mm or 3.37 inches) or a dollar bill (6.14 inches). If the printed ruler matches the known object, your print settings are correct.</p>
+
+  <h2 id="inch-vs-cm">Inch vs. Centimeter Templates</h2>
+  <p>RulerKit provides separate templates for inch and centimeter rulers because the two systems use different subdivision logic. The inch ruler divides each inch into 1/16 increments, with longer marks at the half-inch and quarter-inch positions. The centimeter ruler divides each centimeter into 10 millimeters, making it naturally suited for decimal measurement.</p>
+  <p>Choose the template that matches your measurement needs. The inch ruler is ideal for US construction and hardware projects where measurements are in fractions. The centimeter template works for science, international projects, and any work that benefits from decimal precision. Both templates include a clear zero edge so you can start measuring from the very end of the paper.</p>
+
+  <h2 id="paper-size-settings">Paper Size and Printer Settings</h2>
+  <p>The printable ruler templates are optimized for two common paper sizes. The metric template is formatted for A4 paper (210 x 297 mm), which is the international standard used in most countries outside North America. The inch version is formatted for US Letter paper (8.5 x 11 inches). Using the wrong paper size with a template can cut off part of the ruler or leave excess blank space.</p>
+  <p>If your printer supports borderless printing, enable it to get ruler marks that extend to the very edge of the paper. Standard printers leave a margin, which means the first few millimeters of the ruler may not print. Borderless mode eliminates this gap.</p>
+
+  <h2 id="printing-tips">Printing Tips for Best Results</h2>
+  <p>Use good quality printer paper — 20 lb bond or heavier. Thin paper can tear when you use the ruler for cutting or marking. If you need a durable ruler that will last through multiple projects, print on cardstock (60 lb or heavier). For extra longevity, laminate the printed ruler. A laminating pouch protects against wear and makes it easy to wipe off pencil marks.</p>
+  <p>Store the printed ruler flat. Curling or folding the paper can distort the measuring edge. If you need a ruler for a specific project, print a fresh copy rather than reusing one that has been bent or damaged.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Why does my printed ruler not match a real ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">This usually happens because your printer scaled the PDF. Make sure you select "Actual Size" or 100% scale in the print dialog and disable "Fit to Page."</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What paper sizes are supported?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The inch template works with US Letter (8.5 x 11 inches). The centimeter template works with A4 (210 x 297 mm). Both templates include trim marks if you need to cut the paper to size.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is a printed ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Properly printed at 100% scale, the ruler is as accurate as a store-bought plastic ruler. Most consumer printers have a mechanical tolerance of 0.5% or better.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I laminate the printed ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. Laminating adds durability and makes the ruler water-resistant. Use a standard laminating pouch and trim close to the edge after laminating.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does the ruler include both inches and centimeters on one page?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Each template focuses on one unit system for maximum readability. You can print both templates and use them side by side for conversion.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What if the ruler prints too short or too long?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Check your printer's scaling setting. Some printers default to "Shrink to Fit." Change it to "Actual Size" or "None." Also verify you selected the correct paper size in the print dialog.</div>
+      </div>
+    </div>
+  </div>
+</div>

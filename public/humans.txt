@@ -1,0 +1,15 @@
+/* RulerKit — Free Online Measurement Tools */
+
+/* Site */
+URL: https://tooltastics.com
+Languages: en, es, de, fr, pt, it, ja, ko, ru, zh-CN
+
+/* Tech Stack */
+Framework: Astro 5
+Styling: Tailwind CSS v4
+Deployment: Cloudflare Pages
+Icons: Custom SVG
+
+/* Contact */
+Twitter: @rulerkit
+GitHub: github.com/rulerkit/rulerkit

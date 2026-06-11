@@ -1,0 +1,44 @@
+:root {
+  --ruler-tick-major: oklch(0.3 0.02 285);
+  --ruler-tick-minor: oklch(0.6 0.01 285);
+  --ruler-tick-label: oklch(0.2 0.02 285);
+  --ruler-bg: oklch(0.98 0.005 285);
+  --ruler-bg-stripe: oklch(0.95 0.01 285);
+  --ruler-marker: oklch(0.5 0.24 255);
+  --ruler-marker-active: oklch(0.42 0.22 255);
+  --ruler-guide: oklch(0.65 0.2 25);
+  --ruler-readout-bg: oklch(0.2 0.02 285 / 0.9);
+  --ruler-readout-text: oklch(0.98 0 0);
+  --calibration-guide: oklch(0.5 0.24 255);
+  --calibration-match: oklch(0.55 0.2 145);
+
+  @media (prefers-color-scheme: dark) {
+    --ruler-tick-major: oklch(0.8 0.01 285);
+    --ruler-tick-minor: oklch(0.55 0.01 285);
+    --ruler-tick-label: oklch(0.85 0.01 285);
+    --ruler-bg: oklch(0.18 0.015 285);
+    --ruler-bg-stripe: oklch(0.22 0.015 285);
+    --ruler-marker: oklch(0.6 0.2 255);
+    --ruler-marker-active: oklch(0.7 0.18 255);
+    --ruler-guide: oklch(0.7 0.18 25);
+    --ruler-readout-bg: oklch(0.9 0.01 285 / 0.9);
+    --ruler-readout-text: oklch(0.12 0 0);
+    --calibration-guide: oklch(0.6 0.2 255);
+    --calibration-match: oklch(0.6 0.18 145);
+  }
+}
+
+.dark {
+  --ruler-tick-major: oklch(0.8 0.01 285);
+  --ruler-tick-minor: oklch(0.55 0.01 285);
+  --ruler-tick-label: oklch(0.85 0.01 285);
+  --ruler-bg: oklch(0.18 0.015 285);
+  --ruler-bg-stripe: oklch(0.22 0.015 285);
+  --ruler-marker: oklch(0.6 0.2 255);
+  --ruler-marker-active: oklch(0.7 0.18 255);
+  --ruler-guide: oklch(0.7 0.18 25);
+  --ruler-readout-bg: oklch(0.9 0.01 285 / 0.9);
+  --ruler-readout-text: oklch(0.12 0 0);
+  --calibration-guide: oklch(0.6 0.2 255);
+  --calibration-match: oklch(0.6 0.18 145);
+}

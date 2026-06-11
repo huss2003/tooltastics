@@ -1,0 +1,113 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const metadata = createMetadata({
+  title: 'Contact RulerKit — Get in Touch',
+  description:
+    'Contact the RulerKit team. Have questions, suggestions, or feedback about our online measurement tools? We\'d love to hear from you.',
+  locale,
+  path: '/contact',
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Contact', url: `${SITE.url}/${locale}/contact` },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>Contact RulerKit — Get in Touch</h1>
+  </div>
+
+  <p class="lead text-lg">We would love to hear from you. Whether you have a question, found a bug, want to suggest a feature, or just want to say hello, here is how to reach us.</p>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#ways-to-reach-us">Ways to Reach Us</a></li>
+      <li><a href="#github-issues">GitHub Issues (Bugs &amp; Feature Requests)</a></li>
+      <li><a href="#social">Social Media</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+      <li><a href="#response-times">Response Times</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="ways-to-reach-us">Ways to Reach Us</h2>
+  <p>RulerKit is maintained by a small team. We use a few different channels for different types of communication. Choosing the right channel helps us respond faster and keeps the conversation organized for everyone.</p>
+
+  <h2 id="github-issues">GitHub Issues &mdash; Bugs and Feature Requests</h2>
+  <p>The best place to report bugs or request features is our <a href="https://github.com/rulerkit/rulerkit/issues" rel="external nofollow">GitHub Issues page</a>. Before creating a new issue, please search existing issues to see if someone has already reported the same thing. This helps us avoid duplicates and lets you see if a fix or feature is already in progress.</p>
+  <p>When reporting a bug, please include:</p>
+  <ul>
+    <li>Your browser name and version (e.g., Chrome 125, Firefox 128, Safari 17.5)</li>
+    <li>Your operating system (e.g., Windows 11, macOS 14.5, Android 14, iOS 17)</li>
+    <li>Your screen resolution and size (e.g., 1920x1080 on a 24-inch monitor)</li>
+    <li>Steps to reproduce the issue</li>
+    <li>A screenshot or screen recording if applicable</li>
+    <li>The expected behavior and what actually happened</li>
+  </ul>
+  <p>Feature requests are always welcome. Describe what you would like the tool to do and how you would use it. We cannot implement every suggestion, but we read every one and consider each carefully.</p>
+
+  <h2 id="social">Social Media</h2>
+  <p>You can find us on Twitter at <a href="https://twitter.com/rulerkit" rel="external nofollow">@rulerkit</a>. We use Twitter for announcements, tips, and community engagement. It is not the best channel for bug reports (those tend to get lost in the timeline), but it is great for quick questions and general conversation.</p>
+  <p>For security-related issues, please do not use Twitter or public GitHub issues. Instead, email us directly at security@rulerkit.com. We take security reports seriously and will respond promptly.</p>
+
+  <h2 id="faq">Frequently Asked Questions About Contacting Us</h2>
+  <div class="faq space-y-4 not-prose">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">How quickly do you respond to GitHub issues?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">We aim to acknowledge new issues within 48 hours. Bug fixes and feature implementations depend on complexity and our current workload. Critical bugs are prioritized and usually addressed within a week.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Do you offer email support?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Not at this time. We prefer GitHub Issues because it keeps conversations public and searchable. If you find a bug, someone else likely has the same problem, and a public issue helps everyone. For security concerns, email security@rulerkit.com.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Can I contribute to RulerKit?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Absolutely. RulerKit is open source. You can find the repository on GitHub. We welcome contributions of all kinds: bug fixes, new features, translations, documentation improvements, and accessibility enhancements. Check the contributing guide in the repository to get started.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Do you have a community forum?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Not yet. For now, GitHub Issues and Twitter are the best places to reach us and the broader RulerKit community. We may start a discussion forum in the future if the community grows enough to warrant one.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">How do I report a translation error?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Open a GitHub issue with the language, the incorrect translation, and what it should say. If you are comfortable contributing a fix, you can submit a pull request with the corrected translation. We review all translation changes before merging.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="response-times">Response Times</h2>
+  <p>RulerKit is maintained by a small team, and we respond as quickly as we can. Here are typical response times for each channel:</p>
+  <ul>
+    <li><strong>GitHub Issues:</strong> Acknowledgment within 48 hours. Resolution time depends on the issue severity and complexity.</li>
+    <li><strong>Twitter:</strong> We check Twitter daily. Replies may take a few hours to a day.</li>
+    <li><strong>Security reports:</strong> Acknowledged within 24 hours. We take security issues extremely seriously.</li>
+  </ul>
+  <p>If you have not heard back within these timeframes, feel free to follow up. We do not take silence as disinterest. Sometimes issues slip through the cracks, and a polite nudge helps us catch up.</p>
+</ContentLayout>

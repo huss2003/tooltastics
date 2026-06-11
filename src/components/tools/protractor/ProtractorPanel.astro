@@ -1,0 +1,37 @@
+---
+export interface Props {
+  class?: string
+}
+---
+
+<div class="card space-y-5 {Astro.props.class}" data-protractor-panel>
+  <div class="flex items-center justify-between">
+    <h2 class="text-md font-semibold text-surface-900 dark:text-surface-50">Protractor</h2>
+  </div>
+
+  <div class="rounded-lg bg-surface-100 dark:bg-surface-800 p-4 text-center" data-angle-readout aria-live="polite" aria-atomic="true">
+    <span class="block text-3xl font-bold text-primary-600 dark:text-primary-400" data-angle-value>0</span>
+    <span class="text-xs text-surface-500">degrees</span>
+  </div>
+
+  <button class="btn btn-ghost w-full text-xs text-surface-500" data-reset-btn>Reset</button>
+</div>
+
+<script>
+  import { initProtractor } from './protractor-init'
+
+  const tool = initProtractor()
+  const panel = document.querySelector<HTMLElement>('[data-protractor-panel]')
+  if (tool && panel) {
+    const angleValue = panel.querySelector<HTMLElement>('[data-angle-value]')
+    const resetBtn = panel.querySelector<HTMLButtonElement>('[data-reset-btn]')
+
+    tool.subscribe((angle) => {
+      if (angleValue) angleValue.textContent = String(Math.round(angle))
+    })
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => tool.reset())
+    }
+  }
+</script>

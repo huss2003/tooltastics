@@ -1,0 +1,72 @@
+---
+title: 'Why Screen PPI Matters for Accurate On-Screen Measurements'
+description: 'Discover how pixels per inch (PPI) affects the accuracy of online rulers and digital measurement tools, and why getting it right makes all the difference.'
+published: 2025-04-05
+author: 'RulerKit Team'
+tags: ['PPI', 'calibration', 'accuracy']
+language: 'en'
+locale: 'en'
+---
+
+## What Is PPI?
+
+PPI stands for **pixels per inch** — it's the measure of pixel density on a digital display. Unlike DPI (dots per inch), which refers to print resolution, PPI tells you how many individual pixels are packed into every inch of your screen.
+
+A 24" monitor at 1920 × 1080 has roughly 92 PPI. A 6.1" iPhone 15 display at 2556 × 1179 has 460 PPI. The same inch of physical space contains five times more pixels on the phone than on the monitor.
+
+## Why PPI Breaks Naive Rulers
+
+Most online rulers make a dangerous assumption: that your screen has **96 PPI**. This was a reasonable default for older Windows monitors, but modern displays range from about 92 PPI (standard monitors) to over 500 PPI (flagship smartphones).
+
+Here's the problem in concrete terms:
+
+| Device | Actual PPI | Ruler at 96 PPI (6" object) | Measured Result |
+|---|---|---|---|
+| 24" 1080p monitor | 92 | Uses 96 PPI | 5.75" (under) |
+| 27" 4K monitor | 163 | Uses 96 PPI | 10.2" (over) |
+| iPhone 15 Pro | 460 | Uses 96 PPI | 28.75" (wildly over) |
+
+A ruler tool that ignores PPI can be off by **hundreds of percent** on modern high-resolution displays.
+
+## How RulerKit Handles PPI
+
+RulerKit doesn't guess your PPI. Instead, we provide:
+
+1. **Automatic detection** — we read your screen's logical resolution and infer PPI from common display profiles
+2. **Manual calibration** — enter your monitor's exact PPI for precision work
+3. **Reference object calibration** — use a credit card or known-length object to automatically calculate PPI
+4. **Per-session persistence** — your calibrated PPI is stored so you don't need to recalibrate every visit
+
+## The Zoom Factor
+
+Browser zoom compounds the PPI problem. At 150% zoom, a 96 PPI setting effectively becomes 144 PPI in terms of rendered size. That's why RulerKit displays a zoom warning whenever your browser is not at 100% — it's one of the most common sources of measurement error.
+
+## Real-World Impact
+
+### For Designers
+
+A UI designer measuring a 400px button needs to know how large that button will appear on different screens. At 96 PPI, 400px = 4.17". At 163 PPI (a common 4K monitor), 400px = 2.45". Without PPI awareness, a button meant to be comfortably tappable could end up tiny.
+
+### For DIY and Home Use
+
+If you're using RulerKit to measure a gap for a replacement part, a miscalibrated PPI could mean ordering the wrong size. A part you measure as 5" on a misconfigured screen might really be 4.5" — and it won't fit.
+
+### For Students
+
+Online homework often requires measurements. A student using a non-calibrated online ruler might submit incorrect answers through no fault of their own — the tool itself was lying to them.
+
+## Checking Your Screen's PPI
+
+You can look up your monitor's specifications or use RulerKit's auto-detection feature. For the most accurate results, physically measure your screen's viewable diagonal and compute PPI with the formula:
+
+```
+PPI = √(width_px² + height_px²) / diagonal_inches
+```
+
+Alternatively, grab a credit card and use our reference-based calibration — it takes 10 seconds and requires no math.
+
+## The Future of On-Screen Measurement
+
+As displays continue to improve — 8K monitors, foldable screens, and beyond — PPI will only become more variable. The era of assuming a standard display is over. Accurate digital measurement tools must be PPI-aware, and so must their users.
+
+RulerKit is built for this reality. Whether you're on a 2025 flagship phone or a decade-old office monitor, we make sure the ruler you see is the ruler you can trust.

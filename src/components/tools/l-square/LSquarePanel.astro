@@ -1,0 +1,95 @@
+---
+import { Unit } from '@config/constants'
+
+export interface Props {
+  class?: string
+}
+
+const units = [
+  { value: Unit.Centimeters, label: 'cm' },
+  { value: Unit.Inches, label: 'in' },
+  { value: Unit.Pixels, label: 'px' },
+]
+
+const orientations = [
+  { value: 'normal', label: 'Normal' },
+  { value: 'flip-h', label: 'Flip H' },
+  { value: 'flip-v', label: 'Flip V' },
+]
+---
+
+<div class="card space-y-5 {Astro.props.class}" data-l-square-panel>
+  <h2 class="text-md font-semibold text-surface-900 dark:text-surface-50">L-Square</h2>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Units</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Measurement unit">
+      {units.map((u) => (
+        <button
+          class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+          role="radio"
+          aria-checked={u.value === Unit.Centimeters}
+          data-unit={u.value}
+        >
+          {u.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Orientation</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Ruler orientation">
+      {orientations.map((o) => (
+        <button
+          class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+          role="radio"
+          aria-checked={o.value === 'normal'}
+          data-orientation={o.value}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <button class="btn btn-ghost w-full text-xs text-surface-500" data-clear-btn>Clear</button>
+</div>
+
+<script>
+  import { initLSquare } from './l-square-init'
+
+  const tool = initLSquare()
+  const panel = document.querySelector<HTMLElement>('[data-l-square-panel]')
+  if (tool && panel) {
+    const unitBtns = panel.querySelectorAll<HTMLElement>('[data-unit]')
+    const orientBtns = panel.querySelectorAll<HTMLElement>('[data-orientation]')
+    const clearBtn = panel.querySelector<HTMLButtonElement>('[data-clear-btn]')
+
+    for (const btn of unitBtns) {
+      btn.addEventListener('click', () => {
+        const unit = btn.dataset.unit
+        if (!unit) return
+        tool.setUnit(unit)
+        for (const b of unitBtns) {
+          b.ariaChecked = String(b.dataset.unit === unit)
+        }
+      })
+    }
+
+    for (const btn of orientBtns) {
+      btn.addEventListener('click', () => {
+        const orientation = btn.dataset.orientation
+        if (!orientation) return
+        tool.setOrientation(orientation as 'normal' | 'flip-h' | 'flip-v')
+        for (const b of orientBtns) {
+          b.ariaChecked = String(b.dataset.orientation === orientation)
+        }
+      })
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => tool.clear())
+    }
+  }
+</script>

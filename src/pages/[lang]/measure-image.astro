@@ -1,0 +1,124 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import MeasureImagePanel from '@components/tools/measure-image/MeasureImagePanel.astro'
+import MeasureImageCanvas from '@components/tools/measure-image/MeasureImageCanvas.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('measure-image')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  webApplication(toolName, toolDesc, {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <MeasureImagePanel />
+  </div>
+  <div slot="canvas">
+    <MeasureImageCanvas />
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#how-it-works">How the Image Measurement Tool Works</a></li>
+      <li><a href="#calibrating-from-photo">Calibrating Measurements from a Photo</a></li>
+      <li><a href="#photography-uses">Photography Measurement Uses</a></li>
+      <li><a href="#diy-projects">DIY and Home Improvement Projects</a></li>
+      <li><a href="#estimating-dimensions">Estimating Object Dimensions from Photos</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="how-it-works">How the Image Measurement Tool Works</h2>
+  <p>The Measure Image tool lets you upload a photograph and take real measurements from it. Upload a photo that contains an object of known size — like a credit card, a ruler, or a coin — alongside the object you want to measure. Draw a calibration line across the known object and enter its real-world length. The tool calculates the scale of the image. Then draw measurement lines across the object you care about, and the tool converts the pixel distance to real-world units.</p>
+  <p>This technique is called photogrammetry, and it is the same principle surveyors and archaeologists use to measure from aerial photographs. RulerKit makes it accessible to anyone with a camera and a browser. You can measure the height of a piece of furniture, the width of a window, or the diameter of a pipe from a single photo.</p>
+
+  <h2 id="calibrating-from-photo">Calibrating Measurements from a Photo</h2>
+  <p>Accurate image measurement starts with a good calibration reference. The reference object must be in the same plane as the object you want to measure. If you are measuring something on a table, place the reference object on the same table at the same distance from the camera. The reference should be clearly visible and placed close to the object of interest to minimize perspective error.</p>
+  <h3>Good reference objects</h3>
+  <p>A standard credit card is 85.60 x 53.98 mm. A US quarter is 24.26 mm in diameter. A UK 1-pound coin is 23.03 mm. An A4 sheet is 210 x 297 mm. A US Letter sheet is 215.9 x 279.4 mm. Any of these make reliable calibration references because their dimensions are standardized.</p>
+  <h3>Camera angle matters</h3>
+  <p>Take the photo from directly above the object (overhead angle) for the most accurate results. Angled photos introduce perspective distortion that makes measurements less reliable. If you must shoot at an angle, keep the camera as level and centered as possible.</p>
+
+  <h2 id="photography-uses">Photography Measurement Uses</h2>
+  <p>Photographers use the Measure Image tool to determine the actual size of subjects in their photos. Macro photographers measure tiny subjects like insects, jewelry, and circuit board components. Real estate photographers note window and door dimensions from listing photos. Product photographers verify that items fill the intended portion of the frame. In each case, the workflow is the same: include a reference object, upload the photo, calibrate, and measure.</p>
+
+  <h2 id="diy-projects">DIY and Home Improvement Projects</h2>
+  <p>Home improvement often requires measuring spaces that are awkward to reach. Take a photo of the space with a reference object placed nearby, then measure everything later at your desk. This is particularly useful for measuring baseboards, crown molding, window frames, and cabinet openings. You can also verify that a piece of furniture or an appliance will fit in a specific spot by measuring the photo against known reference dimensions.</p>
+
+  <h2 id="estimating-dimensions">Estimating Object Dimensions from Photos</h2>
+  <p>The Measure Image tool works best with clear, well-lit photos taken at close to 90 degrees to the subject. Even with an ideal photo, measurements are estimates rather than guarantees. Perspective, lens distortion, and the precision of your calibration line placement all affect the final number. For most DIY and hobby purposes, the accuracy is within 2-5% of the true dimension. For applications that require certified accuracy — like construction contracting or medical device sizing — use a physical measuring tool.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What image formats are supported?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The tool accepts JPEG, PNG, WebP, and GIF files. These are the most common formats from phones, cameras, and screenshots.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Is there a maximum file size?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes, the maximum upload size is 20 MB. For larger files, resize the image before uploading or use a compression tool to bring it under the limit.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is the calibration?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Accuracy depends on the photo quality and calibration reference. With a good overhead photo and a known reference object, expect accuracy within 2-5% of the true dimension.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I export or save my measurements?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. You can export a screenshot of the annotated image with measurements overlaid, or copy the measurement values as text for use in other applications.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I measure curved objects in a photo?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The tool measures straight-line distances between two points. For curved objects, measure multiple straight segments along the curve and add them together for an estimate.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does the tool work with scanned images?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. Scanned images work well because they have minimal perspective distortion. Use a known object on the scanner bed as your calibration reference.</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+---
+import { Unit } from '@config/constants'
+
+export interface Props {
+  class?: string
+}
+
+const units = [
+  { value: Unit.Pixels, label: 'px', icon: 'pixel' },
+  { value: Unit.Centimeters, label: 'cm', icon: 'metric' },
+  { value: Unit.Inches, label: 'in', icon: 'imperial' },
+]
+---
+
+<div class="card space-y-5 {Astro.props.class}" data-pixel-ruler-panel>
+  <div class="flex items-center justify-between">
+    <h2 class="text-md font-semibold text-surface-900 dark:text-surface-50">Pixel Ruler</h2>
+    <span class="text-xs text-surface-500" data-ppi-display>PPI: 96</span>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Units</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Measurement unit">
+      {units.map((u) => (
+        <button
+          class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+          role="radio"
+          aria-checked={u.value === Unit.Pixels}
+          data-unit={u.value}
+        >
+          {u.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Orientation</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Ruler orientation">
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="true"
+        data-orientation="horizontal"
+      >
+        <span class="inline-block w-4" aria-hidden="true">↔</span> Horizontal
+      </button>
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="false"
+        data-orientation="vertical"
+      >
+        <span class="inline-block w-4" aria-hidden="true">↕</span> Vertical
+      </button>
+    </div>
+  </div>
+
+  <button class="btn btn-ghost w-full text-xs text-surface-500" data-clear-btn>Clear Measurements</button>
+</div>
+
+<script>
+  import { initRulerTool } from '../ruler/ruler-init'
+  import { Unit } from '@config/constants'
+
+  const tool = initRulerTool()
+  const panel = document.querySelector<HTMLElement>('[data-pixel-ruler-panel]')
+  if (tool && panel) {
+    const ppiDisplay = panel.querySelector<HTMLElement>('[data-ppi-display]')
+    const unitBtns = panel.querySelectorAll<HTMLElement>('[data-unit]')
+    const orientBtns = panel.querySelectorAll<HTMLElement>('[data-orientation]')
+    const clearBtn = panel.querySelector<HTMLButtonElement>('[data-clear-btn]')
+
+    for (const btn of unitBtns) {
+      btn.addEventListener('click', () => {
+        const unit = btn.dataset.unit as Unit | undefined
+        if (!unit) return
+        tool.setUnit(unit)
+        for (const b of unitBtns) {
+          b.ariaChecked = String(b.dataset.unit === unit)
+        }
+      })
+    }
+
+    for (const btn of orientBtns) {
+      btn.addEventListener('click', () => {
+        const orientation = btn.dataset.orientation as 'horizontal' | 'vertical' | undefined
+        if (!orientation) return
+        tool.setOrientation(orientation)
+        for (const b of orientBtns) {
+          b.ariaChecked = String(b.dataset.orientation === orientation)
+        }
+      })
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => tool.clearMarkers())
+    }
+
+    tool.subscribe((state) => {
+      if (ppiDisplay) ppiDisplay.textContent = `PPI: ${state.ppi}`
+    })
+  }
+</script>

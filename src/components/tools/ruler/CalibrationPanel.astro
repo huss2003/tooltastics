@@ -1,0 +1,131 @@
+---
+import { Unit, Orientation } from '@config/constants'
+
+export interface Props {
+  class?: string
+}
+
+const units = [
+  { value: Unit.Centimeters, label: 'cm', icon: 'metric' },
+  { value: Unit.Millimeters, label: 'mm', icon: 'metric' },
+  { value: Unit.Inches, label: 'in', icon: 'imperial' },
+  { value: Unit.Pixels, label: 'px', icon: 'pixel' },
+]
+---
+
+<div class="card space-y-5 {Astro.props.class}" data-calibration-panel>
+  <div class="flex items-center justify-between">
+    <h2 class="text-md font-semibold text-surface-900 dark:text-surface-50">Calibration</h2>
+    <span class="text-xs text-surface-500" data-ppi-display>PPI: 96</span>
+  </div>
+
+  <div class="flex gap-1 rounded-lg bg-surface-100 p-1 dark:bg-surface-800" role="tablist" aria-label="Calibration method">
+    <button class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-selected:bg-white aria-selected:text-primary-600 aria-selected:shadow-sm dark:aria-selected:bg-surface-700 dark:aria-selected:text-primary-400" role="tab" aria-selected="true" data-tab="auto" data-cal-method="auto">Auto</button>
+    <button class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-selected:bg-white aria-selected:text-primary-600 aria-selected:shadow-sm dark:aria-selected:bg-surface-700 dark:aria-selected:text-primary-400" role="tab" aria-selected="false" data-tab="diagonal" data-cal-method="diagonal">Diagonal</button>
+    <button class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-selected:bg-white aria-selected:text-primary-600 aria-selected:shadow-sm dark:aria-selected:bg-surface-700 dark:aria-selected:text-primary-400" role="tab" aria-selected="false" data-tab="card" data-cal-method="card">Card</button>
+  </div>
+
+  <div data-panel="auto">
+    <p class="mb-3 text-xs text-surface-500">Auto-detect your device from our database.</p>
+    <button class="btn btn-secondary w-full" data-auto-detect>Detect Device</button>
+    <p class="mt-2 text-xs text-surface-500" data-auto-status></p>
+  </div>
+
+  <div data-panel="diagonal" hidden>
+    <label class="mb-1 block text-xs font-medium text-surface-600 dark:text-surface-400" htmlFor="diagonal-input">Screen diagonal (inches)</label>
+    <div class="flex gap-2">
+      <input id="diagonal-input" type="number" step="0.1" min="4" max="40" placeholder="e.g. 15.6" class="input flex-1" data-diagonal-input />
+      <button class="btn btn-primary" data-diagonal-apply>Apply</button>
+    </div>
+  </div>
+
+  <div data-panel="card" hidden>
+    <p class="mb-3 text-xs text-surface-500">Place a credit card on the blue rectangle. Adjust until it matches.</p>
+    <div class="relative mb-3 h-12 overflow-hidden rounded-lg bg-primary-100 dark:bg-primary-900" data-card-guide>
+      <div class="absolute inset-y-0 left-0 bg-primary-400 dark:bg-primary-500 transition-[width]" data-card-fill style="width: 50%"></div>
+      <span class="absolute inset-0 flex items-center justify-center text-xs font-medium text-primary-700 dark:text-primary-200">85.60 × 53.98 mm</span>
+    </div>
+    <input type="range" min="30" max="100" value="50" class="slider w-full" data-card-slider aria-label="Adjust to match credit card width" />
+    <button class="btn btn-primary mt-2 w-full" data-card-save>Set Calibration</button>
+  </div>
+
+  <div class="hidden items-center gap-2 rounded-lg bg-success/10 px-3 py-2 text-xs text-success" data-cal-success role="status">
+    <span aria-hidden="true">✓</span>
+    <span data-cal-success-msg>Calibration saved</span>
+  </div>
+
+  <hr class="border-surface-200 dark:border-surface-700" />
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Units</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Measurement unit">
+      {units.map((u) => (
+        <button
+          class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+          role="radio"
+          aria-checked={u.value === Unit.Centimeters}
+          data-unit={u.value}
+        >
+          {u.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Orientation</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Ruler orientation">
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="true"
+        data-orientation={Orientation.Horizontal}
+      >
+        <span class="inline-block w-4" aria-hidden="true">↔</span> Horizontal
+      </button>
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="false"
+        data-orientation={Orientation.Vertical}
+      >
+        <span class="inline-block w-4" aria-hidden="true">↕</span> Vertical
+      </button>
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Mode</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Tool mode">
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="true"
+        data-mode="ruler"
+      >
+        Ruler
+      </button>
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="false"
+        data-mode="pixel-ruler"
+      >
+        Pixel Ruler
+      </button>
+    </div>
+  </div>
+
+  <button class="btn btn-ghost w-full text-xs text-surface-500" data-clear-btn>Clear Measurements</button>
+</div>
+
+<script>
+  import { initRulerTool } from './ruler-init'
+  import { initCalibrationPanel } from './calibration-panel-client'
+
+  const tool = initRulerTool()
+  const panel = document.querySelector<HTMLElement>('[data-calibration-panel]')
+  if (tool && panel) {
+    initCalibrationPanel(panel, tool)
+  }
+</script>

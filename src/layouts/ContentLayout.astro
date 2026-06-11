@@ -1,0 +1,23 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import type { Metadata } from '@lib/seo/metadata'
+
+export interface Props {
+  metadata: Metadata
+}
+
+const { metadata } = Astro.props
+---
+
+<BaseLayout metadata={metadata}>
+  <div slot="head">
+    <slot name="head" />
+  </div>
+
+  <article class="prose prose-surface mx-auto max-w-3xl dark:prose-invert">
+    <slot name="header" />
+    <slot />
+  </article>
+
+  <slot name="related" />
+</BaseLayout>

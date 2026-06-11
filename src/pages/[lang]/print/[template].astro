@@ -1,0 +1,123 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+import { PRINTABLE_TEMPLATES } from '@lib/data/programmatic/printableTemplates'
+
+export interface Params { lang: string; template: string }
+
+export function getStaticPaths() {
+  const paths: { params: Params; props: { locale: Locale } }[] = []
+  for (const locale of SITE.locales) {
+    for (const tpl of PRINTABLE_TEMPLATES) {
+      paths.push({ params: { lang: locale.code, template: tpl.slug }, props: { locale: locale.code, tpl } })
+    }
+  }
+  return paths
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const { tpl } = Astro.props as { tpl: typeof PRINTABLE_TEMPLATES[0] }
+
+if (!tpl) return Astro.redirect(`/${locale}/404`, 404)
+
+const canonical = `${SITE.url}/${locale}/print/${tpl.slug}`
+const title = `${tpl.name} — Free PDF Download at Actual Size | RulerKit`
+const description = `Download a free ${tpl.name.toLowerCase()} PDF. ${tpl.scale}. ${tpl.description} Print on ${tpl.paperSize} paper for accurate measurements.`
+
+const sameType = PRINTABLE_TEMPLATES.filter(t => t.type === tpl.type && t.slug !== tpl.slug)
+
+const metadata = createMetadata({
+  title, description, locale, path: `/print/${tpl.slug}`, ogType: 'article',
+  schema: [
+    article(title, description, { locale, canonical, image: `${SITE.url}/og/default.png` }),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Printable Templates', url: `${SITE.url}/${locale}/print` },
+      { name: tpl.name, url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: tpl.name, url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1 class="text-3xl font-bold tracking-tight text-surface-900 dark:text-white">{tpl.name}</h1>
+    <p class="mt-2 text-sm text-surface-500">Free PDF download &middot; {tpl.scale} &middot; {tpl.paperSize}</p>
+  </div>
+
+  <div class="not-prose mb-8 rounded-xl border border-surface-200 bg-surface-50 p-6 dark:border-surface-700 dark:bg-surface-800/50">
+    <p class="mb-4 text-sm text-surface-600 dark:text-surface-400">{tpl.description}</p>
+    <div class="flex flex-wrap gap-3">
+      <a href={`/${locale}/${tpl.type === 'ruler' ? 'printable-ruler' : tpl.type === 'protractor' ? 'protractor' : tpl.type === 'ring-sizer' ? 'ring-sizer' : tpl.type === 'l-square' ? 'l-square' : 'printable-ruler'}`} class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700">Use Online Tool Instead</a>
+    </div>
+  </div>
+
+  <h2 id="template-details">Template Details</h2>
+  <div class="not-prose overflow-hidden rounded-xl border border-surface-200 dark:border-surface-700">
+    <table class="min-w-full divide-y divide-surface-200 dark:divide-surface-700">
+      <tbody class="divide-y divide-surface-200 dark:divide-surface-700">
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Template Name</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{tpl.name}</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Type</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{tpl.type.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase())}</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Paper Size</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{tpl.paperSize}</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Scale</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{tpl.scale}</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Features</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{tpl.items.join(', ')}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  {tpl.items.length > 0 ? (
+    <>
+      <h2 id="features">What&rsquo;s Included</h2>
+      <ul>
+        {tpl.items.map(item => <li>{item}</li>)}
+      </ul>
+    </>
+  ) : null}
+
+  <h2 id="printing-guide">How to Print at Actual Size</h2>
+  <p>Follow these steps for accurate {tpl.scale} printing of your {tpl.name.toLowerCase()}:</p>
+  <ol>
+    <li><strong>Download the PDF</strong> — Save the file to your device. Do not open it in a browser for printing; use a PDF reader like Adobe Acrobat or your operating system&rsquo;s native PDF viewer.</li>
+    <li><strong>Check page scaling settings</strong> — In your print dialog, set <strong>Page Scaling</strong> to <strong>None</strong> or <strong>Actual Size</strong>. This is the most critical step. If scaling is set to &ldquo;Fit to Page,&rdquo; the ruler will print at the wrong size.</li>
+    <li><strong>Use the correct paper size</strong> — This template is designed for <strong>{tpl.paperSize}</strong> paper. Using a different paper size will affect the scale unless you adjust your print settings accordingly.</li>
+    <li><strong>Print a test page</strong> — Print the first page and verify the scale using a physical ruler or a credit card (85.6 mm or 3.37 inches wide). If the printed measurement matches the physical object, the scale is correct.</li>
+    <li><strong>Print the final version</strong> — Once verified, print the full document. Use high-quality print settings for the sharpest markings.</li>
+  </ol>
+
+  <h2 id="uses">Common Uses</h2>
+  <ul>
+    <li><strong>Classroom and Education</strong> &mdash; Teachers can print rulers and protractors for students who don&rsquo;t have physical measuring tools.</li>
+    <li><strong>DIY and Home Improvement</strong> &mdash; Keep a printed ruler in your toolbox for quick measurements when your tape measure isn&rsquo;t handy.</li>
+    <li><strong>Sewing and Crafting</strong> &mdash; Printable measuring tapes are perfect for body measurements and fabric cutting.</li>
+    <li><strong>Office and Desk</strong> &mdash; A printed ruler stuck to your desk or notebook provides a convenient reference for quick measurements.</li>
+    <li><strong>Travel</strong> &mdash; Print a ruler or ring sizer before traveling so you always have a measuring tool available.</li>
+  </ul>
+
+  {sameType.length > 0 ? (
+    <>
+      <h2 id="more-templates">More {tpl.type.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase())} Templates</h2>
+      <ul>
+        {sameType.map(t => (
+          <li><a href={`/${locale}/print/${t.slug}`}>{t.name}</a></li>
+        ))}
+      </ul>
+    </>
+  ) : null}
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <h3>Why does my printed ruler not match real size?</h3>
+  <p>This is almost always caused by page scaling in your print settings. Ensure &ldquo;Page Scaling&rdquo; is set to &ldquo;None&rdquo; or &ldquo;Actual Size&rdquo; (not &ldquo;Fit to Page&rdquo;). Some browsers add scaling by default.</p>
+  <h3>What paper size should I use?</h3>
+  <p>This template is designed for <strong>{tpl.paperSize}</strong> paper. Using a different paper size will require adjusting your print settings, which may affect accuracy.</p>
+  <h3>Can I use the online version instead of printing?</h3>
+  <p>Yes! RulerKit offers <a href={`/${locale}/${tpl.type === 'ruler' ? 'printable-ruler' : tpl.type === 'protractor' ? 'protractor' : tpl.type === 'ring-sizer' ? 'ring-sizer' : tpl.type === 'l-square' ? 'l-square' : 'printable-ruler'}`}>online tools</a> that work directly in your browser without printing. These tools use your screen&rsquo;s PPI for accurate measurements.</p>
+  <h3>Are the printable templates free?</h3>
+  <p>Yes, all RulerKit printable templates are completely free to download and use. No registration or email required.</p>
+</ContentLayout>

@@ -1,0 +1,180 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/screen-ruler`
+
+const metadata = createMetadata({
+  title: 'Screen Ruler — Measure Anything on Your Display',
+  description:
+    'Use our free online screen ruler to measure objects directly on your display. Accurate calibration in cm, inches, and pixels. No download required.',
+  locale,
+  path: '/screen-ruler',
+  schema: [
+    webApplication(
+      'Screen Ruler',
+      'Use our free online screen ruler to measure objects directly on your display. Accurate calibration in cm, inches, and pixels. No download required.',
+      {
+        locale,
+        canonical,
+        title: 'Screen Ruler — Measure Anything on Your Display',
+        description:
+          'Use our free online screen ruler to measure objects directly on your display. Accurate calibration in cm, inches, and pixels. No download required.',
+      },
+    ),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Screen Ruler', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Screen Ruler', url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1 data-page="screen-ruler">Screen Ruler — Measure Anything on Your Display</h1>
+    <p class="text-sm text-surface-500">Published: January 15, 2025 &middot; Updated: June 1, 2025</p>
+  </div>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#what-is-a-screen-ruler">What Is a Screen Ruler?</a></li>
+      <li><a href="#vs-physical-ruler">Screen Ruler vs. Physical Ruler</a></li>
+      <li><a href="#ppi-explained">Understanding PPI &mdash; Why Calibration Matters</a></li>
+      <li><a href="#how-to-calibrate">How to Calibrate for Accuracy</a></li>
+      <li><a href="#common-uses">Common Uses for a Screen Ruler</a></li>
+      <li><a href="#limitations">Limitations of Screen Rulers</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="what-is-a-screen-ruler">What Is a Screen Ruler?</h2>
+  <p>A screen ruler is a digital tool that turns your monitor, laptop, or phone display into a measuring device. Instead of reaching for a plastic or metal ruler, you open a browser tab and measure objects directly against your screen. The ruler appears as an on-screen scale calibrated to your display's physical dimensions, allowing you to measure anything from a shipping label to a photo print in real-world units like centimeters, inches, or millimeters.</p>
+  <p>Unlike a physical ruler that has fixed markings printed on it, a screen ruler uses your display's pixel grid to render measurement lines at precise intervals. When calibrated correctly, each tick mark on the screen corresponds to a known real-world distance. RulerKit's screen ruler supports multiple units simultaneously, so you can read centimeters on the top scale and inches on the bottom scale without toggling between modes.</p>
+  <p>The key advantage of a digital screen ruler is availability. You always have your screen with you. Whether you are at your desk, in a workshop, or helping a child with homework, the ruler is a few clicks away. There is no tool to lose, no worn-out markings to squint at, and no need to own multiple rulers for different units.</p>
+
+  <h2 id="vs-physical-ruler">Screen Ruler vs. Physical Ruler</h2>
+  <p>Physical rulers have been around for thousands of years for good reason. They are simple, durable, and require no power source. But screen rulers offer advantages that physical rulers cannot match.</p>
+  <h3>Instant unit switching</h3>
+  <p>A physical ruler is printed with one set of units. If you need centimeters and inches, you need a ruler with both scales, or two separate rulers. A screen ruler switches between metric and imperial units instantly. You can measure an object in centimeters, switch to inches to get the imperial reading, and check millimeters for finer precision, all without putting down your work.</p>
+  <h3>No physical object needed</h3>
+  <p>Measuring a large object with a 12-inch ruler requires multiple repositioning steps. Each move introduces error. A screen ruler spans the full width of your display, and you can measure objects up to the size of your screen in one pass. For larger objects, you can measure in segments and add the results.</p>
+  <h3>Always at hand</h3>
+  <p>Physical rulers get lost, borrowed, and left behind. A screen ruler lives in your browser. As long as you have an internet-connected screen, you have a ruler. No rummaging through drawers, no borrowing from coworkers, no buying replacements at the office supply store.</p>
+  <h3>Built-in conversion</h3>
+  <p>Need to know how many millimeters are in 3.5 inches? A screen ruler shows you both values simultaneously instead of making you do mental math or open a separate converter.</p>
+
+  <h2 id="ppi-explained">Understanding PPI &mdash; Why Calibration Matters</h2>
+  <p>The accuracy of any screen ruler depends on one number: your display's PPI, or pixels per inch. This is the density of pixels on your screen, and it varies widely between devices.</p>
+  <h3>What is PPI?</h3>
+  <p>PPI tells you how many pixels fit into one physical inch of your display. A 24-inch monitor at 1920x1080 resolution has roughly 92 PPI. A 27-inch 4K monitor at 3840x2160 has about 163 PPI. A modern smartphone can exceed 400 PPI. The higher the PPI, the smaller each individual pixel is, and the more detailed the image appears.</p>
+  <p>If a screen ruler assumes your display has 96 PPI (the old Windows standard) but your monitor actually has 110 PPI, every inch the ruler draws will be physically too short. Over a 10-inch measurement, that 15% error adds up to 1.5 inches &mdash; enough to make a package appear to fit when it does not.</p>
+  <h3>How PPI affects accuracy</h3>
+  <p>Without calibration, a screen ruler can be off by 5% to 20% depending on your display. Here is how different screens stack up:</p>
+  <ul>
+    <li><strong>24-inch 1080p monitor:</strong> ~92 PPI &mdash; close to the 96 PPI standard, error around 4%</li>
+    <li><strong>27-inch 4K monitor:</strong> ~163 PPI &mdash; very different from 96 PPI, error around 70% if uncorrected</li>
+    <li><strong>15.6-inch laptop (1920x1080):</strong> ~141 PPI &mdash; significant error without calibration</li>
+    <li><strong>6.1-inch phone (2532x1170):</strong> ~460 PPI &mdash; massive error if defaulted to 96 PPI</li>
+  </ul>
+  <p>This is why every serious screen ruler tool includes a calibration step. RulerKit's calibration takes about 15 seconds and stays saved in your browser until you change displays or clear your data.</p>
+
+  <h2 id="how-to-calibrate">How to Calibrate for Accuracy</h2>
+  <p>Calibrating a screen ruler is straightforward. You need one object of known size &mdash; a credit card, a standard sheet of paper, or your screen's diagonal measurement.</p>
+  <h3>Auto-detect method</h3>
+  <p>RulerKit can detect your screen's make and model from your browser's display profile. This works well for common laptops and monitors with standard resolution settings. The tool uses your EDID (Extended Display Identification Data) to look up the exact physical dimensions and calculate PPI automatically. This method gets you within 1-2% accuracy in most cases with zero effort.</p>
+  <h3>Manual calibration with a credit card</h3>
+  <p>Place a standard credit card flat against your screen. Adjust the calibration slider until the on-screen ruler matches the card's actual width of 85.60 mm (3.370 inches). This is the most reliable manual method because credit cards follow the ISO/IEC 7810 ID-1 standard and are virtually identical worldwide.</p>
+  <h3>Screen diagonal method</h3>
+  <p>If you know your monitor's advertised size (for example, 24 inches), you can enter the diagonal measurement along with your screen's aspect ratio. RulerKit calculates the width and height, then derives the PPI. Find your screen's diagonal by checking the model specifications on the manufacturer's website or the sticker on the back of your monitor.</p>
+
+  <h2 id="common-uses">Common Uses for a Screen Ruler</h2>
+  <p>A screen ruler is useful for far more than you might expect. Here are the most common scenarios where people reach for RulerKit's screen ruler.</p>
+  <h3>Designers and developers</h3>
+  <p>Graphic and UI designers measure on-screen elements like margins, padding, button sizes, and image dimensions. While pixel rulers handle screen-native units, a screen ruler is essential when a design needs to map to physical sizes &mdash; for example, checking that a business card design will fit a real 3.5x2 inch card, or that a poster layout matches standard paper dimensions.</p>
+  <h3>Students and educators</h3>
+  <p>Geometry and science students use screen rulers for homework, diagrams, and lab reports. Instead of borrowing a ruler from a classmate, they open RulerKit and measure shapes directly on their laptop screen. Teachers use the ruler during virtual lessons to demonstrate measurement concepts using the same tool students see at home.</p>
+  <h3>DIY and home projects</h3>
+  <p>Measuring a shelf bracket, checking whether a frame fits a wall space, or sizing a shipping box &mdash; these everyday tasks often happen at a desk with a computer nearby. A screen ruler lets you get a quick measurement without walking to the toolbox. For furniture assembly, you can check bolt spacing and panel dimensions against the instruction diagrams displayed on your screen.</p>
+  <h3>E-commerce shopping</h3>
+  <p>Product listings often give dimensions, but it can be hard to visualize them. Open RulerKit's screen ruler, enter the listed measurements, and see exactly how large the item is compared to your screen. This helps you judge whether a backpack, picture frame, or piece of furniture fits your available space.</p>
+
+  <h2 id="limitations">Limitations of Screen Rulers</h2>
+  <p>Screen rulers are incredibly convenient, but they have limitations worth understanding so you know when to rely on them and when to use a physical tool instead.</p>
+  <h3>Screen size constraints</h3>
+  <p>You can only measure objects up to the physical width (or height, in vertical mode) of your screen. For a typical 24-inch monitor in landscape orientation, the usable width is about 20-21 inches. Larger objects must be measured in segments, which introduces cumulative error. For anything longer than your screen, a tape measure is faster and more accurate.</p>
+  <h3>Viewing angle and parallax</h3>
+  <p>If you view your screen from an angle, the ruler markings appear shifted relative to the object you are measuring. This parallax error can throw off readings by several millimeters. Always view the screen straight-on, with your eye level centered on the measurement area. Tilting the screen forward or backward also changes the apparent position of the ruler relative to your object.</p>
+  <h3>Browser zoom sensitivity</h3>
+  <p>Browser zoom directly affects screen ruler accuracy. At 100% zoom, each CSS pixel maps to one physical pixel. At 125% zoom, the ruler is scaled up by 25%, making every measurement read high by the same amount. Always verify your browser zoom is set to 100% before measuring. RulerKit displays a zoom warning if it detects non-default zoom levels.</p>
+  <h3>Screen cleanliness and glare</h3>
+  <p>Dust, smudges, and screen glare can make it difficult to align an object precisely against the ruler markings. A quick screen wipe improves accuracy noticeably, especially when measuring small objects where a millimeter matters.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4 not-prose">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">How accurate is a screen ruler compared to a physical ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">With proper calibration, a screen ruler is accurate to within about 1 mm or 1/16 inch. Physical rulers are inherently more precise because they have fixed markings, but for most everyday tasks the difference is negligible once your screen is calibrated.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Can I use a screen ruler on a phone or tablet?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Yes, but accuracy depends on the device. Phones and tablets have high PPI displays that require careful calibration. The small screen also limits what you can measure. Desktop and laptop screens give the best results.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Does a screen ruler work with any browser?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">RulerKit works on all modern browsers including Chrome, Firefox, Safari, and Edge. The tool uses standard web APIs that are supported across browsers. Internet Explorer is not supported.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Do I need to calibrate every time I use the screen ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">No. RulerKit saves your calibration to your browser's local storage. It persists across sessions. You only need to recalibrate if you change monitors, adjust screen resolution, switch between built-in and external displays, or clear your browser data.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">What is the longest object I can measure with a screen ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">The maximum length you can measure in one go is the width of your screen. For a typical 24-inch monitor, that is roughly 20-21 inches or 52-53 cm. For larger objects, you can measure in segments and add the results together.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Why does my screen ruler show different measurements on different monitors?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Different monitors have different pixel densities (PPI). A 24-inch 1080p monitor has about 92 PPI, while a 27-inch 4K monitor has about 163 PPI. Without per-monitor calibration, the ruler will display different physical sizes on each screen. RulerKit supports separate calibration profiles for each display.</div>
+      </div>
+    </div>
+  </div>
+
+  <div slot="related">
+    <section aria-label="Related Tools">
+      <h2 class="text-xl font-semibold">Related Tools</h2>
+      <p class="text-sm text-surface-500">Discover more measurement tools to help with your projects.</p>
+    </section>
+  </div>
+</ContentLayout>

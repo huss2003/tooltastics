@@ -1,0 +1,37 @@
+<div class="flex flex-1 flex-col {Astro.props.class ?? ''}">
+  <div
+    class="relative flex-1 min-h-[300px] lg:min-h-[400px] rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-900 overflow-hidden"
+    data-canvas-container
+    role="img"
+    aria-label="Measure Image tool — upload and measure objects in an image"
+  >
+    <canvas
+      id="measure-canvas"
+      class="block w-full h-full"
+      role="application"
+      aria-roledescription="measure-image"
+      aria-label="Interactive image measurement canvas. Upload an image to start measuring."
+      tabindex="0"
+    />
+  </div>
+
+  <div
+    class="mt-3 flex items-center justify-center gap-2 rounded-lg bg-surface-100 dark:bg-surface-800 px-4 py-3 text-center text-sm text-surface-500 dark:text-surface-400 min-h-[44px]"
+    data-readout
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    Upload an image and calibrate to start measuring
+  </div>
+</div>
+
+<style>
+  #measure-canvas {
+    touch-action: none;
+  }
+</style>
+
+<script>
+  import { initMeasureImageTool } from './measure-image-init'
+  initMeasureImageTool()
+</script>

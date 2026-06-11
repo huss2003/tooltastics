@@ -1,0 +1,17 @@
+# Cloudflare Pages redirects
+# Canonical domain: https://tooltastics.com
+
+# Root redirect to English locale
+/ /en/ 302
+
+# Old ruler path → online-ruler (site not yet launched, but for safety)
+/en/ruler /en/online-ruler 301
+/es/ruler /es/online-ruler 301
+/de/ruler /de/online-ruler 301
+/fr/ruler /fr/online-ruler 301
+/pt/ruler /pt/online-ruler 301
+/it/ruler /it/online-ruler 301
+/ja/ruler /ja/online-ruler 301
+/ko/ruler /ko/online-ruler 301
+/ru/ruler /ru/online-ruler 301
+/zh-CN/ruler /zh-CN/online-ruler 301

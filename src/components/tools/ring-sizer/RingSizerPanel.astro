@@ -1,0 +1,67 @@
+---
+export interface Props {
+  class?: string
+}
+
+const standards = [
+  { value: 'us', label: 'US' },
+  { value: 'uk', label: 'UK' },
+  { value: 'eu', label: 'EU' },
+  { value: 'jp', label: 'JP' },
+]
+---
+
+<div class="card space-y-5 {Astro.props.class}" data-ring-sizer-panel>
+  <h2 class="text-md font-semibold text-surface-900 dark:text-surface-50">Ring Sizer</h2>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Standard</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Ring size standard">
+      {standards.map((s) => (
+        <button
+          class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+          role="radio"
+          aria-checked={s.value === 'us'}
+          data-standard={s.value}
+        >
+          {s.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="rounded-lg bg-surface-100 dark:bg-surface-800 p-4 text-center" data-measurement-readout aria-live="polite" aria-atomic="true">
+    <span class="block text-2xl font-bold text-surface-900 dark:text-surface-50" data-ring-size-display>—</span>
+    <span class="text-xs text-surface-500">ring size</span>
+  </div>
+</div>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('[data-ring-sizer-panel]')
+  if (panel) {
+    const standardBtns = panel.querySelectorAll<HTMLElement>('[data-standard]')
+    const sizeDisplay = panel.querySelector<HTMLElement>('[data-ring-size-display]')
+
+    let currentStandard = 'us'
+
+    for (const btn of standardBtns) {
+      btn.addEventListener('click', () => {
+        const standard = btn.dataset.standard
+        if (!standard) return
+        currentStandard = standard
+        for (const b of standardBtns) {
+          b.ariaChecked = String(b.dataset.standard === standard)
+        }
+        const event = new CustomEvent('rulerkit:standard-change', {
+          detail: { standard },
+          bubbles: true,
+        })
+        panel.dispatchEvent(event)
+      })
+    }
+
+    panel.addEventListener('rulerkit:size-change', ((e: CustomEvent) => {
+      if (sizeDisplay) sizeDisplay.textContent = e.detail.size || '—'
+    }) as EventListener)
+  }
+</script>

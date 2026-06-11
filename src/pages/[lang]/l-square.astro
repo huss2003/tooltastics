@@ -1,0 +1,124 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import LSquarePanel from '@components/tools/l-square/LSquarePanel.astro'
+import LSquareCanvas from '@components/tools/l-square/LSquareCanvas.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('l-square')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  webApplication(toolName, toolDesc, {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <LSquarePanel />
+  </div>
+  <div slot="canvas">
+    <LSquareCanvas />
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#what-is-l-square">What Is an L-Square?</a></li>
+      <li><a href="#dual-axis-measurement">Dual-Axis Measurement Explained</a></li>
+      <li><a href="#comparing-width-height">Comparing Width and Height</a></li>
+      <li><a href="#uses-in-design">Uses in Design and Layout</a></li>
+      <li><a href="#screen-calibration">Screen Calibration for the L-Square</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="what-is-l-square">What Is an L-Square?</h2>
+  <p>An L-square, also called a try square or carpenter's square, is a tool for measuring and checking right angles. RulerKit's digital L-square puts a virtual try square on your screen. It gives you two perpendicular rulers — one horizontal and one vertical — that meet at a 90-degree corner. You can measure the width and height of any rectangular object or region on your display simultaneously.</p>
+  <p>Unlike a standard single-axis ruler, the L-square shows you both dimensions at once. If you are checking the aspect ratio of an image, the dimensions of a UI card, or the proportions of a design element, the L-square saves you from measuring one axis, then measuring the other. Both readings are visible at the same time.</p>
+
+  <h2 id="dual-axis-measurement">Dual-Axis Measurement Explained</h2>
+  <p>The L-square places a horizontal ruler along the X axis and a vertical ruler along the Y axis, intersecting at the zero point. Drag the corner to position it at the top-left corner of whatever you want to measure. The horizontal arm extends to the right, measuring width. The vertical arm extends downward, measuring height. The readout in the sidebar shows both values in your chosen unit along with the computed aspect ratio.</p>
+  <p>You can also invert the square to measure from the bottom-right corner upward and leftward. This is useful when you are measuring elements that are positioned relative to the bottom or right edge of a canvas. The tool supports eight different corner orientations.</p>
+
+  <h2 id="comparing-width-height">Comparing Width and Height</h2>
+  <p>The most common use of an L-square is checking whether an element has the proportions you expect. A screen that claims to be 16:9 should have a width-to-height ratio of 1.78. The L-square shows you the actual ratio in real time as you drag, so you can verify aspect ratios without doing any math. A card component in a UI that is supposed to be square (1:1) can be checked instantly by seeing whether the width and height readings match.</p>
+  <p>The tool highlights the difference between width and height visually. If the numbers are close, the square appears balanced. If they differ significantly, the difference is called out in the panel. This makes it easy to spot elements that are not aligned or proportioned correctly.</p>
+
+  <h2 id="uses-in-design">Uses in Design and Layout</h2>
+  <p>Web designers use the L-square to verify that hero images, product cards, and banner ads match the specified dimensions. If a design calls for a 1200 x 600 pixel banner, drag the L-square corner to the banner's top-left and read both values. Graphic designers check that logos fit within their safe zones and that margins are consistent on all four sides. Print designers verify that document elements stay within trim and bleed boundaries.</p>
+  <p>Front-end developers use the L-square during QA to confirm that implemented components match the design specification. If the spec says a sidebar should be 320 pixels wide and 800 pixels tall, the L-square gives you both numbers in one placement. Product managers and content editors can use it to check that images have not been stretched or squashed during upload.</p>
+
+  <h2 id="screen-calibration">Screen Calibration for the L-Square</h2>
+  <p>When using the L-square with physical units (inches or centimeters), calibrate your screen first using the RulerKit calibration tool. Place a known object like a credit card against your screen and adjust until the on-screen measurement matches. The L-square uses the same calibration data as the standard ruler, so if you already calibrated for the ruler, the L-square will be accurate without additional steps.</p>
+  <p>For pixel measurements, no calibration is needed. The L-square reads pixel coordinates directly from your display and shows them with 1-pixel precision.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is the L-square?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">In pixel mode, accuracy is 1 pixel. In physical units, accuracy depends on screen calibration. Properly calibrated, it matches the standard ruler's accuracy of 1 mm or 1/16 inch.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What measurement units are supported?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The L-square supports pixels, inches, centimeters, and millimeters. Switch units in the sidebar panel without losing your current measurement position.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How is the L-square different from the regular ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The regular ruler measures along one axis. The L-square measures both width and height simultaneously from a single corner position, making it faster for checking rectangular objects.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Do I need to calibrate my screen for the L-square?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Only if you are using physical units (inches, cm, mm). For pixel measurements, the L-square works immediately without calibration.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I measure from the bottom or right edge?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The L-square supports eight corner orientations, including top-left, top-right, bottom-left, and bottom-right positions.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does the L-square show the aspect ratio?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The sidebar displays the computed width-to-height ratio in real time, updated as you drag the square to new positions.</div>
+      </div>
+    </div>
+  </div>
+</div>

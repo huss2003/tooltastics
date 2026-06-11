@@ -1,0 +1,13 @@
+---
+import type { Schema } from '@lib/seo/schema'
+
+export interface Props {
+  schemas: Schema[]
+}
+
+const { schemas } = Astro.props
+---
+
+{schemas.map((schema) => (
+  <script type="application/ld+json" set:html={JSON.stringify(schema, null, 2)} />
+))}

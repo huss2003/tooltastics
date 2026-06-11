@@ -1,0 +1,136 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+import { SCREEN_SIZES } from '@lib/data/programmatic/screenSizes'
+
+export interface Params { lang: string; size: string }
+
+export function getStaticPaths() {
+  const paths: { params: Params; props: { locale: Locale } }[] = []
+  for (const locale of SITE.locales) {
+    for (const ss of SCREEN_SIZES) {
+      const slug = `${String(ss.diagonalInches).replace('.', '-')}-inch-${ss.category}`
+      paths.push({ params: { lang: locale.code, size: slug }, props: { locale: locale.code, screenSize: ss } })
+    }
+  }
+  return paths
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const { size: sizeSlug } = Astro.params
+const { screenSize } = Astro.props as { screenSize: typeof SCREEN_SIZES[0] }
+
+if (!screenSize) return Astro.redirect(`/${locale}/404`, 404)
+
+const diagDisplay = screenSize.diagonalInches % 1 === 0 ? String(screenSize.diagonalInches) : screenSize.diagonalInches.toFixed(1)
+const canonical = `${SITE.url}/${locale}/ruler-for/${sizeSlug}`
+const title = `Online Ruler for ${diagDisplay}-Inch ${screenSize.label.replace(/^\d+\.?\d*-inch /, '')} | RulerKit`
+const description = `Use our online ruler calibrated for ${diagDisplay}" ${screenSize.label.toLowerCase()} screens. ${screenSize.typicalResolution} typical resolution, ${screenSize.description} Measure accurately without a physical ruler.`
+
+const similarSizes = SCREEN_SIZES.filter(s => s.category === screenSize.category && s.diagonalInches !== screenSize.diagonalInches).slice(0, 5)
+
+const metadata = createMetadata({
+  title, description, locale, path: `/ruler-for/${sizeSlug}`, ogType: 'article',
+  schema: [
+    article(title, description, { locale, canonical, image: `${SITE.url}/og/default.png` }),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: `Ruler for ${diagDisplay}-Inch Screen`, url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: `Ruler for ${diagDisplay}" ${screenSize.category}`, url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1 class="text-3xl font-bold tracking-tight text-surface-900 dark:text-white">Online Ruler for {diagDisplay}-Inch {screenSize.label.replace(/^\d+\.?\d*-inch /, '')} Screens</h1>
+    <p class="mt-2 text-sm text-surface-500">Calibrated measurements for {screenSize.typicalResolution} resolution displays</p>
+  </div>
+
+  <div class="not-prose mb-8 rounded-xl border border-surface-200 bg-surface-50 p-6 dark:border-surface-700 dark:bg-surface-800/50">
+    <p class="mb-3 text-sm text-surface-600 dark:text-surface-400">{screenSize.description} Your {diagDisplay}-inch display typically runs at {screenSize.typicalResolution} resolution.</p>
+    <a href={`/${locale}/ruler`} class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700">Use Online Ruler →</a>
+  </div>
+
+  <h2 id="about-size">About {diagDisplay}-Inch {screenSize.label.replace(/^\d+\.?\d*-inch /, '')} Screens</h2>
+  <p>The {diagDisplay}-inch {screenSize.category} display is one of the most common screen sizes in its category. {screenSize.description} Understanding the exact dimensions of your screen helps you get the most accurate measurements from RulerKit&rsquo;s online ruler tool.</p>
+  <p>When you visit RulerKit&rsquo;s ruler page, the tool automatically detects or allows you to set your screen&rsquo;s PPI (pixels per inch) for accurate calibration. For a {diagDisplay}-inch display with {screenSize.typicalResolution} resolution, the PPI typically ranges from {screenSize.category === 'phone' ? '326 to 513' : screenSize.category === 'tablet' ? '264 to 326' : screenSize.category === 'laptop' ? '141 to 282' : '82 to 163'} depending on the specific resolution and panel technology.</p>
+
+  <h2 id="how-to-measure">How to Measure on Your {diagDisplay}-Inch Screen</h2>
+  <ol>
+    <li><strong>Open RulerKit&rsquo;s online ruler</strong> by clicking the button above.</li>
+    <li><strong>Calibrate your screen</strong> using the credit card method or by selecting your device from our database. For a {diagDisplay}-inch screen, we recommend using the credit card calibration for the most accurate results.</li>
+    <li><strong>Select measurement units</strong> &mdash; Choose between inches, centimeters, or millimeters depending on your needs.</li>
+    <li><strong>Measure any object</strong> on your screen by placing the ruler alongside the item you want to measure.</li>
+  </ol>
+  <p>For best results on a {diagDisplay}-inch screen, ensure your browser is in full-screen mode (press F11) and your display is set to its native resolution. This eliminates any scaling that could affect measurement accuracy.</p>
+
+  <h2 id="ppi-calibration">PPI Calibration for {diagDisplay}-Inch Screens</h2>
+  <p>The key to accurate on-screen measurements is correct PPI calibration. For a {diagDisplay}-inch display, the PPI varies based on resolution:</p>
+  <div class="not-prose overflow-x-auto">
+    <table class="min-w-full divide-y divide-surface-200 dark:divide-surface-700">
+      <thead><tr class="bg-surface-100 dark:bg-surface-800"><th class="px-4 py-2 text-left text-sm font-medium">Resolution</th><th class="px-4 py-2 text-left text-sm font-medium">Approx. PPI</th><th class="px-4 py-2 text-left text-sm font-medium">Accuracy</th></tr></thead>
+      <tbody class="divide-y divide-surface-200 dark:divide-surface-700">
+        {screenSize.category === 'phone' ? (
+          <>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">HD (720p)</td><td class="px-4 py-2 text-sm">~250-300 PPI</td><td class="px-4 py-2 text-sm">Moderate</td></tr>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">Full HD (1080p)</td><td class="px-4 py-2 text-sm">~400-440 PPI</td><td class="px-4 py-2 text-sm">High</td></tr>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">QHD+ (1440p)</td><td class="px-4 py-2 text-sm">~500-530 PPI</td><td class="px-4 py-2 text-sm">Very High</td></tr>
+          </>
+        ) : screenSize.category === 'tablet' ? (
+          <>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">Standard</td><td class="px-4 py-2 text-sm">~264 PPI</td><td class="px-4 py-2 text-sm">High</td></tr>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">High Density</td><td class="px-4 py-2 text-sm">~326 PPI</td><td class="px-4 py-2 text-sm">Very High</td></tr>
+          </>
+        ) : screenSize.category === 'laptop' ? (
+          <>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">Full HD (1080p)</td><td class="px-4 py-2 text-sm">~141-166 PPI</td><td class="px-4 py-2 text-sm">Good</td></tr>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">QHD+ (2K)</td><td class="px-4 py-2 text-sm">~200-260 PPI</td><td class="px-4 py-2 text-sm">High</td></tr>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">4K (UHD)</td><td class="px-4 py-2 text-sm">~260-290 PPI</td><td class="px-4 py-2 text-sm">Very High</td></tr>
+          </>
+        ) : (
+          <>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">Full HD (1080p)</td><td class="px-4 py-2 text-sm">~92 PPI</td><td class="px-4 py-2 text-sm">Good</td></tr>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">QHD (1440p)</td><td class="px-4 py-2 text-sm">~109 PPI</td><td class="px-4 py-2 text-sm">High</td></tr>
+            <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50"><td class="px-4 py-2 text-sm">4K (UHD)</td><td class="px-4 py-2 text-sm">~140-163 PPI</td><td class="px-4 py-2 text-sm">Very High</td></tr>
+          </>
+        )}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="applications">What Can You Measure on a {diagDisplay}-Inch Screen?</h2>
+  <ul>
+    <li><strong>Web Design</strong> &mdash; Measure UI elements, margins, paddings, and component sizes during responsive design testing on your {diagDisplay}-inch display.</li>
+    <li><strong>Digital Art</strong> &mdash; Check canvas sizes, brush dimensions, and element proportions while creating digital artwork.</li>
+    <li><strong>Productivity</strong> &mdash; Measure document margins, spreadsheet column widths, and presentation element sizes.</li>
+    <li><strong>General Reference</strong> &mdash; Quickly estimate the size of on-screen objects when you need a rough measurement without a physical ruler.</li>
+  </ul>
+
+  {similarSizes.length > 0 ? (
+    <>
+      <h2 id="other-sizes">Other {screenSize.category === 'phone' ? 'Phone' : screenSize.category === 'tablet' ? 'Tablet' : screenSize.category === 'laptop' ? 'Laptop' : 'Monitor'} Screen Sizes</h2>
+      <ul>
+        {similarSizes.map(s => {
+          const sSlug = `${String(s.diagonalInches).replace('.', '-')}-inch-${s.category}`
+          return <li><a href={`/${locale}/ruler-for/${sSlug}`}>Ruler for {s.diagonalInches % 1 === 0 ? String(s.diagonalInches) : s.diagonalInches.toFixed(1)}-inch {s.category}s</a></li>
+        })}
+      </ul>
+    </>
+  ) : null}
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <h3>How do I calibrate the ruler for my {diagDisplay}-inch screen?</h3>
+  <p>Open the RulerKit ruler tool, then use the calibration panel to either select your device from the database or place a credit card against the on-screen guide. For {diagDisplay}-inch screens, we recommend the credit card method for the highest accuracy.</p>
+  <h3>What is the PPI of a {diagDisplay}-inch screen?</h3>
+  <p>The PPI depends on the resolution. At {screenSize.typicalResolution}, the PPI is calculated by dividing the diagonal resolution in pixels by {diagDisplay} inches. Most {diagDisplay}-inch {screenSize.category}s have a PPI between {screenSize.category === 'phone' ? '326-513' : screenSize.category === 'tablet' ? '264-326' : screenSize.category === 'laptop' ? '138-282' : '82-163'}.</p>
+  <h3>Can I use the ruler on a {diagDisplay}-inch screen without calibration?</h3>
+  <p>We recommend always calibrating for accurate measurements. Without calibration, the ruler defaults to 96 PPI, which may not match your {diagDisplay}-inch display and could result in measurement errors of 10-50%.</p>
+</ContentLayout>

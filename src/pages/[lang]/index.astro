@@ -1,0 +1,209 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { TOOLS } from '@config/tools'
+import { createMetadata } from '@lib/seo/metadata'
+import { webSite, breadcrumbList } from '@lib/seo/schema'
+import BaseLayout from '@layouts/BaseLayout.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+
+const metadata = createMetadata({
+  title: 'Online Ruler — Free Screen Measurement Tool',
+  description: SITE.tagline,
+  locale,
+  path: '/',
+  schema: [
+    webSite({
+      locale,
+      canonical: `${SITE.url}/${locale}/`,
+      title: SITE.name,
+      description: SITE.tagline,
+    }),
+    breadcrumbList([{ name: 'Home', url: `${SITE.url}/${locale}/` }]),
+  ],
+})
+---
+
+<BaseLayout metadata={metadata}>
+  <section class="py-16 text-center">
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+      The Most Accurate Online Ruler
+    </h1>
+    <p class="mx-auto mt-4 max-w-2xl text-lg text-surface-600 dark:text-surface-400">
+      {SITE.tagline}. No app download, no install, no sign-up required.
+    </p>
+    <div class="mt-8">
+      <a
+        href={`/${locale}/ruler`}
+        class="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+      >
+        Start Measuring
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Tools">
+    {TOOLS.map((tool) => (
+      <a
+        href={`/${locale}/${tool.slug}`}
+        class="card group transition-shadow hover:shadow-tool-lg"
+      >
+        <h2 class="text-lg font-semibold text-surface-900 group-hover:text-primary-600 dark:text-surface-50 dark:group-hover:text-primary-400">
+          {t(tool.nameKey)}
+        </h2>
+        <p class="mt-1 text-sm text-surface-500 dark:text-surface-400">
+          {t(tool.shortDescriptionKey)}
+        </p>
+      </a>
+    ))}
+  </section>
+
+  <section class="py-16">
+    <h2 class="text-3xl font-bold tracking-tight text-center">How It Works</h2>
+    <div class="mt-10 grid gap-8 sm:grid-cols-3">
+      <div class="text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300 text-xl font-bold">1</div>
+        <h3 class="mt-4 text-lg font-semibold">Calibrate</h3>
+        <p class="mt-2 text-sm text-surface-500">Select your screen size, use auto-detect, or place a credit card on your display. RulerKit calculates your screen's exact pixel density in seconds.</p>
+      </div>
+      <div class="text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300 text-xl font-bold">2</div>
+        <h3 class="mt-4 text-lg font-semibold">Measure</h3>
+        <p class="mt-2 text-sm text-surface-500">Choose your tool and unit. Measure straight lines, angles, rings, images, or pixels. Switch between cm, mm, inches at any time.</p>
+      </div>
+      <div class="text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300 text-xl font-bold">3</div>
+        <h3 class="mt-4 text-lg font-semibold">Done</h3>
+        <p class="mt-2 text-sm text-surface-500">Read your measurement, take a screenshot, or switch tools. No accounts, no data uploads, no hassle. Your measurements stay on your device.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 border-t border-surface-200 dark:border-surface-700">
+    <h2 class="text-3xl font-bold tracking-tight text-center">Why Choose RulerKit</h2>
+    <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="card">
+        <h3 class="font-semibold text-primary-600 dark:text-primary-400">Privacy First</h3>
+        <p class="mt-2 text-sm text-surface-500">Every tool runs in your browser. Zero data leaves your device. No tracking, no analytics, no data collection.</p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-primary-600 dark:text-primary-400">Accurate to ±0.5mm</h3>
+        <p class="mt-2 text-sm text-surface-500">Multiple calibration methods ensure precision. Auto-detect, screen diagonal, or credit card calibration for reliable measurements.</p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-primary-600 dark:text-primary-400">Free Forever</h3>
+        <p class="mt-2 text-sm text-surface-500">No subscriptions, no sign-ups, no hidden fees. All tools are completely free with no feature limitations.</p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-primary-600 dark:text-primary-400">8 Powerful Tools</h3>
+        <p class="mt-2 text-sm text-surface-500">Ruler, pixel ruler, protractor, ring sizer, L-square, image measurement, printable ruler, and unit converter. All in one place.</p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-primary-600 dark:text-primary-400">Works Offline</h3>
+        <p class="mt-2 text-sm text-surface-500">After the first visit, all tools work without an internet connection. No server dependency for measurements.</p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-primary-600 dark:text-primary-400">10 Languages</h3>
+        <p class="mt-2 text-sm text-surface-500">Available in English, Spanish, French, German, Portuguese, Japanese, Chinese, Russian, Arabic, and Hindi. More coming.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 border-t border-surface-200 dark:border-surface-700">
+    <h2 class="text-3xl font-bold tracking-tight text-center">Measurement Guides</h2>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <a href={`/${locale}/actual-size-ruler-guide`} class="card group transition-shadow hover:shadow-tool-lg">
+        <h3 class="font-semibold text-surface-900 group-hover:text-primary-600 dark:text-surface-50 dark:group-hover:text-primary-400">Actual Size Ruler Guide</h3>
+        <p class="mt-1 text-sm text-surface-500">Learn how to measure real-world objects online with an actual-size ruler.</p>
+      </a>
+      <a href={`/${locale}/how-to-calibrate`} class="card group transition-shadow hover:shadow-tool-lg">
+        <h3 class="font-semibold text-surface-900 group-hover:text-primary-600 dark:text-surface-50 dark:group-hover:text-primary-400">How to Calibrate</h3>
+        <p class="mt-1 text-sm text-surface-500">Step-by-step calibration guide for accurate screen measurements.</p>
+      </a>
+      <a href={`/${locale}/how-to-measure-screen-size`} class="card group transition-shadow hover:shadow-tool-lg">
+        <h3 class="font-semibold text-surface-900 group-hover:text-primary-600 dark:text-surface-50 dark:group-hover:text-primary-400">How to Measure Screen Size</h3>
+        <p class="mt-1 text-sm text-surface-500">Find your screen's physical dimensions and diagonal measurement.</p>
+      </a>
+      <a href={`/${locale}/cm-ruler-online`} class="card group transition-shadow hover:shadow-tool-lg">
+        <h3 class="font-semibold text-surface-900 group-hover:text-primary-600 dark:text-surface-50 dark:group-hover:text-primary-400">CM Ruler Online</h3>
+        <p class="mt-1 text-sm text-surface-500">Measure in centimeters with precision calibration.</p>
+      </a>
+      <a href={`/${locale}/inch-ruler-online`} class="card group transition-shadow hover:shadow-tool-lg">
+        <h3 class="font-semibold text-surface-900 group-hover:text-primary-600 dark:text-surface-50 dark:group-hover:text-primary-400">Inch Ruler Online</h3>
+        <p class="mt-1 text-sm text-surface-500">Measure in inches with fractional markings.</p>
+      </a>
+      <a href={`/${locale}/screen-ruler`} class="card group transition-shadow hover:shadow-tool-lg">
+        <h3 class="font-semibold text-surface-900 group-hover:text-primary-600 dark:text-surface-50 dark:group-hover:text-primary-400">Screen Ruler</h3>
+        <p class="mt-1 text-sm text-surface-500">Use your screen as a precision measurement tool.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="py-16 border-t border-surface-200 dark:border-surface-700">
+    <h2 class="text-3xl font-bold tracking-tight text-center">Frequently Asked Questions</h2>
+    <div class="mx-auto mt-10 max-w-3xl space-y-6 not-prose">
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name" class="text-base font-semibold">How accurate is RulerKit?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text" class="mt-1 text-sm text-surface-600">With proper calibration, our online ruler is accurate to within ±0.5mm. Use auto-detect or the credit card method for best results.</div>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name" class="text-base font-semibold">Do I need to install anything?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text" class="mt-1 text-sm text-surface-600">No. RulerKit runs entirely in your browser. No downloads, plugins, or sign-ups required.</div>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name" class="text-base font-semibold">What units can I measure in?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text" class="mt-1 text-sm text-surface-600">Centimeters, millimeters, inches, and pixels. Switch between units at any time without recalibration.</div>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name" class="text-base font-semibold">Is my data private?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text" class="mt-1 text-sm text-surface-600">Absolutely. All tools run client-side. No measurements, images, or personal data are ever sent to a server. No analytics, no tracking.</div>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name" class="text-base font-semibold">Does RulerKit work on mobile?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text" class="mt-1 text-sm text-surface-600">Yes, RulerKit works on iOS and Android. The interface adapts to your screen size and supports touch interaction.</div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 text-center">
+      <a href={`/${locale}/faq`} class="text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400">View all FAQs &rarr;</a>
+    </div>
+  </section>
+
+  <section class="py-16 text-center border-t border-surface-200 dark:border-surface-700">
+    <h2 class="text-3xl font-bold tracking-tight">Ready to Measure?</h2>
+    <p class="mx-auto mt-4 max-w-xl text-surface-600 dark:text-surface-400">No sign-up, no download, no cost. Just accurate measurement tools that respect your privacy.</p>
+    <div class="mt-8">
+      <a
+        href={`/${locale}/ruler`}
+        class="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+      >
+        Start Measuring Now
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

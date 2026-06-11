@@ -1,0 +1,128 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import CalibrationPanel from '@components/tools/ruler/CalibrationPanel.astro'
+import RulerCanvas from '@components/tools/ruler/RulerCanvas.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('online-ruler')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  webApplication(toolName, toolDesc, {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <CalibrationPanel />
+  </div>
+  <div slot="canvas">
+    <RulerCanvas />
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#how-to-use">How to Use the Online Ruler</a></li>
+      <li><a href="#calibration">Calibrating for Accuracy</a></li>
+      <li><a href="#measurement-tips">Measurement Tips & Techniques</a></li>
+      <li><a href="#supported-units">Supported Units: cm, inches, and mm</a></li>
+      <li><a href="#practical-use-cases">Practical Use Cases</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="how-to-use">How to Use the Online Ruler</h2>
+  <p>The RulerKit online ruler turns your screen into a precise measuring tool. No download, no install — it works straight in your browser. To get started, place an object against your screen and adjust the ruler marks until they align with the edges of what you are measuring. The ruler updates in real time as you drag, so you can measure anything on your display: the width of a package, the height of a photo, or the spacing between elements in a design.</p>
+  <p>Your screen shows both centimeters and inches by default. You can switch between units with a single click in the sidebar panel. The ruler snaps to your cursor, making it easy to read measurements down to 1 millimeter or 1/16 inch. For the best experience, use a flat-edged object like a credit card or a piece of paper to line up against the ruler ticks.</p>
+
+  <h2 id="calibration">Calibrating for Accuracy</h2>
+  <p>Screen sizes vary. A 15-inch laptop and a 27-inch monitor display pixels at different densities, so your ruler needs to know your screen's actual physical dimensions to give accurate readings. RulerKit makes this simple with a one-time calibration step.</p>
+  <h3>How to calibrate</h3>
+  <p>Place a known object — like a credit card (85.60 mm wide) or a standard sheet of paper (210 mm wide for A4) — flat against your screen. Adjust the on-screen slider until the virtual ruler matches the physical object's size. Once calibrated, the tool remembers your setting for future visits using local storage.</p>
+  <h3>Why calibration matters</h3>
+  <p>Without calibration, an online ruler can be off by 5% to 15% depending on your display's PPI (pixels per inch). A 5% error on a 10-inch measurement is half an inch — enough to matter for woodworking, sewing, or package sizing. Taking the 10 seconds to calibrate turns a rough estimate into a reliable measurement.</p>
+  <h3>When to recalibrate</h3>
+  <p>Change your monitor or switch to a different device? Recalibrate. If you switch between a laptop and an external display, the ruler needs separate calibration for each. The same applies if you change your screen resolution in your operating system settings.</p>
+
+  <h2 id="measurement-tips">Measurement Tips & Techniques</h2>
+  <p>Getting precise measurements online takes a little practice. Here are techniques that help:</p>
+  <p>Use the left edge of the ruler as your starting point. The ruler scale begins at zero on the left side of the canvas. Drag the ruler so that zero aligns perfectly with one edge of your object. The right edge of the object will line up with the measurement reading. Zoom your browser view to 100% — not zoomed in or out. Browser zoom changes how pixels map to physical space and throws off your calibration. For small objects like buttons, bezels, or jewelry, use the millimeter scale. For larger items like posters, monitors, or furniture, switch to inches or centimeters. Keep your screen clean. Dust and smudges can create visual parallax when you try to line up an object against the ruler.</p>
+
+  <h2 id="supported-units">Supported Units: cm, inches, and mm</h2>
+  <p>RulerKit supports three measurement units. Centimeters (cm) are ideal for everyday objects and metric-system users. One centimeter equals 10 millimeters. Inches are standard in the US, Canada, and the UK for construction, screen sizes, and hardware dimensions. Millimeters (mm) give you the finest granularity — perfect for precision work like jewelry, electronics, and detailed design.</p>
+  <p>You can switch between units at any time without losing your calibration. The ruler ticks redraw to show the appropriate subdivisions: 1 mm marks when in metric mode, and 1/16 inch marks when in imperial mode. A conversion bar at the bottom of the tool shows the equivalent measurement in all three units simultaneously.</p>
+
+  <h2 id="practical-use-cases">Practical Use Cases</h2>
+  <p>An online ruler works for more situations than you might expect. E-commerce shoppers use it to check whether a listed product dimension fits their available space. Graphic designers measure margins, padding, and element sizes in their layouts. Students use the ruler for geometry homework, drawing diagrams, and science lab reports where they need quick size estimates. Crafters and hobbyists check fabric swatches, bead sizes, and model kit parts. Office workers measure envelopes, binder dimensions, and shipping labels. Anyone who needs a ruler but does not have one at hand can open this tool and get a measurement in seconds.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is the online ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">With proper calibration, the online ruler is accurate to within approximately 1 millimeter or 1/16 inch. The key factor is how precisely you align the calibration object against your screen.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Do I need to calibrate every time I visit?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">No. RulerKit saves your calibration setting in your browser's local storage. You only need to recalibrate when you change monitors, adjust your screen resolution, or clear your browser data.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Which devices are supported?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The tool works on any device with a modern browser — Windows, macOS, Linux, Android, and iOS. Desktop and laptop screens with known physical dimensions give the best results.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I measure in both inches and centimeters at the same time?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The ruler shows dual markings by default. You can also toggle between a primary unit and view the converted measurement in the sidebar panel.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does it work on mobile phones?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">It works on mobile browsers, but accuracy depends on screen size and resolution. For the best experience, use a desktop or laptop with a larger display and calibrate before measuring.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What is the maximum length I can measure?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The ruler can measure up to the width of your screen. For larger objects, measure one section at a time and add the results together.</div>
+      </div>
+    </div>
+  </div>
+</div>

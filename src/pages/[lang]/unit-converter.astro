@@ -1,0 +1,129 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('unit-converter')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  webApplication(toolName, toolDesc, {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <div class="card space-y-5">
+      <h2 class="text-lg font-semibold">Unit Converter</h2>
+      <p class="text-sm text-surface-500">Configure your conversion settings here.</p>
+    </div>
+  </div>
+  <div slot="canvas">
+    <div class="flex items-center justify-center min-h-[300px] bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-700">
+      <p class="text-surface-500">Unit converter interface will render here</p>
+    </div>
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#why-conversion-matters">Why Unit Conversion Matters</a></li>
+      <li><a href="#common-conversions">Common Conversions: cm to Inches, mm to Inches, Pixels to Inches</a></li>
+      <li><a href="#conversion-formulas">Conversion Formulas Behind the Tool</a></li>
+      <li><a href="#practical-examples">Practical Conversion Examples</a></li>
+      <li><a href="#ppi-considerations">PPI and DPI Considerations for Pixel Conversions</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="why-conversion-matters">Why Unit Conversion Matters</h2>
+  <p>Different fields and regions use different measurement units. A European designer receives a specification in millimeters but needs to work in pixels. An American DIYer finds a project plan written in centimeters and needs inches. A graphic designer has a print file sized in inches but the digital mockup is in pixels. The RulerKit unit converter handles these conversions instantly, supporting the four units that matter most for screen and print work: centimeters, inches, millimeters, and pixels.</p>
+  <p>Manual conversion is error-prone. A misplaced decimal point when converting 0.5 inches to millimeters gives you 12.7 mm instead of the correct 1.27 mm — a tenfold error. The converter eliminates these mistakes by doing the math for you and showing the result to three decimal places.</p>
+
+  <h2 id="common-conversions">Common Conversions: cm to Inches, mm to Inches, Pixels to Inches</h2>
+  <p>The three most requested conversions on RulerKit are centimeters to inches, millimeters to inches, and pixels to inches. Centimeters to inches is essential for anyone working with international specifications. Multiply centimeters by 0.3937 to get inches. For example, a 30 cm wide shelf is 11.81 inches. Millimeters to inches divides the millimeter value by 25.4. A 12 mm screw diameter is 0.472 inches. Pixels to inches depends on your screen's PPI. At 96 PPI, 384 pixels equals 4 inches. At 300 PPI (print resolution), 384 pixels equals 1.28 inches.</p>
+  <p>The converter shows all four units simultaneously. Type a value in any unit and see the equivalent in the other three instantly. This makes it easy to cross-reference and verify your numbers.</p>
+
+  <h2 id="conversion-formulas">Conversion Formulas Behind the Tool</h2>
+  <p>The unit converter uses standard conversion factors:</p>
+  <p>1 inch = 25.4 millimeters = 2.54 centimeters. To convert inches to millimeters, multiply by 25.4. To convert inches to centimeters, multiply by 2.54. To convert centimeters to inches, divide by 2.54. To convert millimeters to inches, divide by 25.4.</p>
+  <p>Pixel conversions require knowing the PPI (pixels per inch) of your display or output device. The formula is: inches = pixels / PPI. At 96 PPI, 96 pixels = 1 inch. At 72 PPI (standard for many screens), 72 pixels = 1 inch. At 300 PPI (standard for print), 300 pixels = 1 inch. The converter defaults to 96 PPI but lets you adjust this value to match your specific device or output requirement.</p>
+
+  <h2 id="practical-examples">Practical Conversion Examples</h2>
+  <p>Example 1: You are buying a 55-inch TV and want to know the width in centimeters. A 55-inch diagonal with a 16:9 aspect ratio gives a width of approximately 121 cm. The converter confirms this instantly.</p>
+  <p>Example 2: A design file specifies a 240 px margin. Your printer asks for dimensions in inches. At 96 PPI, 240 / 96 = 2.5 inches. Enter 240 px into the converter with PPI set to 96, and you get 2.5 inches.</p>
+  <p>Example 3: A European product listing says the item is 50 cm tall. You need the height in inches for a US market listing. The converter tells you 50 cm = 19.685 inches.</p>
+
+  <h2 id="ppi-considerations">PPI and DPI Considerations for Pixel Conversions</h2>
+  <p>Pixels per inch (PPI) describes the pixel density of a display. Dots per inch (DPI) describes the dot density of a printer. While technically different, the converter treats them the same for practical measurement purposes. Common PPI values include 72 (older screens), 96 (standard Windows displays), 110 (typical 24-inch 1080p monitor), 163 (typical smartphone), 218 (Retina laptop), and 300 (standard print).</p>
+  <p>If you do not know your screen's PPI, use the RulerKit calibration tool. It calculates your display's actual PPI based on the physical size of a known object. Enter that PPI value into the converter for accurate pixel-to-physical-unit conversions.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is the unit converter?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Conversions between physical units (cm, inches, mm) are exact to three decimal places. Pixel conversions are as accurate as the PPI value you provide — use the calibration tool to get the correct PPI.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What PPI should I use for pixel conversions?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Use 96 PPI for standard Windows displays, 72 PPI for older Mac screens, or run the RulerKit calibration tool to find your exact display PPI. For print, use 300 DPI.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What measurement units are supported?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The converter supports centimeters, inches, millimeters, and pixels. All four are shown simultaneously, so you always see the full conversion set.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I convert multiple values at once?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The converter handles one value at a time. For batch conversions, enter each value individually — the conversion is instant, so it only takes seconds per value.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does the converter work offline?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The conversion math runs entirely in your browser. Once the page loads, no internet connection is needed for the converter to function.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I convert feet and inches?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The converter works with inches as the base imperial unit. To convert feet to inches, multiply by 12, then enter the total inches into the converter.</div>
+      </div>
+    </div>
+  </div>
+</div>

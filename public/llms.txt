@@ -1,0 +1,26 @@
+# RulerKit — Free Online Measurement Tools
+
+## Tools
+- Ruler: https://tooltastics.com/en/ruler — Measure objects in cm, inches, mm on your screen
+- Pixel Ruler: https://tooltastics.com/en/pixel-ruler — Measure pixel-perfect screen distances
+- Protractor: https://tooltastics.com/en/protractor — Measure angles on your screen
+- Printable Ruler: https://tooltastics.com/en/printable-ruler — Download and print actual-size rulers
+- Ring Sizer: https://tooltastics.com/en/ring-sizer — Find your ring size online
+- L-Square: https://tooltastics.com/en/l-square — XY coordinate measurement tool
+- Measure Image: https://tooltastics.com/en/measure-image — Upload and measure objects in photos
+- Unit Converter: https://tooltastics.com/en/unit-converter — Convert between cm, inches, mm, pixels
+
+## Guides
+- How to Calibrate: https://tooltastics.com/en/how-to-calibrate — Calibrate your online ruler for accuracy
+- Screen Ruler Guide: https://tooltastics.com/en/screen-ruler — Measure anything on your display
+- Actual Size Ruler Guide: https://tooltastics.com/en/actual-size-ruler-guide — Measure real-world objects online
+- CM Ruler Online: https://tooltastics.com/en/cm-ruler-online — Measure in centimeters on your screen
+- Inch Ruler Online: https://tooltastics.com/en/inch-ruler-online — Measure in inches on your screen
+- How to Measure Screen Size: https://tooltastics.com/en/how-to-measure-screen-size — Find your display dimensions
+
+## Info
+- About: https://tooltastics.com/en/about — About RulerKit
+- FAQ: https://tooltastics.com/en/faq — Frequently asked questions
+- Contact: https://tooltastics.com/en/contact — Get in touch
+- Privacy Policy: https://tooltastics.com/en/privacy-policy — Privacy policy
+- Terms: https://tooltastics.com/en/terms-and-conditions — Terms and conditions

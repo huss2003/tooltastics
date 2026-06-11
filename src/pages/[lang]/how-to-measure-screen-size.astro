@@ -1,0 +1,271 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/how-to-measure-screen-size`
+
+const metadata = createMetadata({
+  title: 'How to Measure Screen Size — Find Your Monitor or Phone Display Size',
+  description:
+    'Learn how to measure screen size diagonally for monitors, laptops, tablets, and phones. Use our online tools to determine display dimensions without a tape measure.',
+  locale,
+  path: '/how-to-measure-screen-size',
+  ogType: 'article',
+  schema: [
+    article(
+      'How to Measure Screen Size — Find Your Monitor or Phone Display Size',
+      'Learn how to measure screen size diagonally for monitors, laptops, tablets, and phones. Use our online tools to determine display dimensions without a tape measure.',
+      {
+        locale,
+        canonical,
+        title: 'How to Measure Screen Size — Find Your Monitor or Phone Display Size',
+        description:
+          'Learn how to measure screen size diagonally for monitors, laptops, tablets, and phones. Use our online tools to determine display dimensions without a tape measure.',
+        datePublished: '2025-04-12',
+        dateModified: '2025-06-01',
+      },
+    ),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+      { name: 'How to Measure Screen Size', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+    { name: 'How to Measure Screen Size', url: canonical },
+  ],
+  publishedTime: '2025-04-12',
+  modifiedTime: '2025-06-01',
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>How to Measure Screen Size — Find Your Monitor or Phone Display Size</h1>
+    <p class="text-sm text-surface-500">Published: April 12, 2025 &middot; Updated: June 1, 2025</p>
+  </div>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#why-diagonal">Why Screen Sizes Are Measured Diagonally</a></li>
+      <li><a href="#measure-monitor">How to Measure a Monitor Screen Size</a></li>
+      <li><a href="#measure-laptop">How to Measure a Laptop Screen Size</a></li>
+      <li><a href="#measure-phone">How to Measure a Phone Screen Size</a></li>
+      <li><a href="#measure-tablet">How to Measure a Tablet Screen Size</a></li>
+      <li><a href="#measure-tv">How to Measure a TV Screen Size</a></li>
+      <li><a href="#aspect-ratio">Understanding Aspect Ratio and Diagonal</a></li>
+      <li><a href="#screen-size-table">Common Screen Sizes Comparison Table</a></li>
+      <li><a href="#online-vs-tape">Online Tools vs. a Tape Measure</a></li>
+      <li><a href="#viewable-area">Viewable Area vs. Bezel</a></li>
+      <li><a href="#find-model-specs">Finding Your Model Specs Online</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="why-diagonal">Why Screen Sizes Are Measured Diagonally</h2>
+  <p>Screen sizes are always quoted as a single diagonal measurement: a 24-inch monitor, a 6.1-inch phone, a 55-inch TV. This convention dates back to the early days of television when cathode ray tubes (CRTs) were measured by the diameter of their circular face. Even though modern rectangular screens look very different, the diagonal measurement stuck as the industry standard.</p>
+  <p>The diagonal is the single number that best represents a screen's overall size. A 24-inch monitor has more screen area than a 22-inch monitor, regardless of the aspect ratio. The diagonal measurement is also unambiguous &mdash; it is the same whether you are looking at a 16:9 widescreen display or a 4:3 square-ish monitor. Width alone would be misleading because a wide 21:9 ultra-wide monitor would appear to be a much larger screen than a 16:9 monitor with the same diagonal.</p>
+  <p>To calculate the diagonal from width and height, use the Pythagorean theorem: diagonal = &radic;(width&sup2; + height&sup2;). For a 16:9 aspect ratio display with a 20.9-inch width and 11.8-inch height: diagonal = &radic;(20.9&sup2; + 11.8&sup2;) = &radic;(436.8 + 139.2) = &radic;576 = 24 inches.</p>
+
+  <h2 id="measure-monitor">How to Measure a Monitor Screen Size</h2>
+  <p>Measuring a monitor screen size is straightforward. You need a tape measure or RulerKit's online ruler.</p>
+  <p><strong>With a tape measure:</strong> Measure from the top-left corner of the actual display area (not the bezel) to the bottom-right corner. Only measure the glass area where pixels are visible. Do not include the plastic or metal frame around the screen. The result in inches is your monitor's advertised size. A 24-inch monitor will measure approximately 24 inches diagonally.</p>
+  <p><strong>With RulerKit's online ruler:</strong> Place your monitor's edge against the screen &mdash; which is a bit tricky for a monitor since you are using the monitor itself. Instead, use the calibration methods. If your monitor has auto-detect, RulerKit reads the EDID data and automatically knows the diagonal. If not, look up your monitor model's specifications on the manufacturer's website.</p>
+  <p><strong>Check your operating system:</strong> On Windows, open Settings &gt; System &gt; Display &gt; Advanced display. The monitor name is listed. Search for that model online to find the diagonal size. On macOS, open System Settings &gt; Displays and look for the display name, then look up the specs.</p>
+
+  <h2 id="measure-laptop">How to Measure a Laptop Screen Size</h2>
+  <p>Laptop screens are measured the same way as monitors: diagonally from one corner of the display area to the opposite corner. The difference is that laptop screens are typically measured with the lid closed or open depending on how you access the display.</p>
+  <p><strong>Method 1: Measure physically.</strong> Open the laptop fully. Use a tape measure from the top-left corner of the display (where pixels begin) to the bottom-right corner. Common laptop sizes include 13.3 inches, 14.0 inches, 15.6 inches, and 17.3 inches. These numbers represent the diagonal of the viewable pixel area, not the lid size.</p>
+  <p><strong>Method 2: Check the model specs.</strong> Flip your laptop over and look for the model number sticker. It is usually a string like "XPS 15 9530" or "ThinkPad T14 Gen 3." Search this model number online to find the exact screen size. Most manufacturers list display size prominently in the specifications.</p>
+  <p><strong>Method 3: Use RulerKit.</strong> Calibrate the online ruler to your laptop's built-in display using auto-detect or the diagonal calibration method. If you know your laptop's screen size (for example, 15.6 inches), enter that into the calibration panel to verify.</p>
+  <p>Laptop screens are sometimes measured differently by manufacturers. A 15.6-inch laptop may actually have a 15.5-inch viewable area depending on how the bezel overlaps the display panel. The difference is usually within 0.1-0.2 inches.</p>
+
+  <h2 id="measure-phone">How to Measure a Phone Screen Size</h2>
+  <p>Phone screen sizes are measured diagonally from one corner of the display to the opposite corner. This is the number you see in phone specifications: iPhone 15 Pro Max has a 6.7-inch display, Samsung Galaxy S24 Ultra has a 6.8-inch display.</p>
+  <p><strong>Physical measurement:</strong> Use a small ruler or tape measure to measure diagonally from the top-left corner of the glass to the bottom-right corner. Only measure the display area, not the bezel or the phone body. For phones with rounded corners, measure to the theoretical corner where the straight edges would meet.</p>
+  <p><strong>Software method:</strong> On most phones, you can find the screen size in Settings. On iPhone, go to Settings &gt; General &gt; About and look for the model name. Search that model online for the display size. On Android, go to Settings &gt; About Phone and look for the display specifications.</p>
+  <p><strong>Using RulerKit on your phone:</strong> Open RulerKit in your phone's browser. Calibrate using the credit card method or auto-detect. Then switch to inch mode and measure your phone's diagonal by aligning the ruler with the corners of the display. Note that phone measurements on a phone screen can be challenging due to the small screen size and parallax issues.</p>
+
+  <h2 id="measure-tablet">How to Measure a Tablet Screen Size</h2>
+  <p>Tablets follow the same diagonal measurement convention. Common tablet sizes include 8.3 inches (iPad Mini), 10.9 inches (iPad Air), 11 inches (iPad Pro), and 12.9 inches (iPad Pro 12.9). Android tablets typically range from 8 to 14 inches.</p>
+  <p><strong>Physical measurement:</strong> Lay the tablet flat on a table. Measure diagonally from the top-left corner of the display to the bottom-right corner. Do not include the bezel. The bezel on tablets is often wider than on phones, making it easier to accidentally include it in your measurement. The display area is the part that lights up.</p>
+  <p><strong>From specifications:</strong> Tablets have their screen size listed in the product name or specifications. An "iPad Air 11-inch" has an 11-inch display. A "Samsung Galaxy Tab S9 FE" comes in 10.9-inch and 12.4-inch versions. Always verify against the model number if you are unsure which version you have.</p>
+
+  <h2 id="measure-tv">How to Measure a TV Screen Size</h2>
+  <p>TVs are the most common application of diagonal screen measurement. A 55-inch TV measures 55 inches diagonally. Unlike monitors and laptops, TVs are almost always measured by their advertised diagonal, and the measurement includes the entire display panel (the glass area), not just the bezel-less viewable area.</p>
+  <p><strong>With a tape measure:</strong> Measure from the top-left corner of the glass panel to the bottom-right corner. For large TVs, you may need a long tape measure or an assistant. Most TV sizes range from 32 inches to 85 inches, with 55, 65, and 75 inches being the most popular sizes.</p>
+  <p><strong>Without a tape measure:</strong> If your TV is mounted or hard to reach, look up the model number on the back of the TV or in the settings menu. Search that number online. The screen size is always listed in the specifications. You can also measure the width of the TV and calculate the diagonal using the aspect ratio. A 55-inch 16:9 TV is approximately 47.9 inches wide.</p>
+  <p>TV sizes can be confusing because the advertised size may be slightly different from the actual viewable area. Most modern TVs list the viewable diagonal, which is the industry standard. If you are building a cabinet or entertainment center, always check the TV's physical dimensions (width, height, depth with stand) rather than relying solely on the diagonal screen size.</p>
+
+  <h2 id="aspect-ratio">Understanding Aspect Ratio and Diagonal</h2>
+  <p>Aspect ratio describes the proportional relationship between a screen's width and height. The most common aspect ratios are 16:9 (widescreen, used by most TVs and monitors), 16:10 (used by some productivity monitors and laptops), 21:9 (ultra-wide monitors), 4:3 (older monitors and tablets), and 19.5:9 or similar (modern smartphones).</p>
+  <p>The aspect ratio matters because two screens with the same diagonal can have very different widths and heights. A 24-inch 16:9 monitor is 20.9 inches wide and 11.8 inches tall. A 24-inch 4:3 monitor (if one existed) would be 19.2 inches wide and 14.4 inches tall. They have the same diagonal but very different screen areas: the 4:3 screen has about 19% more actual display area.</p>
+  <p>When measuring your screen size for a specific application &mdash; like fitting a monitor into a desk setup or buying a screen protector &mdash; you need both the diagonal size and the aspect ratio. RulerKit uses both when you calibrate via the screen diagonal method, ensuring the width and height are calculated correctly.</p>
+
+  <h2 id="screen-size-table">Common Screen Sizes Comparison Table</h2>
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="min-w-full text-sm border-collapse border border-surface-300 dark:border-surface-700">
+      <thead>
+        <tr class="bg-surface-100 dark:bg-surface-800">
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Device Type</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Diagonal</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Width</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Height</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Aspect Ratio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Phone (compact)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">5.4 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">2.4 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">4.8 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">19.5:9</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Phone (large)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">6.7 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">3.0 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">6.1 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">19.5:9</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Tablet (small)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">8.3 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">6.6 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">5.0 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">4:3</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Tablet (large)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">12.9 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">10.3 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">7.7 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">4:3</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Laptop (compact)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">13.3 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">11.6 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">6.5 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">16:9</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Laptop (standard)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">15.6 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">13.6 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">7.6 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">16:9</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Monitor (small)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">24 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">20.9 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">11.8 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">16:9</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Monitor (large)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">32 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">27.9 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">15.7 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">16:9</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">TV (medium)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">55 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">47.9 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">27.0 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">16:9</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">TV (large)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">75 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">65.4 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">36.8 in</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">16:9</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="online-vs-tape">Online Tools vs. a Tape Measure</h2>
+  <p>Both methods for measuring screen size have their place. Here is when to use each.</p>
+  <h3>When to use an online tool</h3>
+  <p>RulerKit's online ruler is ideal when you do not have a tape measure handy, when the screen is mounted or difficult to access (like a wall-mounted TV), or when you want to verify the manufacturer's specifications. Online tools are also useful for measuring multiple screens quickly &mdash; for example, checking the screen sizes of several laptops before making a purchase decision. The auto-detect feature makes it especially convenient for modern monitors and laptops.</p>
+  <h3>When to use a physical tape measure</h3>
+  <p>A physical tape measure is more accurate and does not require calibration. If you need a precise measurement for fitting a screen into a tight space (like a monitor into a shelf cubby or a TV into an entertainment center), use a tape measure. Physical measurement also works for any screen regardless of age, model, or connectivity. For older monitors that do not support EDID auto-detection, a tape measure is the most reliable method.</p>
+  <p>The best approach is to use both methods for cross-verification. Measure with RulerKit first for speed, then confirm with a tape measure for critical installations.</p>
+
+  <h2 id="viewable-area">Viewable Area vs. Bezel</h2>
+  <p>The "screen size" you see advertised always refers to the viewable display area, not the total physical size including the bezel. The bezel is the frame around the display &mdash; the plastic, metal, or glass border that does not show pixels.</p>
+  <p>On modern devices, bezels vary widely. A typical monitor has a bezel of 5-15 mm on each side. Some premium monitors advertise "zero-bezel" designs where the bezel is only 2-3 mm thick. Laptops have bezels that range from 5 mm (Dell XPS series) to 15 mm or more (budget laptops). The advertised screen size is the diagonal of the pixel area, not the diagonal of the outer lid or case.</p>
+  <p>When measuring screen size yourself, be careful to measure only the glass area where pixels are visible. On some devices, there is a black border between the visible pixels and the outer bezel. This black border is not part of the viewable area. Start your tape measure where the first pixel is visible, not at the edge of the glass panel.</p>
+
+  <h2 id="find-model-specs">Finding Your Model Specs Online</h2>
+  <p>If you cannot measure your screen directly, the next best option is to look up your device's specifications. Here is how to find the model number and look up the screen size.</p>
+  <p><strong>Monitors:</strong> The model number is usually printed on a sticker on the back of the monitor. It may also appear in the on-screen display menu. Search "MonitorName specs" on Google or check the manufacturer's support page. The screen size is always listed in the display specifications.</p>
+  <p><strong>Laptops:</strong> Flip the laptop over and look for the model number sticker near the hinge. On Windows, the model is shown in System Information. On macOS, click the Apple logo &gt; About This Mac &gt; System Report. Search the model number online for the display specifications.</p>
+  <p><strong>Phones:</strong> On iPhone, go to Settings &gt; General &gt; About. The model name is listed. On Android, go to Settings &gt; About Phone. The model number is usually something like SM-S921U (Samsung) or Pixel 8 Pro (Google). Search for "PhoneName display size" for the diagonal measurement.</p>
+  <p><strong>Tablets:</strong> Model information is typically in Settings &gt; About Tablet. The screen size is often part of the product name (e.g., "iPad Pro 12.9-inch"). If not, the model number lookup will reveal the display size.</p>
+  <p><strong>TVs:</strong> The model number is on a sticker on the back or side of the TV. It may also be found in the settings menu under Support &gt; Contact Support or About. TV model numbers often encode the screen size: a Sony XR-55A80L is a 55-inch TV. Look for the two-digit number near the beginning or end of the model string.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4 not-prose">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Why are screens measured diagonally instead of by width?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">The diagonal measurement is a convention inherited from early CRT televisions, which had circular screens measured by diameter. The diagonal stuck because it is a single number that reasonably represents the overall size of a rectangular display, and it works across different aspect ratios. Width alone would make wide 21:9 screens appear larger than they really are.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">How can I measure screen size without a ruler or tape measure?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Use RulerKit's online ruler on a calibrated screen, or look up your device model number online. You can also use known objects for reference. For example, a standard credit card is 3.37 inches wide. Measure how many card-widths fit across your screen and multiply to estimate the size.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Does aspect ratio affect the screen size measurement?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">The diagonal measurement itself is not affected by aspect ratio. A 24-inch screen is always 24 inches diagonally. However, the width and height depend on the aspect ratio. Two screens with the same diagonal but different aspect ratios will have different dimensions and different total screen areas.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Is a TV screen measured the same way as a monitor screen?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Yes. Both TVs and monitors are measured diagonally from corner to corner of the viewable display area. The measurement does not include the bezel on either type of device. The same diagonal measurement standard applies to phones, tablets, laptops, and all other screen-based devices.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">What is the difference between screen size and viewable area?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Screen size and viewable area are the same thing for modern displays. Both refer to the diagonal measurement of the pixel area. The confusion arises with the physical dimensions including the bezel. A 24-inch monitor may be 22 inches wide including the bezel, but the advertised 24 inches is the diagonal of the pixels only.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Can I use RulerKit to measure my TV screen size?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Not directly, because you would need to place the TV against your computer screen. Instead, use RulerKit to calibrate your computer's display, then use a known-size reference to estimate the TV size. For accurate TV measurements, use a tape measure or look up the model number online.</div>
+      </div>
+    </div>
+  </div>
+</ContentLayout>

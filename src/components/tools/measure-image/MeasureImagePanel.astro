@@ -1,0 +1,262 @@
+---
+import { Unit } from '@config/constants'
+
+export interface Props {
+  class?: string
+}
+
+const units = [
+  { value: Unit.Centimeters, label: 'cm' },
+  { value: Unit.Millimeters, label: 'mm' },
+  { value: Unit.Inches, label: 'in' },
+]
+---
+
+<div class="card space-y-5 {Astro.props.class}" data-measure-panel>
+  <h2 class="text-md font-semibold text-surface-900 dark:text-surface-50">Measure Image</h2>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Image Upload</h3>
+    <div
+      class="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-surface-300 dark:border-surface-600 px-4 py-6 text-center cursor-pointer hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
+      data-drop-zone
+    >
+      <span class="text-sm text-surface-500 dark:text-surface-400" data-upload-hint>Drop an image or click to browse</span>
+      <span class="hidden text-sm font-medium text-surface-700 dark:text-surface-200" data-file-name></span>
+      <input type="file" accept="image/*" class="hidden" data-file-input />
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Tool Mode</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Tool mode">
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="true"
+        data-mode="calibrate"
+      >Calibrate</button>
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="false"
+        data-mode="measure"
+      >Measure</button>
+      <button
+        class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+        role="radio"
+        aria-checked="false"
+        data-mode="pan"
+      >Pan</button>
+    </div>
+  </div>
+
+  <div class="space-y-3" data-cal-section hidden>
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Calibration</h3>
+    <div class="flex gap-2">
+      <input
+        type="number"
+        step="0.01"
+        min="0.01"
+        placeholder="Known length"
+        class="input flex-1"
+        data-cal-length
+      />
+      <select class="input w-16" data-cal-unit>
+        {units.map((u) => (
+          <option value={u.value}>{u.label}</option>
+        ))}
+      </select>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-primary flex-1" data-cal-apply>Set Calibration</button>
+      <button class="btn btn-ghost text-xs" data-cal-clear>Clear</button>
+    </div>
+  </div>
+
+  <div class="space-y-3" data-measurements-section hidden>
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">
+      Measurements (<span data-measurement-count>0</span>)
+    </h3>
+    <ul class="space-y-2" data-measurement-list></ul>
+  </div>
+
+  <div class="space-y-3" data-label-section hidden>
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Selected Label</h3>
+    <input type="text" class="input w-full" placeholder="Edit label..." data-label-input />
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Export</h3>
+    <button class="btn btn-primary w-full" data-export-btn disabled>Export PNG</button>
+    <a class="hidden" data-download-link download="measurement.png" href="/en/measure-image" aria-label="Download measurement PNG">Download</a>
+  </div>
+</div>
+
+<script>
+  import { initMeasureImageTool } from './measure-image-init'
+  import { Unit } from '@config/constants'
+
+  const tool = initMeasureImageTool()
+  const panel = document.querySelector<HTMLElement>('[data-measure-panel]')
+  if (!tool || !panel) {
+    throw new Error('MeasureImageTool or panel not found')
+  }
+
+  const fileInput = panel.querySelector<HTMLInputElement>('[data-file-input]')!
+  const dropZone = panel.querySelector<HTMLElement>('[data-drop-zone]')!
+  const uploadHint = panel.querySelector<HTMLElement>('[data-upload-hint]')!
+  const fileName = panel.querySelector<HTMLElement>('[data-file-name]')!
+  const modeBtns = panel.querySelectorAll<HTMLElement>('[data-mode]')
+  const calSection = panel.querySelector<HTMLElement>('[data-cal-section]')!
+  const calLength = panel.querySelector<HTMLInputElement>('[data-cal-length]')!
+  const calUnit = panel.querySelector<HTMLSelectElement>('[data-cal-unit]')!
+  const calApply = panel.querySelector<HTMLButtonElement>('[data-cal-apply]')!
+  const calClear = panel.querySelector<HTMLButtonElement>('[data-cal-clear]')!
+  const measurementsSection = panel.querySelector<HTMLElement>('[data-measurements-section]')!
+  const measurementCount = panel.querySelector<HTMLElement>('[data-measurement-count]')!
+  const measurementList = panel.querySelector<HTMLElement>('[data-measurement-list]')!
+  const labelSection = panel.querySelector<HTMLElement>('[data-label-section]')!
+  const labelInput = panel.querySelector<HTMLInputElement>('[data-label-input]')!
+  const exportBtn = panel.querySelector<HTMLButtonElement>('[data-export-btn]')!
+  const downloadLink = panel.querySelector<HTMLAnchorElement>('[data-download-link]')!
+
+  let currentState = tool.getState()
+
+  tool.subscribe((state) => {
+    currentState = state
+    render(state)
+  })
+
+  function render(state: typeof currentState): void {
+    const hasImage = state.image !== null
+    const hasCal = state.calibration !== null && state.calibration.pixelsPerUnit > 0
+    const needsCalLength = state.calibration !== null && state.calibration.pixelsPerUnit <= 0
+
+    if (state.image) {
+      uploadHint.classList.add('hidden')
+      fileName.classList.remove('hidden')
+      fileName.textContent = 'Image loaded'
+    } else {
+      uploadHint.classList.remove('hidden')
+      fileName.classList.add('hidden')
+    }
+
+    calSection.hidden = !needsCalLength
+    measurementsSection.hidden = !(hasCal && state.measurements.length > 0)
+    labelSection.hidden = state.selectedId === null
+
+    if (state.selectedId) {
+      const m = state.measurements.find((m) => m.id === state.selectedId)
+      if (m) labelInput.value = m.label
+    }
+
+    for (const btn of modeBtns) {
+      btn.ariaChecked = String(btn.dataset.mode === state.toolMode)
+    }
+
+    measurementCount.textContent = String(state.measurements.length)
+    renderMeasurementList(state.measurements, state.selectedId)
+
+    exportBtn.disabled = !(hasCal && hasImage)
+  }
+
+  function renderMeasurementList(measurements: typeof currentState.measurements, selectedId: string | null): void {
+    measurementList.innerHTML = ''
+    for (const m of measurements) {
+      const li = document.createElement('li')
+      li.className = 'flex items-center justify-between gap-2 rounded-lg bg-surface-100 dark:bg-surface-800 px-3 py-2 text-xs cursor-pointer transition-colors'
+      if (m.id === selectedId) {
+        li.classList.add('ring-1', 'ring-primary-500', 'dark:ring-primary-400')
+      }
+      li.dataset.mId = m.id
+
+      const span = document.createElement('span')
+      span.className = 'font-medium text-surface-700 dark:text-surface-200'
+      span.textContent = `${m.label}: ${m.value.toFixed(1)} ${m.unit}`
+      li.appendChild(span)
+
+      const del = document.createElement('button')
+      del.className = 'text-surface-400 hover:text-red-500 transition-colors'
+      del.textContent = '✕'
+      del.addEventListener('click', (e) => {
+        e.stopPropagation()
+        tool.deleteMeasurement(m.id)
+      })
+      li.appendChild(del)
+
+      li.addEventListener('click', () => {
+        if (currentState.selectedId === m.id) {
+          labelSection.hidden = true
+        } else {
+          labelSection.hidden = false
+        }
+      })
+
+      measurementList.appendChild(li)
+    }
+  }
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files?.[0]
+    if (file) tool.loadImage(file)
+  })
+
+  dropZone.addEventListener('click', () => fileInput.click())
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault()
+    dropZone.classList.add('border-primary-400', 'dark:border-primary-500')
+  })
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-primary-400', 'dark:border-primary-500')
+  })
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault()
+    dropZone.classList.remove('border-primary-400', 'dark:border-primary-500')
+    const file = e.dataTransfer?.files[0]
+    if (file && file.type.startsWith('image/')) {
+      tool.loadImage(file)
+    }
+  })
+
+  for (const btn of modeBtns) {
+    btn.addEventListener('click', () => {
+      const mode = btn.dataset.mode
+      if (mode === 'calibrate' || mode === 'measure' || mode === 'pan') {
+        tool.setToolMode(mode)
+      }
+    })
+  }
+
+  calApply.addEventListener('click', () => {
+    const length = parseFloat(calLength.value)
+    if (isNaN(length) || length <= 0) return
+    const unit = calUnit.value as 'cm' | 'in' | 'mm'
+    tool.setUnit(unit)
+    tool.setCalibrationLength(length)
+    tool.applyCalibration()
+  })
+
+  calClear.addEventListener('click', () => {
+    tool.clearCalibration()
+    calLength.value = ''
+  })
+
+  labelInput.addEventListener('input', () => {
+    const id = currentState.selectedId
+    if (id) tool.updateLabel(id, labelInput.value)
+  })
+
+  exportBtn.addEventListener('click', async () => {
+    const blob = await tool.exportPNG()
+    if (blob) {
+      const url = URL.createObjectURL(blob)
+      downloadLink.href = url
+      downloadLink.click()
+      setTimeout(() => URL.revokeObjectURL(url), 5000)
+    }
+  })
+</script>

@@ -1,0 +1,27 @@
+<div class="flex flex-1 flex-col {Astro.props.class ?? ''}">
+  <div
+    class="relative flex-1 min-h-[300px] lg:min-h-[400px] rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-900 overflow-auto flex items-center justify-center"
+    data-canvas-container
+    role="img"
+    aria-label="Printable ruler preview"
+  >
+    <canvas
+      id="printable-ruler-canvas"
+      class="block"
+      role="img"
+      aria-label="Preview of printable ruler"
+    />
+  </div>
+</div>
+
+<style>
+  #printable-ruler-canvas {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+
+<script>
+  import { initPrintableRuler } from './printable-ruler-init'
+  initPrintableRuler()
+</script>

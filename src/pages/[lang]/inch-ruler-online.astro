@@ -1,0 +1,268 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/inch-ruler-online`
+
+const metadata = createMetadata({
+  title: 'Inch Ruler Online — Measure in Inches on Your Screen',
+  description:
+    'Free online inch ruler. Measure objects in inches directly on your screen. Supports 1/16, 1/8, 1/4, and 1/2 inch precision with calibration.',
+  locale,
+  path: '/inch-ruler-online',
+  ogType: 'article',
+  schema: [
+    article(
+      'Inch Ruler Online — Measure in Inches on Your Screen',
+      'Free online inch ruler. Measure objects in inches directly on your screen. Supports 1/16, 1/8, 1/4, and 1/2 inch precision with calibration.',
+      {
+        locale,
+        canonical,
+        title: 'Inch Ruler Online — Measure in Inches on Your Screen',
+        description:
+          'Free online inch ruler. Measure objects in inches directly on your screen. Supports 1/16, 1/8, 1/4, and 1/2 inch precision with calibration.',
+        datePublished: '2025-03-05',
+        dateModified: '2025-06-01',
+      },
+    ),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+      { name: 'Inch Ruler Online', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+    { name: 'Inch Ruler Online', url: canonical },
+  ],
+  publishedTime: '2025-03-05',
+  modifiedTime: '2025-06-01',
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>Inch Ruler Online — Measure in Inches on Your Screen</h1>
+    <p class="text-sm text-surface-500">Published: March 5, 2025 &middot; Updated: June 1, 2025</p>
+  </div>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#imperial-system">Understanding the Imperial System in Context</a></li>
+      <li><a href="#reading-fractional-inches">How to Read Fractional Inches</a></li>
+      <li><a href="#decimal-conversion">Inches to Decimal Conversion</a></li>
+      <li><a href="#conversion-reference">Conversion Reference Table</a></li>
+      <li><a href="#common-objects-inches">Common Objects Measured in Inches</a></li>
+      <li><a href="#calibrating-for-inches">How to Calibrate for Inch Measurements</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="imperial-system">Understanding the Imperial System in Context</h2>
+  <p>The imperial system, which uses inches, feet, and yards, remains the primary measurement system in the United States and is still commonly used in the United Kingdom, Canada, and Australia for certain applications. For anyone working with US-based products, construction materials, or hardware, inches are unavoidable. Screen sizes are quoted in inches. Lumber is sold in feet and inches. Hardware fasteners use inch measurements. An inch ruler online is therefore an essential tool for millions of people.</p>
+  <p>One inch is defined as exactly 25.4 millimeters. This fixed conversion means that an online inch ruler, when calibrated correctly, is just as accurate as a metric ruler. The challenge with inches lies not in the measurement itself, but in reading the fractional divisions. While metric users read a single decimal number (e.g., 5.3 cm), imperial users must read fractions like 3-7/16 inches. This takes practice, but RulerKit's inch ruler makes it easier by labeling each fractional mark clearly.</p>
+  <p>The inch ruler on RulerKit displays divisions down to 1/16 of an inch, which is sufficient for most construction, crafting, and home measurement tasks. The scale marks are drawn at different lengths to help you distinguish between halves, quarters, eighths, and sixteenths at a glance.</p>
+
+  <h2 id="reading-fractional-inches">How to Read Fractional Inches</h2>
+  <p>Reading an inch ruler requires understanding how the marks are organized. Each inch is divided into progressively smaller fractions.</p>
+  <h3>1/2 inch marks</h3>
+  <p>The longest marks between inch numbers represent half inches. There is one 1/2 inch mark between each pair of whole-inch marks. On RulerKit's ruler, the 1/2 inch mark is nearly as long as the inch mark and is positioned exactly halfway between the two inch numbers. If an object reaches the first mark past the 3-inch marker, the measurement is 3-1/2 inches.</p>
+  <h3>1/4 inch marks</h3>
+  <p>Between each inch mark and the 1/2 inch mark, you will find a slightly shorter mark at the quarter position. Each inch has four quarter-inch marks: at 1/4, 1/2, 3/4, and the next whole inch. RulerKit labels these positions so you can read measurements like 2-1/4 inches or 5-3/4 inches without counting marks.</p>
+  <h3>1/8 and 1/16 inch marks</h3>
+  <p>For finer precision, each quarter inch is split into two eighths, and each eighth is split into two sixteenths. This means there are 16 marks per inch in total (including the inch mark itself). The 1/16 inch marks are the shortest lines on the ruler. To read 3-5/16 inches, count five short marks past the 3-inch marker. RulerKit shows a digital readout of the exact fraction as you measure, so you can confirm your visual reading.</p>
+  <p>The full hierarchy of marks, from longest to shortest: inch marks &gt; 1/2 inch marks &gt; 1/4 inch marks &gt; 1/8 inch marks &gt; 1/16 inch marks. The ruler also includes 1/32 marks on some scales for extra precision, but the standard RulerKit inch ruler uses 1/16 as the finest division.</p>
+
+  <h2 id="decimal-conversion">Inches to Decimal Conversion</h2>
+  <p>Many modern tools and specifications use decimal inches rather than fractions. A decimal inch ruler shows 1.5 inches instead of 1-1/2 inches, and 2.25 inches instead of 2-1/4 inches. Converting between fractions and decimals is straightforward once you know the equivalents.</p>
+  <p>To convert a fraction to decimal inches, divide the numerator by the denominator. For 7/16 inch, calculate 7 &divide; 16 = 0.4375 inches. Add this to the whole inch count: 3-7/16 inches = 3.4375 inches. Most practical applications round to two or three decimal places &mdash; 3.44 inches is close enough for woodworking and construction.</p>
+  <p>RulerKit shows both the fractional and decimal equivalents as you measure, so you do not need to do the conversion manually. The sidebar displays the decimal reading alongside the fraction, making it easy to record measurements in whichever format your project requires.</p>
+
+  <h2 id="conversion-reference">Conversion Reference Table</h2>
+  <p>Keep this reference handy for quick conversions between inch fractions, decimal inches, and millimeters.</p>
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="min-w-full text-sm border-collapse border border-surface-300 dark:border-surface-700">
+      <thead>
+        <tr class="bg-surface-100 dark:bg-surface-800">
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Fraction</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Decimal</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Millimeters</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Common Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">1/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.0625</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">1.59</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Fine measurement</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">1/8</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.125</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">3.18</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Small hardware spacing</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">3/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.1875</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">4.76</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Fastener diameters</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">1/4</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.25</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">6.35</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Bolt spacing</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">5/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.3125</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">7.94</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Nut dimensions</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">3/8</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.375</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">9.53</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Plywood thickness</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">7/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.4375</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">11.11</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Socket sizes</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">1/2</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.5</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">12.70</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Half-inch reference</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">9/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.5625</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">14.29</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Wrench sizes</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">5/8</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.625</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">15.88</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Drywall spacing</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">11/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.6875</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">17.46</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Drill bit sizes</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">3/4</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.75</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">19.05</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Three-quarter reference</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">13/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.8125</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">20.64</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Pipe diameters</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">7/8</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.875</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">22.23</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Spacing references</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">15/16</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">0.9375</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">23.81</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Near-inch measurements</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">1</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">1.0</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">25.40</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Full inch reference</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="common-objects-inches">Common Objects Measured in Inches</h2>
+  <p>Knowing typical inch measurements helps you estimate sizes and verify your ruler's calibration. Here are reference objects you encounter regularly.</p>
+  <h3>US letter paper</h3>
+  <p>A standard sheet of US letter paper measures 8.5 inches by 11 inches. This is the most common reference object for inch-based calibration. If you place a sheet of letter paper against your screen, it should measure exactly 8.5 inches wide. This is a quick way to verify your ruler's accuracy before important measurements.</p>
+  <h3>Monitor and TV screen sizes</h3>
+  <p>Screen sizes are always quoted diagonally in inches: 24-inch monitor, 55-inch TV, 6.1-inch phone display. The actual width of a 24-inch 16:9 monitor is about 20.9 inches, and the height is about 11.8 inches. A 55-inch TV measures roughly 47.9 inches wide and 27.0 inches tall. RulerKit's inch ruler can help you verify these dimensions if you want to check whether a TV stand or monitor arm will fit your space.</p>
+  <h3>Hardware and construction</h3>
+  <p>The construction industry in the US uses inches and feet almost exclusively. Standard measurements include:</p>
+  <ul>
+    <li>2x4 lumber: actually 1.5 inches by 3.5 inches (nominal vs. actual dimension)</li>
+    <li>Plywood thickness: 1/4 inch (0.25"), 3/8 inch (0.375"), 1/2 inch (0.5"), 3/4 inch (0.75")</li>
+    <li>Drywall screws: typically 1-5/8 inches or 2 inches long</li>
+    <li>Nail sizes: measured in "penny" (d) with common sizes like 8d (2.5 inches) and 16d (3.5 inches)</li>
+    <li>Pipe diameter: 1/2 inch, 3/4 inch, 1 inch (nominal inside diameter)</li>
+  </ul>
+  <p>Having these references at hand makes it easy to spot-check your ruler and confirm that your measurements are in the right ballpark before cutting or purchasing materials.</p>
+
+  <h2 id="calibrating-for-inches">How to Calibrate for Inch Measurements</h2>
+  <p>Calibration for inch measurements works exactly the same way as for centimeters. The unit you measure in does not affect the calibration process &mdash; you are simply telling the ruler the physical dimensions of your screen.</p>
+  <p>To calibrate specifically for inch-based work: use a US letter sheet of paper (8.5 inches wide) as your reference object. Place it flat against your screen and adjust the calibration slider until the on-screen ruler reads 8.5 inches at the paper's edge. This gives you a calibration that is optimized for inch readings and verified against a common reference.</p>
+  <p>Alternatively, you can use a standard credit card (3.37 inches wide). While credit cards are metric in origin (85.6 mm), the inch equivalent is well-established. After calibrating, test your ruler against a few known objects: a letter sheet (8.5 inches), a standard pencil (about 7.5 inches), or a smartphone (about 6 inches for a typical large phone). If all three read close to their expected values, your calibration is solid.</p>
+  <p>RulerKit saves your calibration in local storage, so you only need to do this once. The ruler remembers your setting and applies it to both inch and centimeter measurements on future visits.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4 not-prose">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">How do I read 1/16 inch marks on an online ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">The 1/16 inch marks are the shortest lines on the ruler. Between each inch mark there are 15 short lines. Count the number of lines past the last inch mark to get the numerator, and use 16 as the denominator. For 1/4 inch, count 4 lines (4/16 = 1/4). RulerKit shows the fraction as a digital readout so you can confirm your visual reading.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Should I use fractional inches or decimal inches for my project?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Use fractions for construction, woodworking, and hardware (where tools and materials use fractional sizes). Use decimals for engineering, 3D printing, and digital design (where software uses decimal inputs). RulerKit shows both formats simultaneously, so you always have the right reading.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Do I need to calibrate differently for inches vs. centimeters?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">No. Calibration is the same regardless of the unit you plan to use. The PPI value is unit-agnostic. Once calibrated, switch between inches, centimeters, and millimeters freely without recalibrating.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Why does my inch ruler show marks at different lengths?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">RulerKit draws longer marks for larger fractions to make reading easier. The 1-inch mark is the longest, followed by 1/2 inch, then 1/4 inch, then 1/8 inch, with 1/16 inch being the shortest. This visual hierarchy helps you read measurements quickly without counting every tick.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Can I measure in inches on a phone or tablet?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Yes, but accuracy depends on screen size. Phones have small screens with high PPI, making precise alignment harder. Tablets offer a better experience. For inch measurements, a desktop or laptop display is recommended for the best balance of screen space and accuracy.</div>
+      </div>
+    </div>
+  </div>
+</ContentLayout>

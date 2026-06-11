@@ -1,0 +1,236 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/how-to-calibrate`
+
+const metadata = createMetadata({
+  title: 'How to Calibrate Your Online Ruler for Accurate Measurements',
+  description:
+    'Learn how to calibrate your online ruler for ±0.5mm accuracy. Three methods: auto-detect, screen diagonal, and credit card calibration.',
+  locale,
+  path: '/how-to-calibrate',
+  ogType: 'article',
+  schema: [
+    article(
+      'How to Calibrate Your Online Ruler for Accurate Measurements',
+      'Learn how to calibrate your online ruler for ±0.5mm accuracy. Three methods: auto-detect, screen diagonal, and credit card calibration.',
+      {
+        locale,
+        canonical,
+        title: 'How to Calibrate Your Online Ruler for Accurate Measurements',
+        description:
+          'Learn how to calibrate your online ruler for ±0.5mm accuracy. Three methods: auto-detect, screen diagonal, and credit card calibration.',
+        datePublished: '2025-01-15',
+        dateModified: '2025-06-01',
+      },
+    ),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+      { name: 'How to Calibrate', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+    { name: 'How to Calibrate', url: canonical },
+  ],
+  publishedTime: '2025-01-15',
+  modifiedTime: '2025-06-01',
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>How to Calibrate Your Online Ruler for Accurate Measurements</h1>
+    <p class="text-sm text-surface-500">Published: January 15, 2025 &middot; Updated: June 1, 2025</p>
+  </div>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#why-calibration-matters">Why Calibration Matters</a></li>
+      <li><a href="#method-1-auto-detect">Method 1 — Auto-Detect Calibration</a></li>
+      <li><a href="#method-2-screen-diagonal">Method 2 — Screen Diagonal Calibration</a></li>
+      <li><a href="#method-3-credit-card">Method 3 — Credit Card Calibration</a></li>
+      <li><a href="#method-comparison">Calibration Method Comparison</a></li>
+      <li><a href="#how-ppi-affects-accuracy">How PPI Affects Accuracy</a></li>
+      <li><a href="#troubleshooting">Troubleshooting Common Issues</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="why-calibration-matters">Why Calibration Matters</h2>
+  <p>Every screen displays pixels at a different density. A 13-inch laptop packs roughly 2,304,000 pixels into a small space, while a 32-inch monitor spreads about the same number across a much larger area. This means a pixel on the laptop is physically smaller than a pixel on the monitor. When an online ruler assumes a standard pixel density without adjustment, the measurements it shows are wrong.</p>
+  <p>Without calibration, errors of 5% to 20% are common. A 5% error on a 10-inch measurement is half an inch &mdash; enough to make a shipping box seem suitable when it is not, or to cut a piece of material too short. Calibration eliminates this error by measuring your actual display and calculating the correct pixel-to-physical conversion.</p>
+  <p>RulerKit's calibration takes under 30 seconds and requires no special equipment. You have three methods to choose from, each suited to different situations. Once calibrated, the setting is stored in your browser and persists until you change displays or clear your local data.</p>
+
+  <h2 id="method-1-auto-detect">Method 1 — Auto-Detect Calibration</h2>
+  <p>Auto-detect is the fastest method. RulerKit reads your display's EDID (Extended Display Identification Data) directly from your operating system. This data includes the manufacturer, model, and physical size of your monitor. The tool cross-references this information against a database of known displays to determine the exact PPI.</p>
+  <p><strong>Steps:</strong></p>
+  <ol>
+    <li>Open RulerKit's ruler tool.</li>
+    <li>Click the calibration button in the sidebar panel.</li>
+    <li>Select "Auto-Detect" from the calibration options.</li>
+    <li>Wait 2-3 seconds while the tool reads your display information.</li>
+    <li>Confirm the detected screen size and resolution.</li>
+  </ol>
+  <p>Auto-detect works best on desktop monitors and laptops with standard display configurations. It may not detect custom-built monitors, external displays connected via certain adapters, or virtual machines. For those cases, use one of the manual methods below.</p>
+
+  <h2 id="method-2-screen-diagonal">Method 2 — Screen Diagonal Calibration</h2>
+  <p>If auto-detect does not work or you want to verify its results, the screen diagonal method is the most reliable manual approach. You provide your screen's advertised diagonal size and aspect ratio, and RulerKit calculates the exact width, height, and PPI.</p>
+  <p><strong>Step-by-step instructions:</strong></p>
+  <ol>
+    <li>Find your monitor's advertised diagonal size. This is usually printed on the box, listed on the manufacturer's website, or shown in your operating system's display settings. Common sizes include 21.5, 24, 27, and 32 inches for monitors, and 13.3, 15.6, and 17.3 inches for laptops.</li>
+    <li>Determine your screen's aspect ratio. Most modern displays are 16:9. Older monitors and some productivity displays use 16:10. Ultra-wide monitors use 21:9.</li>
+    <li>Open RulerKit's calibration panel and select "Screen Diagonal."</li>
+    <li>Enter the diagonal measurement in inches (or centimeters if your region uses metric).</li>
+    <li>Select the aspect ratio from the dropdown menu.</li>
+    <li>Click "Calculate" to set the calibration.</li>
+  </ol>
+  <p>This method is accurate to within 1% if you enter the correct numbers. The math RulerKit uses is based on the Pythagorean theorem: for a 16:9 display with a 24-inch diagonal, the width is calculated as cos(arctan(9/16)) &times; 24 = 20.9 inches, and the height is sin(arctan(9/16)) &times; 24 = 11.8 inches.</p>
+  <p><strong>Where to find your screen's diagonal:</strong></p>
+  <ul>
+    <li><strong>Windows:</strong> Settings &gt; System &gt; Display &gt; Advanced display. Look for the monitor name, then search for its specs online.</li>
+    <li><strong>macOS:</strong> System Settings &gt; Displays. The monitor name is shown at the top.</li>
+    <li><strong>Physical check:</strong> Look for a sticker on the back or bottom edge of the monitor. It often lists the model number and size.</li>
+    <li><strong>Manufacturer website:</strong> Search your monitor model number on the manufacturer's site. The specifications page lists the diagonal size.</li>
+  </ul>
+
+  <h2 id="method-3-credit-card">Method 3 — Credit Card Calibration</h2>
+  <p>If you do not know your screen's diagonal and auto-detect fails, use a physical reference object. A standard credit or debit card works perfectly because they follow the ISO/IEC 7810 ID-1 standard: 85.60 mm by 53.98 mm (3.370 inches by 2.125 inches).</p>
+  <p><strong>Step-by-step instructions:</strong></p>
+  <ol>
+    <li>Take a credit card, debit card, or any ID card that follows the standard size.</li>
+    <li>Place it flat against your screen, aligned with the ruler's starting edge.</li>
+    <li>Open RulerKit's calibration panel and select "Credit Card" or "Manual."</li>
+    <li>Adjust the calibration slider until the on-screen ruler shows 85.6 mm (or 3.37 inches) at the card's opposite edge.</li>
+    <li>Fine-tune the slider until the ruler ticks align perfectly with both edges of the card.</li>
+    <li>Save the calibration.</li>
+  </ol>
+  <p>For best results, hold the card steady with one hand while adjusting with the other. If the ruler ticks do not align at both edges simultaneously, the card may not be positioned flat against the screen. Try placing it on a flat desk against the screen's base instead of holding it in the air.</p>
+  <p>Other reference objects work too, as long as you know their exact dimensions:</p>
+  <ul>
+    <li><strong>US dollar bill:</strong> 156 mm by 66.3 mm (6.14 inches by 2.61 inches)</li>
+    <li><strong>A4 paper:</strong> 210 mm by 297 mm (8.27 inches by 11.69 inches)</li>
+    <li><strong>US letter paper:</strong> 216 mm by 279 mm (8.5 inches by 11 inches)</li>
+    <li><strong>Post-it note (standard):</strong> 76 mm by 76 mm (3 inches by 3 inches)</li>
+  </ul>
+
+  <h2 id="method-comparison">Calibration Method Comparison</h2>
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="min-w-full text-sm border-collapse border border-surface-300 dark:border-surface-700">
+      <thead>
+        <tr class="bg-surface-100 dark:bg-surface-800">
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Method</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Accuracy</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Ease of Use</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Requirements</th>
+          <th class="border border-surface-300 dark:border-surface-700 p-2 text-left font-semibold">Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Auto-Detect</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">&plusmn;1-2%</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Easiest &mdash; one click</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Modern monitor or laptop with EDID support</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Quick setup on standard displays</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Screen Diagonal</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">&plusmn;0.5-1%</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Moderate &mdash; needs diagonal size</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Known diagonal measurement and aspect ratio</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Most accurate manual method</td>
+        </tr>
+        <tr>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Credit Card</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">&plusmn;1-3%</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Easy &mdash; just need a card</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">Standard credit/debit card (ISO/IEC 7810)</td>
+          <td class="border border-surface-300 dark:border-surface-700 p-2">When auto-detect fails and diagonal is unknown</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="how-ppi-affects-accuracy">How PPI Affects Accuracy</h2>
+  <p>Pixels per inch (PPI) is the fundamental variable behind every online ruler. The tool draws a line that is, say, 96 pixels long and labels it as 1 inch. But if your screen has 110 PPI, those 96 pixels only cover 0.87 physical inches &mdash; a 13% error. If your screen has 72 PPI, those same 96 pixels cover 1.33 inches, a 33% error.</p>
+  <p>Here is how different displays compare when using an uncalibrated ruler that assumes 96 PPI:</p>
+  <ul>
+    <li><strong>24-inch 1920x1080 monitor (92 PPI):</strong> The ruler shows 1 inch where there is actually 1.04 inches. Error: +4%.</li>
+    <li><strong>27-inch 3840x2160 monitor (163 PPI):</strong> The ruler shows 1 inch where there is actually 0.59 inches. Error: -41%.</li>
+    <li><strong>15.6-inch 1920x1080 laptop (141 PPI):</strong> The ruler shows 1 inch where there is actually 0.68 inches. Error: -32%.</li>
+    <li><strong>14-inch 2560x1600 laptop (216 PPI):</strong> The ruler shows 1 inch where there is actually 0.44 inches. Error: -56%.</li>
+  </ul>
+  <p>These numbers make it clear: calibration is not optional for accurate measurement. The good news is that once you calibrate, the ruler is accurate for every measurement you take on that screen, regardless of the unit you use. The PPI value is the same whether you are reading centimeters or inches.</p>
+
+  <h2 id="troubleshooting">Troubleshooting Common Issues</h2>
+  <p>Even with a straightforward calibration process, issues can arise. Here is how to handle the most common ones.</p>
+  <h3>Calibration not saving between sessions</h3>
+  <p>RulerKit stores calibration data in your browser's local storage. If you clear your browser cache, cookies, or site data, the calibration is lost. Privacy-focused browsers or extensions that auto-clear data on exit will also remove your calibration. To avoid this, add RulerKit to your browser's "keep cookies and site data" exception list, or simply recalibrate after clearing your browser data.</p>
+  <h3>Switching between devices or monitors</h3>
+  <p>Each display has its own PPI. When you move from your laptop screen to an external monitor, the calibration changes. RulerKit detects display changes and prompts you to recalibrate. If you use multiple monitors simultaneously, calibrate each one separately. The tool remembers individual calibrations per display as long as the EDID data remains consistent.</p>
+  <h3>Browser differences</h3>
+  <p>Most modern browsers handle screen measurements the same way, but there are edge cases. Firefox on Linux may report incorrect screen dimensions due to driver differences. Safari on macOS handles Retina display scaling differently than Chrome. If you get inconsistent results, try switching browsers as a test. RulerKit is tested and optimized for Chrome, Firefox, Safari, and Edge on their latest versions.</p>
+  <h3>Calibration seems wrong with a physical reference</h3>
+  <p>If you calibrate using a credit card but measurements still seem off, verify that the card is actually ISO/IEC 7810 standard size. Some store loyalty cards, membership cards, or novelty cards are slightly different sizes. Try measuring the card with a physical ruler first to confirm its dimensions. Also ensure the card is lying flat against the screen with no gap, and that your browser zoom is at 100%.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4 not-prose">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">How often should I recalibrate my online ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Only when your display setup changes. Recalibrate after connecting a new monitor, changing screen resolution, switching from laptop to external display, or after clearing your browser data. The calibration persists indefinitely otherwise.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Which calibration method is most accurate?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">The screen diagonal method is the most accurate manual approach with about &plusmn;0.5% error, provided you enter the correct diagonal size. Auto-detect is close behind at &plusmn;1-2%. Credit card calibration is convenient but depends on how precisely you align the card.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Does browser zoom affect calibration?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Yes. Browser zoom changes how CSS pixels map to screen pixels. Always set your browser zoom to 100% before calibrating and measuring. RulerKit displays a visible warning if it detects non-default zoom levels.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Can I calibrate without knowing my screen size?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Yes. Use the credit card method or auto-detect. Both work without you needing to know your screen's diagonal. The auto-detect method reads the information directly from your display's internal data.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Does calibration carry over between different browsers on the same computer?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">No. Calibration data is stored in each browser's local storage independently. If you calibrate in Chrome, you need to calibrate separately in Firefox, Safari, or Edge. The process is quick and takes about 15 seconds per browser.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">What if my credit card is a different size than the standard?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Most credit, debit, and ID cards follow the ISO/IEC 7810 ID-1 standard (85.60 x 53.98 mm). If you are unsure, measure the card with a physical ruler first. Some loyalty cards and gift cards use slightly different dimensions. You can also use any object with known dimensions as your reference.</div>
+      </div>
+    </div>
+  </div>
+</ContentLayout>

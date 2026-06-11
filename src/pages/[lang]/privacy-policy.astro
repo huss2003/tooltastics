@@ -1,0 +1,112 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const metadata = createMetadata({
+  title: 'Privacy Policy — RulerKit',
+  description:
+    'RulerKit\'s privacy policy. We take your privacy seriously. All measurement tools run entirely in your browser with no data collection, no tracking, and no cookies.',
+  locale,
+  path: '/privacy-policy',
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Privacy Policy', url: `${SITE.url}/${locale}/privacy-policy` },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>Privacy Policy — RulerKit</h1>
+  </div>
+
+  <p class="lead text-lg">Effective Date: January 1, 2025</p>
+  <p>RulerKit ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our online measurement tools at RulerKit (the "Service").</p>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#information-collection">Information We Collect</a></li>
+      <li><a href="#no-data-collection">We Do Not Collect Personal Data</a></li>
+      <li><a href="#how-tools-work">How Our Measurement Tools Work</a></li>
+      <li><a href="#cookies">Cookies and Tracking</a></li>
+      <li><a href="#third-party">Third-Party Services</a></li>
+      <li><a href="#data-retention">Data Retention</a></li>
+      <li><a href="#children">Children's Privacy</a></li>
+      <li><a href="#changes">Changes to This Privacy Policy</a></li>
+      <li><a href="#contact">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="information-collection">Information We Collect</h2>
+  <p>RulerKit is designed to collect no personal information. We do not require you to create an account, provide an email address, or submit any personal data to use our tools. You can visit and use every feature of RulerKit without revealing your identity.</p>
+  <p>The only data that exists in connection with your use of RulerKit is:</p>
+  <ul>
+    <li><strong>Standard server logs</strong> &mdash; Our hosting provider, Cloudflare Pages, automatically records basic HTTP request data such as your IP address, browser user-agent string, the page requested, and the timestamp of the request. These logs are used for network diagnostics, security monitoring, and infrastructure optimization. Cloudflare retains these logs for a limited period as described in their own privacy policy. We do not access, analyze, or store these logs ourselves.</li>
+    <li><strong>Local browser storage</strong> &mdash; RulerKit stores your calibration settings (PPI values) in your browser's localStorage. This data never leaves your device. You can clear it at any time through your browser settings or by clicking "Reset Calibration" in the tool. We cannot access this data, nor is it transmitted to any server.</li>
+  </ul>
+
+  <h2 id="no-data-collection">We Do Not Collect Personal Data</h2>
+  <p>To be absolutely clear: RulerKit does not collect, store, process, or transmit any personal data. We do not ask for your name, email address, phone number, physical address, or any other personally identifiable information. We do not use fingerprinting techniques or any other method to identify you across sessions or devices.</p>
+  <p>We do not sell your data. We do not share your data with third parties for marketing, advertising, or any other commercial purpose. We do not build profiles of our users. We do not track your behavior across other websites.</p>
+  <p>Our commitment to privacy is not a marketing slogan. It is a technical reality enforced by the architecture of the application: every measurement tool runs entirely in your browser. There is no backend server that processes your measurements, so there is nothing to collect even if we wanted to.</p>
+
+  <h2 id="how-tools-work">How Our Measurement Tools Work</h2>
+  <p>All RulerKit tools are client-side web applications. Here is what happens when you use each type of tool:</p>
+  <ul>
+    <li><strong>Ruler, Pixel Ruler, Protractor, L-Square:</strong> These tools render measurement graphics using the HTML5 Canvas API. All calculations (distance, angle, unit conversion) happen in JavaScript on your device. No data is sent to any server.</li>
+    <li><strong>Ring Sizer:</strong> You enter your ring size or finger measurement. The tool calculates the corresponding ring size chart. The calculation happens locally. We do not store or transmit your ring size.</li>
+    <li><strong>Measure Image:</strong> When you upload an image to measure, the image is read using the File API and displayed on a Canvas. The image never leaves your device. We cannot see your images, and they are not uploaded to any server.</li>
+    <li><strong>Printable Ruler:</strong> The printable ruler is generated as an SVG or PDF directly in your browser using client-side JavaScript. No server is involved in generating the printable file.</li>
+    <li><strong>Unit Converter:</strong> All conversion calculations use hardcoded conversion factors in JavaScript. No API calls are made. No input data is transmitted.</li>
+  </ul>
+  <p>Because every tool executes entirely on the client side, RulerKit can continue to function even if you are offline (after the initial page load). There is no server dependency for measurement functionality.</p>
+
+  <h2 id="cookies">Cookies and Tracking</h2>
+  <p>RulerKit does not use cookies for tracking, analytics, advertising, or any other purpose. We do not set first-party tracking cookies. We do not allow third-party tracking cookies. We do not use web beacons, pixel tags, or any other tracking technologies.</p>
+  <p>The only browser storage mechanism RulerKit uses is the localStorage API, and only for storing your calibration settings (PPI value). This is strictly functional: without it, you would need to recalibrate every time you load a new page. You can view, clear, or disable localStorage through your browser's developer tools or privacy settings at any time.</p>
+  <p>We do not use any analytics services. We do not track page views, user sessions, feature usage, or any other metrics. We deliberately chose not to install Google Analytics, Plausible, Fathom, or any other analytics platform. We do not use heatmaps, session recordings, or user feedback widgets that would transmit data to third parties.</p>
+
+  <h2 id="third-party">Third-Party Services</h2>
+  <p>RulerKit uses the following third-party services, each with strict privacy limitations:</p>
+  <ul>
+    <li><strong>Cloudflare Pages</strong> &mdash; Our hosting provider. Cloudflare serves the static files of RulerKit from their global CDN. As part of normal website operation, Cloudflare's servers process HTTP requests and may temporarily log IP addresses and user-agent strings for security and network optimization purposes. Cloudflare's privacy policy applies to their handling of this data. We do not have access to Cloudflare's server logs.</li>
+    <li><strong>GitHub</strong> &mdash; Our source code is hosted on GitHub. If you submit a bug report, feature request, or pull request, GitHub's privacy policy governs the information you provide through those interactions. RulerKit itself does not transmit any data to GitHub.</li>
+  </ul>
+  <p>We do not use any advertising networks, affiliate trackers, social media widgets, embedded third-party content (beyond the static files we serve), or any other service that would introduce third-party code into the RulerKit page. Every byte of JavaScript running on RulerKit is written by us and serves the single purpose of providing measurement tools.</p>
+
+  <h2 id="data-retention">Data Retention</h2>
+  <p>Because RulerKit does not collect or store personal data on any server, there is no user data for us to retain, delete, or manage. Your calibration settings are stored in your browser's localStorage and persist until you clear them. We have no ability to access, modify, or delete this data, and we never receive copies of it.</p>
+  <p>If Cloudflare's server logs contain your IP address (as they do for any website visitor), those logs are retained according to Cloudflare's data retention policies. We do not extract, analyze, or store these logs.</p>
+
+  <h2 id="children">Children's Privacy</h2>
+  <p>RulerKit does not knowingly collect any information from children under the age of 13 (or under the age of 16 in the European Economic Area). Because we do not collect any personal information from any user regardless of age, children can use RulerKit without risk of their personal data being collected. We do not display targeted advertising, recommend content, or offer social features that would be inappropriate for children.</p>
+  <p>If you are a parent or guardian and believe your child has provided personal information to RulerKit through some means, please contact us. Since we do not collect personal information, any such submission would be inadvertent and we will take steps to ensure it is not retained.</p>
+
+  <h2 id="changes">Changes to This Privacy Policy</h2>
+  <p>We may update this Privacy Policy from time to time. When we do, we will revise the "Effective Date" at the top of this page. Material changes will be announced on our GitHub repository and, for significant changes, through a notice on the RulerKit website.</p>
+  <p>We encourage you to review this Privacy Policy periodically. Your continued use of RulerKit after any changes constitutes your acceptance of the updated policy. If you do not agree with the changes, you should stop using the Service.</p>
+
+  <h2 id="contact">Contact Us</h2>
+  <p>If you have questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us:</p>
+  <ul>
+    <li>By opening an issue on our <a href="https://github.com/rulerkit/rulerkit/issues" rel="external nofollow">GitHub repository</a></li>
+    <li>By emailing security@rulerkit.com for privacy or security concerns</li>
+  </ul>
+  <p>We will respond to privacy inquiries within 30 days.</p>
+</ContentLayout>

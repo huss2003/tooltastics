@@ -1,0 +1,40 @@
+node_modules/
+dist/
+.astro/
+*.log
+.DS_Store
+.wrangler/
+.devcontainer/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor
+.idea/
+*.swp
+*.swo
+*~
+
+# Debug / temp files
+astro-dev.txt
+rulerkit-homepage
+seo-check
+seo-en-homepage
+seo-en-ruler
+seo-en-ruler-check
+hreflang-check
+structured-data
+ruler-page-src
+
+# Screenshots / artifacts
+screenshots/
+*.bat
+
+# Playwright MCP cache
+.playwright-mcp/
+
+# Kilo (agent framework)
+.kilo/
+kilo.json

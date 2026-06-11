@@ -1,0 +1,100 @@
+---
+import { Unit } from '@config/constants'
+
+export interface Props {
+  class?: string
+}
+
+const units = [
+  { value: Unit.Inches, label: 'in' },
+  { value: Unit.Centimeters, label: 'cm' },
+]
+
+const lengths = [
+  { label: '6 in / 15 cm', valueIn: 6, valueCm: 15 },
+  { label: '12 in / 30 cm', valueIn: 12, valueCm: 30 },
+]
+---
+
+<div class="card space-y-5 {Astro.props.class}" data-printable-ruler-panel>
+  <h2 class="text-md font-semibold text-surface-900 dark:text-surface-50">Printable Ruler</h2>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Units</h3>
+    <div class="flex gap-1 rounded-lg bg-surface-100 p-0.5 dark:bg-surface-800" role="radiogroup" aria-label="Measurement unit">
+      {units.map((u) => (
+        <button
+          class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors aria-checked:bg-white aria-checked:text-primary-600 aria-checked:shadow-sm dark:aria-checked:bg-surface-700 dark:aria-checked:text-primary-400"
+          role="radio"
+          aria-checked={u.value === Unit.Inches}
+          data-unit={u.value}
+        >
+          {u.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-xs font-semibold text-surface-500 uppercase tracking-wider">Length</h3>
+    <div class="flex flex-col gap-1">
+      {lengths.map((len) => (
+        <button
+          class="rounded-md px-3 py-2 text-xs font-medium transition-colors aria-checked:bg-primary-100 aria-checked:text-primary-700 dark:aria-checked:bg-primary-900 dark:aria-checked:text-primary-300 border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300"
+          role="radio"
+          aria-checked={len.valueIn === 12}
+          data-length-in={len.valueIn}
+          data-length-cm={len.valueCm}
+        >
+          {len.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <button class="btn btn-primary w-full text-xs" data-download-btn>Download PDF</button>
+</div>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('[data-printable-ruler-panel]')
+  if (panel) {
+    const unitBtns = panel.querySelectorAll<HTMLElement>('[data-unit]')
+    const lengthBtns = panel.querySelectorAll<HTMLElement>('[data-length-in]')
+    const downloadBtn = panel.querySelector<HTMLButtonElement>('[data-download-btn]')
+
+    let currentUnit = 'in'
+    let currentLengthIn = 12
+    let currentLengthCm = 30
+
+    for (const btn of unitBtns) {
+      btn.addEventListener('click', () => {
+        const unit = btn.dataset.unit
+        if (!unit) return
+        currentUnit = unit
+        for (const b of unitBtns) {
+          b.ariaChecked = String(b.dataset.unit === unit)
+        }
+      })
+    }
+
+    for (const btn of lengthBtns) {
+      btn.addEventListener('click', () => {
+        for (const b of lengthBtns) {
+          b.ariaChecked = String(b === btn)
+        }
+        currentLengthIn = parseInt(btn.dataset.lengthIn ?? '12', 10)
+        currentLengthCm = parseInt(btn.dataset.lengthCm ?? '30', 10)
+      })
+    }
+
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        const event = new CustomEvent('rulerkit:print', {
+          detail: { unit: currentUnit, lengthIn: currentLengthIn, lengthCm: currentLengthCm },
+          bubbles: true,
+        })
+        panel.dispatchEvent(event)
+      })
+    }
+  }
+</script>

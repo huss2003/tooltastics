@@ -1,0 +1,127 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { howTo, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import RingSizerPanel from '@components/tools/ring-sizer/RingSizerPanel.astro'
+import RingSizerCanvas from '@components/tools/ring-sizer/RingSizerCanvas.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('ring-sizer')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  howTo(toolName, toolDesc, [
+    { name: 'Choose your sizing standard', text: 'Select US, UK, EU, or JP ring sizes.' },
+    { name: 'Place an existing ring on the circles', text: 'Find the circle that matches your ring.' },
+    { name: 'Read your ring size', text: 'The matching circle shows your ring size.' },
+  ], {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <RingSizerPanel />
+  </div>
+  <div slot="canvas">
+    <RingSizerCanvas />
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#find-ring-size-at-home">How to Find Your Ring Size at Home</a></li>
+      <li><a href="#international-sizing">US, UK, EU, and JP Size Standards</a></li>
+      <li><a href="#measuring-existing-ring">Measuring an Existing Ring</a></li>
+      <li><a href="#measuring-your-finger">Measuring Your Finger</a></li>
+      <li><a href="#accurate-sizing-tips">Tips for Accurate Sizing</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="find-ring-size-at-home">How to Find Your Ring Size at Home</h2>
+  <p>RulerKit's ring sizer helps you determine your ring size without visiting a jeweler. The tool displays a series of concentric circles, each labeled with a ring size. Place an existing ring that fits you well on top of the circles and find the one that matches its inner diameter. The circle whose edge aligns most closely with the inside edge of your ring shows your size. It takes about 30 seconds and requires nothing more than the ring you already own.</p>
+  <p>If you do not have a ring to use as a reference, the tool also includes a strip-style sizer that you can hold against your finger. This method uses a scaled guide that you wrap conceptually around your finger to estimate the circumference.</p>
+
+  <h2 id="international-sizing">US, UK, EU, and JP Size Standards</h2>
+  <p>Ring sizing is not universal. A US size 7 is a UK size N, a EU size 54, and a JP size 14. These differences can lead to ordering the wrong size if you are buying from an international seller. RulerKit's ring sizer includes all four major sizing standards so you can read your size in the system used by the store or jeweler you are purchasing from.</p>
+  <p>The tool shows the equivalent size in each standard next to the circle. If your finger measures as a US size 7, you will see the UK, EU, and JP equivalents displayed automatically. This cross-referencing eliminates guesswork when shopping on international websites.</p>
+
+  <h2 id="measuring-existing-ring">Measuring an Existing Ring</h2>
+  <p>This is the most reliable method for finding your ring size. Take a ring that fits the correct finger well. Place it on a flat surface. Align the ring's inside edge with the on-screen circles in the RulerKit tool. The circle that matches the inner diameter most closely determines your size. If the ring falls between two circles, choose the larger size for comfort — a slightly loose ring is preferable to one that is tight.</p>
+  <p>Measure the ring at room temperature. Metal expands when warm and contracts when cold, which can change the diameter by a fraction of a size. For the most consistent result, measure the ring after it has been at normal room temperature for at least 30 minutes.</p>
+
+  <h2 id="measuring-your-finger">Measuring Your Finger</h2>
+  <p>If you do not have an existing ring, you can measure your finger directly. Use a piece of string or a strip of paper about 6 inches long. Wrap it around the base of the finger you want to size. Mark where the ends meet, then lay that length against the RulerKit ruler to get the circumference in millimeters. Divide the circumference by 3.1416 to get the diameter, then compare that diameter to the ring sizer circles.</p>
+  <p>Measure your finger at the end of the day when it is at its largest. Fingers swell slightly throughout the day due to activity and temperature. A ring sized in the morning when fingers are smaller may feel tight by evening. Also measure the specific finger — your left and right hands can differ by half a size or more.</p>
+
+  <h2 id="accurate-sizing-tips">Tips for Accurate Sizing</h2>
+  <p>Measure multiple times and take the average. A single measurement can be off by a small amount due to angle or pressure. Three measurements that agree within half a size give you confidence in the result. Account for ring width. Wide bands (6 mm or wider) fit more snugly than thin bands. If you are sizing for a wide band, go up half a size from what the circle suggests. Consider the knuckle. If your knuckle is significantly larger than your finger base, measure both and choose a size that passes over the knuckle without being too loose on the finger.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What ring size systems does the tool support?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The tool supports US, UK, EU, and Japanese (JP) ring size standards. You can switch between them in the sidebar panel and see all equivalents at once.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I find my size without an existing ring?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. Use the circumference method with a string or paper strip. Measure against the RulerKit ruler, then match the diameter to the on-screen circles.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does the tool include children's ring sizes?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The circle range covers sizes from children's (US 1) through adult (US 13+). Use the same method — place an existing ring on the circles or measure the finger circumference.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Are half sizes included?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The tool includes half sizes for US and UK standards. EU and JP sizes are continuous and do not use half increments.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is an online ring sizer?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">With careful use, an online ring sizer is accurate to within half a size. The most reliable method is comparing an existing ring to the circles rather than measuring your finger with string.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">What if my ring size falls between two circles?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Choose the larger size. A ring that is slightly loose is more comfortable and easier to remove than one that is tight. For wide bands, going up half a size from the circle match is recommended.</div>
+      </div>
+    </div>
+  </div>
+</div>

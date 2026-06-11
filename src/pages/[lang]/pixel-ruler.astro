@@ -1,0 +1,123 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { getTool } from '@config/tools'
+import { toolMetadata } from '@lib/seo/metadata'
+import { webApplication, breadcrumbList } from '@lib/seo/schema'
+import ToolLayout from '@layouts/ToolLayout.astro'
+import PixelRulerPanel from '@components/tools/pixel-ruler/PixelRulerPanel.astro'
+import PixelRulerCanvas from '@components/tools/pixel-ruler/PixelRulerCanvas.astro'
+import en from '@lib/i18n/translations/en.json'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+const tool = getTool('pixel-ruler')!
+const t = (key: string): string => (en as Record<string, string>)[key] ?? key
+const toolName = t(tool.nameKey)
+const toolDesc = t(tool.descriptionKey)
+
+const metadata = toolMetadata(locale, tool.slug, toolName, toolDesc, [
+  webApplication(toolName, toolDesc, {
+    locale,
+    canonical: `${SITE.url}/${locale}/${tool.slug}`,
+    title: toolName,
+    description: toolDesc,
+  }),
+  breadcrumbList([
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: toolName, url: `${SITE.url}/${locale}/${tool.slug}` },
+  ]),
+])
+---
+
+<ToolLayout metadata={metadata} title={toolName}>
+  <div slot="sidebar">
+    <PixelRulerPanel />
+  </div>
+  <div slot="canvas">
+    <PixelRulerCanvas />
+  </div>
+</ToolLayout>
+
+<div class="prose prose-surface mx-auto max-w-3xl dark:prose-invert pb-16">
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#what-is-a-pixel-ruler">What Is a Pixel Ruler?</a></li>
+      <li><a href="#why-designers-need-it">Why Designers and Developers Need a Pixel Ruler</a></li>
+      <li><a href="#measuring-ui-elements">Measuring UI Elements Accurately</a></li>
+      <li><a href="#pixel-perfect-workflow">Pixel-Perfect Design Workflow</a></li>
+      <li><a href="#pixels-vs-real-units">Pixels vs. Real-World Units</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="what-is-a-pixel-ruler">What Is a Pixel Ruler?</h2>
+  <p>A pixel ruler measures distances on your screen in pixels — the tiny squares of light that make up every digital display. Unlike a physical ruler that measures in centimeters or inches, a pixel ruler works in the native units of screens and digital images. Each measurement you take with a pixel ruler tells you exactly how many pixels separate two points in your design, code, or image.</p>
+  <p>RulerKit's pixel ruler gives you a crosshair cursor that you can drag across any part of your screen. As you move your mouse, the tool displays the horizontal and vertical distance in pixels in real time. The ruler's scale markings are drawn at precise pixel intervals so you can read measurements down to a single pixel.</p>
+
+  <h2 id="why-designers-need-it">Why Designers and Developers Need a Pixel Ruler</h2>
+  <p>Design fidelity depends on getting pixel measurements right. When a designer specifies a 24-pixel margin and a developer implements a 20-pixel margin, the result looks noticeably off. A pixel ruler bridges that gap by giving both roles a shared reference.</p>
+  <h3>UI and web design</h3>
+  <p>Check spacing between elements, measure icon sizes, verify padding around buttons, and confirm that your design comp matches the implemented page. Common measurements include line heights, column widths, gutter spacing, and border radii.</p>
+  <h3>Front-end development</h3>
+  <p>Before you write a single line of CSS, measure the reference design to know the exact pixel values you need. Use the ruler to verify that your responsive breakpoints produce consistent spacing across viewport sizes.</p>
+  <h3>Graphic design and illustration</h3>
+  <p>Measure canvas element positions, check alignment of layered objects, and ensure consistent spacing in multi-artboard projects. The pixel ruler works over any application window, not just inside the browser.</p>
+
+  <h2 id="measuring-ui-elements">Measuring UI Elements Accurately</h2>
+  <p>To measure a UI element, hover the crosshair over its top-left corner, note the starting pixel coordinate, then drag to the bottom-right corner. The difference gives you width and height in pixels. For spacing between two elements, measure the gap by positioning the crosshair at the edge of the first element and reading the distance to the edge of the second.</p>
+  <p>Use the horizontal and vertical guides to check alignment. If two buttons have different pixel distances from the left edge of the container, they are not aligned. The ruler flags these mismatches instantly. The tool also shows a running measurement log so you can compare multiple readings without memorizing numbers.</p>
+
+  <h2 id="pixel-perfect-workflow">Pixel-Perfect Design Workflow</h2>
+  <p>Building pixel-perfect interfaces takes more than a good eye. Start by measuring the reference design at 100% zoom. Write down the key spacing values — margins between sections, padding inside cards, font sizes in pixels, and icon dimensions. Then build your CSS or design file using those exact numbers. After implementation, run the pixel ruler over the live page to confirm every measurement matches. Any discrepancy of 1 pixel or more is visible to users and worth correcting.</p>
+  <p>For responsive designs, test at each breakpoint. A card grid that looks perfectly spaced at 1440 px wide might compress awkwardly at 1024 px. The pixel ruler helps you spot and fix these layout issues before they reach production.</p>
+
+  <h2 id="pixels-vs-real-units">Pixels vs. Real-World Units</h2>
+  <p>A pixel has no fixed physical size. On a 24-inch 1080p monitor, one pixel is roughly 0.27 mm. On a 27-inch 5K display, one pixel is about 0.12 mm. That means a "96 px" element is physically different sizes on different screens. The pixel ruler measures in the screen's native unit, which is exactly what you need for digital design.</p>
+  <p>If you also need physical measurements — say, to check whether a design will fit on a printed page — switch to the regular RulerKit ruler with inch or centimeter units. The two tools complement each other: use the pixel ruler for screen work and the standard ruler for anything that involves paper or physical objects.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">How accurate is the pixel ruler for UI design?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">It is accurate to 1 pixel. The tool measures the actual screen pixels regardless of display size or resolution, so you get true-to-screen results every time.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I convert pixel measurements to inches or centimeters?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The sidebar shows the equivalent measurement in inches and centimeters based on your screen's PPI. You can also use the RulerKit unit converter for batch conversions.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does browser zoom affect the pixel ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. Browser zoom changes how pixels are rendered. For best accuracy, set your browser zoom to 100% before taking measurements.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Can I use the pixel ruler on retina or high-DPI displays?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">Yes. The tool accounts for device pixel ratio automatically, giving you accurate measurements on Retina and high-DPI displays without any extra setup.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">Does it work over any application, not just the browser?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text">The pixel ruler operates within the browser tab. To measure other applications, take a screenshot and use the Measure Image tool, or use a desktop pixel ruler app for on-screen measurements.</div>
+      </div>
+    </div>
+  </div>
+</div>

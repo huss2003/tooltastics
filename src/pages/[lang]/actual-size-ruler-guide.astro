@@ -1,0 +1,186 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/actual-size-ruler-guide`
+
+const metadata = createMetadata({
+  title: 'Actual Size Ruler Guide — How to Measure Real-World Objects Online',
+  description:
+    'Your complete guide to using an actual size ruler online. Calibrate your screen and measure real objects in cm, inches, and millimeters with precision.',
+  locale,
+  path: '/actual-size-ruler-guide',
+  ogType: 'article',
+  schema: [
+    article(
+      'Actual Size Ruler Guide — How to Measure Real-World Objects Online',
+      'Your complete guide to using an actual size ruler online. Calibrate your screen and measure real objects in cm, inches, and millimeters with precision.',
+      {
+        locale,
+        canonical,
+        title: 'Actual Size Ruler Guide — How to Measure Real-World Objects Online',
+        description:
+          'Your complete guide to using an actual size ruler online. Calibrate your screen and measure real objects in cm, inches, and millimeters with precision.',
+        datePublished: '2025-02-10',
+        dateModified: '2025-05-20',
+      },
+    ),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+      { name: 'Actual Size Ruler Guide', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+    { name: 'Actual Size Ruler Guide', url: canonical },
+  ],
+  publishedTime: '2025-02-10',
+  modifiedTime: '2025-05-20',
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>Actual Size Ruler Guide — How to Measure Real-World Objects Online</h1>
+    <p class="text-sm text-surface-500">Published: February 10, 2025 &middot; Updated: May 20, 2025</p>
+  </div>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#what-actual-size-means">What &ldquo;Actual Size&rdquo; Means on a Screen</a></li>
+      <li><a href="#physics-of-screen-measurements">The Physics of Screen Measurements</a></li>
+      <li><a href="#ppi-explained">PPI Explained — The Key to Accuracy</a></li>
+      <li><a href="#step-by-step-calibration">Step-by-Step Calibration for Actual Size</a></li>
+      <li><a href="#measuring-in-different-units">Measuring Objects in cm, Inches, and mm</a></li>
+      <li><a href="#practical-example-credit-card">Practical Example — Measuring a Credit Card</a></li>
+      <li><a href="#common-misconceptions">Common Misconceptions</a></li>
+      <li><a href="#what-affects-accuracy">What Affects Accuracy</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="what-actual-size-means">What &ldquo;Actual Size&rdquo; Means on a Screen</h2>
+  <p>When you see "actual size" next to an online ruler, it means the ruler markings on your screen correspond to real-world physical dimensions &mdash; one centimeter on the screen is exactly one centimeter in the physical world. This is different from a "digital representation" where an image of a ruler is shown without accounting for your screen's specific pixel density.</p>
+  <p>The challenge is that screens do not have a fixed relationship between pixels and physical distance. A 100-pixel line might be 0.67 inches on one display and 1.04 inches on another. "Actual size" on a screen ruler is an achievement of calibration: mapping the abstract pixel grid to concrete physical units using your display's unique PPI value.</p>
+  <p>RulerKit achieves actual-size measurements by calculating how many pixels fit into each physical unit on your specific screen. When you calibrate the tool, it stores a conversion factor. Every subsequent measurement multiplies pixel distances by this factor to display the true physical length. The result is a ruler that behaves like a transparent plastic ruler laid over your display.</p>
+
+  <h2 id="physics-of-screen-measurements">The Physics of Screen Measurements</h2>
+  <p>To understand why screens need calibration, it helps to know how displays work. A screen is a grid of pixels &mdash; tiny light-emitting elements. The number of pixels is fixed by the screen's resolution. A 1920x1080 display always has exactly 1,920 pixels horizontally and 1,080 vertically. But the physical size of each pixel depends on the screen's dimensions.</p>
+  <p>On a 24-inch monitor with 1920x1080 resolution, each pixel is about 0.276 mm wide. On a 15.6-inch laptop with the same resolution, each pixel is only about 0.180 mm wide. The pixels are physically smaller because the same number of pixels is packed into a smaller area. Higher resolution at the same screen size makes pixels even smaller.</p>
+  <p>This is why an "actual size" ruler cannot work without knowing your display's physical dimensions. The tool needs to know the PPI to convert pixel distances to physical distances. Without this data, it is guessing &mdash; and the guess can be wrong by 50% or more on modern high-resolution displays.</p>
+
+  <h2 id="ppi-explained">PPI Explained — The Key to Accuracy</h2>
+  <p>PPI, or pixels per inch, measures pixel density. It is calculated by dividing the screen's resolution by its physical size. For a 24-inch 1920x1080 monitor, the horizontal PPI is about 92. For a 27-inch 4K monitor, it is about 163. For a 6.1-inch iPhone, it is about 460.</p>
+  <p>PPI determines how many pixels fit into one physical inch. If a ruler tool assumes 96 PPI (a common default), but your screen has 163 PPI, the tool draws too few pixels per inch &mdash; making every measurement appear smaller than reality. The higher your screen's actual PPI, the more dramatic the error if the tool defaults to a low estimate.</p>
+  <p>You can calculate your screen's PPI yourself using the formula: PPI = &radic;(horizontal pixels&sup2; + vertical pixels&sup2;) / diagonal inches. For a 27-inch 4K monitor: &radic;(3840&sup2; + 2160&sup2;) / 27 = &radic;(14,745,600 + 4,665,600) / 27 = &radic;19,411,200 / 27 = 4406 / 27 = 163 PPI. RulerKit does this math automatically during calibration.</p>
+
+  <h2 id="step-by-step-calibration">Step-by-Step Calibration for Actual Size</h2>
+  <p>Getting actual-size measurements on RulerKit requires one calibration step. Here is the complete process.</p>
+  <p><strong>Using auto-detect (easiest):</strong></p>
+  <ol>
+    <li>Open the RulerKit ruler tool.</li>
+    <li>Click "Calibrate" in the settings panel.</li>
+    <li>Choose "Auto-Detect." RulerKit reads your screen's EDID data.</li>
+    <li>Review the detected PPI value and confirm.</li>
+    <li>The ruler now displays actual-size measurements.</li>
+  </ol>
+  <p><strong>Using a physical reference (most reliable):</strong></p>
+  <ol>
+    <li>Place a credit card or known-size object flat against your screen.</li>
+    <li>Open RulerKit's calibration panel.</li>
+    <li>Select "Manual Calibration."</li>
+    <li>Enter the object's known width (e.g., 85.6 mm for a credit card).</li>
+    <li>Adjust the slider until the on-screen ruler matches the object's edges.</li>
+    <li>Save the calibration. The ruler now shows actual sizes.</li>
+  </ol>
+  <p>After calibration, test it by measuring a few known objects. A standard credit card should read 85.6 mm wide. A sheet of A4 paper should read 210 mm wide. If these match within 1-2 mm, your actual-size ruler is ready for use.</p>
+
+  <h2 id="measuring-in-different-units">Measuring Objects in cm, Inches, and mm</h2>
+  <p>Once calibrated, RulerKit lets you measure in any unit. The actual-size conversion applies regardless of the unit you choose, because the underlying PPI value is unit-agnostic.</p>
+  <p><strong>Centimeters (cm):</strong> Best for everyday objects and metric-system users. The ruler shows tick marks at every centimeter, with finer millimeter marks between them. A4 paper is 21.0 cm wide, a smartphone is typically 7-8 cm wide, and a standard brick is about 22 cm long. Centimeter measurements are ideal for furniture, packaging, and school projects.</p>
+  <p><strong>Inches (in):</strong> The standard for US and UK users. The ruler shows 1-inch marks with fractional subdivisions (1/2, 1/4, 1/8, 1/16). US letter paper is 8.5 inches wide, a standard sheet of plywood is 48 inches wide, and screen sizes are always quoted in inches. Inch measurements are common in construction, hardware, and DIY.</p>
+  <p><strong>Millimeters (mm):</strong> For precision work. One millimeter is about the thickness of a credit card. Use mm mode for jewelry sizing, electronics measurements (SIM card: 25 mm x 15 mm), and detailed crafting. RulerKit shows mm marks in 1 mm increments when in metric mode.</p>
+  <p>Switching between units does not require recalibration. The tool converts using the same PPI value, so a 10 cm object measured in inches will show 3.937 inches (which you can read as approximately 3-15/16 inches).</p>
+
+  <h2 id="practical-example-credit-card">Practical Example — Measuring a Credit Card</h2>
+  <p>Let us walk through measuring a credit card using RulerKit's actual-size ruler, from start to finish.</p>
+  <p><strong>Step 1: Calibrate.</strong> If you have not calibrated yet, use auto-detect or the screen diagonal method. For this example, we will assume a 24-inch monitor at 1920x1080, which gives approximately 92 PPI.</p>
+  <p><strong>Step 2: Switch to millimeters.</strong> Credit cards are 85.6 mm wide. Using the mm scale gives the most precise reading.</p>
+  <p><strong>Step 3: Position the card.</strong> Place the credit card flat against your screen, aligned with the ruler's zero mark on the left. Make sure the card lies flat with no gaps or tilting.</p>
+  <p><strong>Step 4: Read the measurement.</strong> Look at where the right edge of the card intersects the ruler scale. On a properly calibrated ruler, it should read 85-86 mm. If the reading is off by more than 2 mm, check your calibration and repeat.</p>
+  <p><strong>Step 5: Verify.</strong> For extra confidence, measure the card's height as well. It should read 53.98 mm. If both dimensions are close to the standard values, your actual-size ruler is calibrated correctly.</p>
+  <p>This same process works for any physical object: a book, a phone, a photograph, or a piece of hardware. The key variables are consistent calibration and careful positioning of the object against the screen.</p>
+
+  <h2 id="common-misconceptions">Common Misconceptions</h2>
+  <p>Several myths about actual-size rulers lead people to question their accuracy. Here is the truth behind the most common ones.</p>
+  <h3>&ldquo;My screen already shows actual size without calibration&rdquo;</h3>
+  <p>This is false. No screen displays actual-size measurements by default. The operating system does not communicate physical screen dimensions to the browser in a reliable way. Every online ruler that shows accurate actual-size measurements has done the calibration work behind the scenes.</p>
+  <h3>&ldquo;All 15-inch laptops have the same PPI&rdquo;</h3>
+  <p>Not even close. A 15.6-inch laptop with 1920x1080 resolution has about 141 PPI. A 15.6-inch laptop with 3840x2160 (4K) resolution has about 282 PPI &mdash; exactly double. The same physical screen size with higher resolution means more pixels per inch, and a significantly different ruler scale.</p>
+  <h3>&ldquo;Actual size on screen equals print size&rdquo;</h3>
+  <p>Print size depends on the printer's DPI (dots per inch), not the screen's PPI. A design that measures 10 cm on your calibrated screen will print at 10 cm only if your printer is configured correctly. Screen calibration and print calibration are separate processes.</p>
+
+  <h2 id="what-affects-accuracy">What Affects Accuracy</h2>
+  <p>Even with perfect calibration, several factors can introduce error into your actual-size measurements. Understanding them helps you get consistently reliable results.</p>
+  <h3>Screen resolution changes</h3>
+  <p>If you change your display's resolution in your operating system, the PPI changes. A 24-inch monitor at 1920x1080 has 92 PPI. If you switch to 1280x720, the same monitor now has about 61 PPI because the operating system stretches fewer pixels across the same physical area. RulerKit detects resolution changes and alerts you to recalibrate.</p>
+  <h3>Viewing angle</h3>
+  <p>LCD and OLED screens have optimal viewing angles. When you view the screen from the side, the apparent position of ruler markings shifts relative to your object. This parallax effect can offset measurements by 1-3 mm depending on the angle. Always view the screen straight-on when measuring.</p>
+  <h3>Browser zoom level</h3>
+  <p>Browser zoom scales the entire page, including the ruler. At 100% zoom, one CSS pixel equals one device pixel. At 110% zoom, the ruler is 10% larger than it should be, making objects appear smaller than they are. RulerKit warns you if your zoom is not at 100%.</p>
+  <h3>Object positioning</h3>
+  <p>If the object you are measuring is not flat against the screen, or if it is tilted, the measurement will be off. The gap between the object and the screen creates a parallax error that varies with your viewing angle. For best results, press the object flat against the display surface.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4 not-prose">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">What is the difference between actual size and print size?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Actual size on a screen refers to what you see on your display after calibration. Print size refers to the dimensions of an object on paper. A 10 cm image on your screen will print at 10 cm only if your printer DPI settings match. They are separate measurements that require separate calibration.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Why does the same ruler look different on my phone and laptop?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Different screens have different pixel densities. A phone display typically has 300-500 PPI, while a laptop has 100-200 PPI. Even with calibration, the visual appearance of the ruler changes because pixels are physically smaller on the phone. The measurement values will match if both are calibrated correctly.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Can I measure objects larger than my screen?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Yes, but you need to measure in segments. Measure as much of the object as fits on your screen, note the reading, then reposition the object to measure the remaining portion and add the two values. For best accuracy, mark the object at the screen's edge before repositioning.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Does screen brightness affect measurement accuracy?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">No. Screen brightness does not change pixel positions or physical dimensions. However, very low brightness can make ruler markings harder to see, which may lead to reading errors. Adjust brightness to a comfortable level for best visibility.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">How do I know if my actual-size ruler is accurate?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Test it with a known-size object. A standard credit card should measure 85.6 mm or 3.37 inches wide. An A4 sheet of paper should measure 210 mm or 8.27 inches wide. If these objects measure correctly on your screen, your ruler is accurate.</div>
+      </div>
+    </div>
+  </div>
+</ContentLayout>

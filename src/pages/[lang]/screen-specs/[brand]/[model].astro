@@ -1,0 +1,142 @@
+---
+import type { Locale } from '@config/constants'
+import type { DeviceEntry } from '@/types/measurement'
+import { SITE } from '@config/site'
+import { DEVICE_DATABASE } from '@lib/calibration/deviceDatabase'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+import { slugify } from '@lib/data/programmatic/slug'
+
+export interface Params { lang: string; brand: string; model: string }
+
+export interface Props { locale: Locale; device: DeviceEntry }
+
+export function getStaticPaths() {
+  const paths: { params: Params; props: Props }[] = []
+  for (const locale of SITE.locales) {
+    for (const device of DEVICE_DATABASE) {
+      paths.push({
+        params: { lang: locale.code, brand: slugify(device.brand), model: slugify(device.name) },
+        props: { locale: locale.code, device },
+      })
+    }
+  }
+  return paths
+}
+
+const { locale, device } = Astro.props as Props
+const brandSlug = slugify(device.brand)
+const modelSlug = slugify(device.name)
+
+const canonical = `${SITE.url}/${locale}/screen-specs/${brandSlug}/${modelSlug}`
+const resolution = `${device.widthPx}×${device.heightPx}`
+const typeLabel = device.type.charAt(0).toUpperCase() + device.type.slice(1)
+const title = `${device.name} Screen Specifications: PPI, Resolution & Size | RulerKit`
+const description = `Complete screen specifications for the ${device.name}. ${resolution} resolution, ${device.ppi} PPI pixel density, ${device.diagonalInches}" diagonal screen size. Calibrate your online ruler for this device.`
+
+const relatedByBrand = DEVICE_DATABASE.filter(d => d.brand === device.brand && d.name !== device.name).slice(0, 5)
+const similarPpi = DEVICE_DATABASE.filter(d => Math.abs(d.ppi - device.ppi) < 20 && d.name !== device.name).slice(0, 5)
+
+const metadata = createMetadata({
+  title,
+  description,
+  locale,
+  path: `/screen-specs/${brandSlug}/${modelSlug}`,
+  ogType: 'article',
+  schema: [
+    article(title, description, {
+      locale,
+      canonical,
+      image: `${SITE.url}/og/default.png`,
+    }),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Screen Specs', url: `${SITE.url}/${locale}/screen-specs` },
+      { name: device.brand, url: `${SITE.url}/${locale}/screen-specs/${brandSlug}` },
+      { name: device.name, url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Screen Specs', url: `${SITE.url}/${locale}/screen-specs` },
+    { name: device.name, url: canonical },
+  ],
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1 class="text-3xl font-bold tracking-tight text-surface-900 dark:text-white">{device.name} Screen Specifications</h1>
+    <p class="mt-2 text-sm text-surface-500">{typeLabel} &middot; {device.brand}</p>
+  </div>
+
+  <div class="not-prose mb-8 overflow-hidden rounded-xl border border-surface-200 bg-surface-50 dark:border-surface-700 dark:bg-surface-800/50">
+    <table class="min-w-full divide-y divide-surface-200 dark:divide-surface-700">
+      <tbody class="divide-y divide-surface-200 dark:divide-surface-700">
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Display Resolution</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{resolution} pixels</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Pixel Density (PPI)</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{device.ppi} PPI</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Screen Diagonal</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{device.diagonalInches}" ({Math.round(device.diagonalInches * 2.54)} cm)</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Device Type</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{typeLabel}</td></tr>
+        <tr><td class="px-4 py-3 text-sm font-medium text-surface-500">Brand</td><td class="px-4 py-3 text-sm text-surface-900 dark:text-white">{device.brand}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="not-prose mb-8 flex flex-wrap gap-3">
+    <a href={`/${locale}/ruler?ppi=${device.ppi}`} class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700">Use Online Ruler with {device.ppi} PPI</a>
+    <a href={`/${locale}/how-to-calibrate`} class="inline-flex items-center gap-2 rounded-lg border border-surface-300 bg-white px-4 py-2 text-sm font-medium text-surface-700 transition-colors hover:bg-surface-50 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700">How to Calibrate Your Ruler</a>
+  </div>
+
+  <h2 id="ppi-explained">What Is {device.ppi} PPI on the {device.name}?</h2>
+  <p>PPI stands for Pixels Per Inch, and it measures the pixel density of your screen. The {device.name} has a pixel density of <strong>{device.ppi} PPI</strong>, which means there are {device.ppi} pixels packed into every inch of the display. This determines how sharp text and images appear, and it is the critical value used by RulerKit to calibrate the online ruler for accurate real-size measurements on your screen.</p>
+  <p>A higher PPI means crisper text and more detailed images. The {device.name}&rsquo;s {device.ppi} PPI is {device.ppi > 300 ? 'typical of modern high-resolution displays, providing a Retina-quality viewing experience where individual pixels are indistinguishable at normal viewing distances' : 'adequate for general use, though individual pixels may be visible up close'}.</p>
+
+  <h2 id="resolution-details">{resolution} Resolution Explained</h2>
+  <p>The {device.name} features a {resolution} pixel resolution on its {device.diagonalInches}-inch display. This gives it an aspect ratio of approximately {(device.widthPx / device.heightPx).toFixed(3)}:1. The total number of pixels on screen is {Math.round(device.widthPx * device.heightPx / 1000000)} million, providing {(device.ppi * device.ppi * (device.diagonalInches * 2.54) * 1).toFixed(0)} pixels per square cm of screen area.</p>
+  <p>When using RulerKit&rsquo;s online ruler with this device, we use the {device.ppi} PPI value to ensure that one inch on screen corresponds to exactly one physical inch. This auto-calibration ensures your measurements are accurate to within {Math.round(0.5 / device.ppi * 100) / 100} inches.</p>
+
+  <h2 id="calibrate-ruler">Using the Online Ruler with Your {device.name}</h2>
+  <p>To get the most accurate measurements on your {device.name}, follow these steps:</p>
+  <ol>
+    <li><strong>Visit the RulerKit online ruler</strong> at the link above. The ruler will auto-select the {device.ppi} PPI calibration for your device.</li>
+    <li><strong>Verify the calibration</strong> by placing a credit card or known-size object against your screen. The ruler should match the actual size of the card.</li>
+    <li><strong>Choose your units</strong>: Switch between centimeters, inches, or millimeters using the unit selector.</li>
+    <li><strong>Measure anything</strong> on your screen by aligning the ruler with the object you want to measure.</li>
+  </ol>
+  <p>If the auto-calibrated ruler does not match a physical reference, you can manually adjust the PPI using the credit card calibration method. Place a standard credit card (85.6 mm × 53.98 mm) against the on-screen ruler and adjust the PPI slider until the ruler matches the card&rsquo;s dimensions exactly.</p>
+
+  <h2 id="screen-quality">{device.ppi} PPI Display Quality</h2>
+  <p>At {device.ppi} PPI, the {device.name} offers {device.ppi >= 400 ? 'a Retina-class display where individual pixels are invisible to the naked eye at normal viewing distances. Content appears sharp and smooth, making it excellent for reading, design work, and media consumption' : 'a standard-definition display suitable for everyday tasks. While individual pixels may be visible on close inspection, the display is perfectly functional for browsing, document editing, and video playback'}. The screen measures {device.diagonalInches} inches diagonally ({Math.round(device.diagonalInches * 2.54)} cm), making it {device.type === 'phone' ? 'compact enough for one-handed use' : device.type === 'tablet' ? 'ideal for productivity and creative work' : 'suitable for demanding workflows and multitasking'}.</p>
+
+  {relatedByBrand.length > 0 ? (
+    <>
+      <h2 id="related-devices">Other {device.brand} Devices</h2>
+      <ul>
+        {relatedByBrand.map(d => (
+          <li><a href={`/${locale}/screen-specs/${slugify(d.brand)}/${slugify(d.name)}`}>{d.name} &mdash; {d.ppi} PPI, {d.diagonalInches}&rdquo; {d.type}</a></li>
+        ))}
+      </ul>
+    </>
+  ) : null}
+
+  {similarPpi.length > 0 ? (
+    <>
+      <h2 id="similar-ppi">Devices with Similar PPI ({device.ppi} PPI)</h2>
+      <p>If you use multiple devices, these screens have a similar pixel density to the {device.name} and will provide comparable ruler accuracy:</p>
+      <ul>
+        {similarPpi.map(d => (
+          <li><a href={`/${locale}/screen-specs/${slugify(d.brand)}/${slugify(d.name)}`}>{d.name} &mdash; {d.ppi} PPI</a></li>
+        ))}
+      </ul>
+    </>
+  ) : null}
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <h3>How accurate is the ruler on my {device.name}?</h3>
+  <p>When calibrated with the correct {device.ppi} PPI value, RulerKit&rsquo;s online ruler is accurate to within approximately {Math.round(0.5 / device.ppi * 100) / 100} inches ({Math.round(0.5 / device.ppi * 25.4 * 100) / 100} mm) on your {device.name}. This is because each pixel on your {device.ppi} PPI screen represents {Math.round(1 / device.ppi * 25400 * 100) / 100} microns.</p>
+  <h3>Can I use this PPI value for other measurement tools?</h3>
+  <p>Yes. The {device.ppi} PPI value for the {device.name} can be used with any screen measurement tool that supports manual PPI input, including our pixel ruler, protractor, and L-square tools.</p>
+  <h3>Why does my screen say it has a different resolution?</h3>
+  <p>The {resolution} resolution is the physical (native) resolution of the {device.name}&rsquo;s display. Your operating system may use a scaled resolution for better readability. RulerKit uses the native resolution and PPI for the most accurate measurements.</p>
+</ContentLayout>

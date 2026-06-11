@@ -1,0 +1,88 @@
+---
+title: 'How to Calibrate Your Screen for Accurate Online Ruler Measurements'
+description: 'Learn how to calibrate your monitor or device screen so the RulerKit online ruler displays real-world accurate measurements every time.'
+published: 2025-01-15
+updated: 2025-06-01
+author: 'RulerKit Team'
+tags: ['calibration', 'setup', 'accuracy']
+language: 'en'
+locale: 'en'
+---
+
+## Why Screen Calibration Matters
+
+An online ruler is only as accurate as your screen calibration. Unlike a physical ruler, a digital ruler relies on knowing the exact pixel density (PPI) of your display. If your screen's PPI is misconfigured, every measurement you take with our tool will be slightly off — and that margin of error compounds the longer the object you're measuring.
+
+Whether you're a designer checking print dimensions, a student completing a homework assignment, or a DIY hobbyist measuring a replacement part, calibration ensures the numbers you see on screen match the real world.
+
+## Step 1: Use a Reference Object
+
+Before adjusting anything, grab a physical reference object with a known length. The best candidates are:
+
+- A standard **credit card** (85.60 mm × 53.98 mm / 3.370 in × 2.125 in)
+- A **US dollar bill** (156 mm / 6.14 in wide)
+- An **A4 sheet of paper** (210 mm × 297 mm / 8.27 in × 11.69 in)
+
+Place the object flat against your screen and note how it aligns with the default ruler on RulerKit.
+
+## Step 2: Adjust Your Display PPI Setting
+
+RulerKit lets you fine-tune the PPI value used for rendering measurements. Here's how to find the correct PPI for your setup:
+
+### Find Your Monitor's Native Resolution and Diagonal Size
+
+```
+PPI = √(horizontal_pixels² + vertical_pixels²) / diagonal_inches
+```
+
+For example, a 27" monitor at 2560 × 1440:
+
+```
+PPI = √(2560² + 1440²) / 27 ≈ 108.8 PPI
+```
+
+Enter this value into RulerKit's calibration settings.
+
+### For Laptops and Phones
+
+Most modern laptops and phones have very high DPI displays. Check your device's technical specifications online — manufacturers almost always list the PPI. Common values:
+
+- **MacBook Pro 14" (2023)**: 254 PPI
+- **MacBook Air 13" (M2)**: 227 PPI
+- **iPhone 15 Pro Max**: 460 PPI
+- **Samsung Galaxy S24 Ultra**: 505 PPI
+- **Generic 1080p 24" monitor**: 92 PPI
+
+## Step 3: Verify With the Reference Object
+
+After setting your PPI, re-check the ruler against your reference object. The on-screen measurement should match the real-world length within ±1 mm.
+
+If it's still off, fine-tune the PPI value incrementally:
+
+- If the ruler reads **too long**, increase the PPI
+- If the ruler reads **too short**, decrease the PPI
+
+Adjust by 2–5 PPI at a time and re-check until your reference object lines up perfectly.
+
+## Step 4: Save Your Calibration Profile
+
+RulerKit can store your calibrated PPI in a browser cookie or localStorage entry. Once saved, you won't need to recalibrate unless you switch displays or change your screen resolution.
+
+## Troubleshooting Common Issues
+
+| Problem | Likely Cause | Fix |
+|---|---|---|
+| Ruler is consistently short | PPI set too high | Lower PPI by 5–10 |
+| Ruler is consistently long | PPI set too low | Raise PPI by 5–10 |
+| Accuracy changes when I zoom | Browser zoom interferes | Reset zoom to 100% |
+| Mobile ruler is inaccurate | OS display scaling active | Check device PPI specsheet |
+
+## Browser Zoom and Scaling
+
+Always ensure your browser zoom is set to **100%** when using RulerKit. Zooming in or out effectively changes the perceived PPI and will throw off measurements. You can reset zoom quickly with `Ctrl+0` (Windows/Linux) or `Cmd+0` (macOS).
+
+Similarly, operating system display scaling (e.g., Windows "Scale & Layout" set to 125% or 150%) needs to be factored in. On Windows, divide the native PPI by the scaling factor — for example, `108 PPI × 1.25 = 135 PPI` at 125% scaling.
+
+## Final Check
+
+Once calibrated, try measuring a few different objects around your desk — a pen, a phone, a notebook — against the physical ruler. If all readings are within tolerance, your calibration is complete. For best results, repeat this process whenever you use a different monitor or change your display settings.

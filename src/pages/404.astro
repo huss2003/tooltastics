@@ -1,0 +1,37 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import type { Metadata } from '@lib/seo/metadata'
+import BaseLayout from '@layouts/BaseLayout.astro'
+
+const metadata: Metadata = {
+  title: '404 — Page Not Found',
+  titleTemplate: '404 — Page Not Found | RulerKit',
+  description: 'The page you are looking for does not exist.',
+  canonical: `${SITE.url}/404`,
+  locale: 'en' as Locale,
+  lang: 'en-US',
+  dir: 'ltr' as const,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  noindex: true,
+  nofollow: true,
+  schema: [],
+  breadcrumbs: [],
+}
+---
+
+<BaseLayout metadata={metadata}>
+  <section class="flex flex-col items-center justify-center py-24 text-center">
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">404 — Page Not Found</h1>
+    <p class="mt-4 text-lg text-surface-600">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <a
+      href="/"
+      class="mt-8 inline-flex items-center gap-2 rounded-xl bg-primary-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-700"
+    >
+      Back to Home
+    </a>
+  </section>
+</BaseLayout>

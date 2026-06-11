@@ -1,0 +1,175 @@
+---
+import type { Locale } from '@config/constants'
+import { SITE } from '@config/site'
+import { createMetadata } from '@lib/seo/metadata'
+import { article, breadcrumbList } from '@lib/seo/schema'
+import ContentLayout from '@layouts/ContentLayout.astro'
+
+export interface Params {
+  lang: string
+}
+
+export function getStaticPaths() {
+  return SITE.locales.map((locale) => ({
+    params: { lang: locale.code },
+    props: { locale: locale.code },
+  }))
+}
+
+const { locale } = Astro.props as { locale: Locale }
+
+const canonical = `${SITE.url}/${locale}/cm-ruler-online`
+
+const metadata = createMetadata({
+  title: 'CM Ruler Online — Measure in Centimeters on Your Screen',
+  description:
+    'Free online cm ruler. Measure any object in centimeters on your screen with calibrated accuracy. Perfect for metric measurements and international standards.',
+  locale,
+  path: '/cm-ruler-online',
+  ogType: 'article',
+  schema: [
+    article(
+      'CM Ruler Online — Measure in Centimeters on Your Screen',
+      'Free online cm ruler. Measure any object in centimeters on your screen with calibrated accuracy. Perfect for metric measurements and international standards.',
+      {
+        locale,
+        canonical,
+        title: 'CM Ruler Online — Measure in Centimeters on Your Screen',
+        description:
+          'Free online cm ruler. Measure any object in centimeters on your screen with calibrated accuracy. Perfect for metric measurements and international standards.',
+        datePublished: '2025-03-05',
+        dateModified: '2025-06-01',
+      },
+    ),
+    breadcrumbList([
+      { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+      { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+      { name: 'CM Ruler Online', url: canonical },
+    ]),
+  ],
+  breadcrumbs: [
+    { name: 'RulerKit', url: `${SITE.url}/${locale}/` },
+    { name: 'Guides', url: `${SITE.url}/${locale}/guides` },
+    { name: 'CM Ruler Online', url: canonical },
+  ],
+  publishedTime: '2025-03-05',
+  modifiedTime: '2025-06-01',
+})
+---
+
+<ContentLayout metadata={metadata}>
+  <div slot="header">
+    <h1>CM Ruler Online — Measure in Centimeters on Your Screen</h1>
+    <p class="text-sm text-surface-500">Published: March 5, 2025 &middot; Updated: June 1, 2025</p>
+  </div>
+
+  <nav class="toc mb-8 rounded-lg bg-surface-50 dark:bg-surface-900 p-4 not-prose">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-surface-500">Table of Contents</h2>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><a href="#why-metric">Why Use the Metric System for Screen Measurements</a></li>
+      <li><a href="#how-to-use">How to Use a CM Ruler Online</a></li>
+      <li><a href="#reading-cm-ruler">Reading a Centimeter Ruler — Understanding mm Marks</a></li>
+      <li><a href="#centimeter-precision">Centimeter Precision — What You Can Accurately Measure</a></li>
+      <li><a href="#converting-cm">Converting cm to Other Units</a></li>
+      <li><a href="#common-objects-cm">Common Objects Measured in Centimeters</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="why-metric">Why Use the Metric System for Screen Measurements</h2>
+  <p>The metric system is the standard measurement system used by virtually every country in the world except for the United States, Liberia, and Myanmar. For online rulers, centimeters offer several practical advantages over inches. The centimeter scale is decimal-based, which means subdivisions follow a simple pattern of 10, rather than the fractional divisions (1/2, 1/4, 1/8, 1/16) used in the imperial system. This makes readings easier to interpret and calculations simpler to perform.</p>
+  <p>A centimeter ruler online is particularly useful for international users, scientific work, and any context where metric units are standard. Product dimensions on most e-commerce sites outside the US are listed in centimeters. Engineering drawings, architectural plans, and technical specifications use metric units worldwide. By using a cm ruler online, you can verify these measurements directly against real objects without converting between systems.</p>
+  <p>RulerKit's cm ruler displays a clean scale with prominent 1 cm marks and finer 1 mm subdivisions. The scale is drawn at your screen's actual physical size after calibration, so the centimeters you see on screen correspond exactly to centimeters in the real world. This is the same level of accuracy you would get from a high-quality plastic or metal ruler.</p>
+
+  <h2 id="how-to-use">How to Use a CM Ruler Online</h2>
+  <p>Using RulerKit's cm ruler is straightforward. Follow these steps to get accurate measurements.</p>
+  <p><strong>Step 1: Calibrate your screen.</strong> Before measuring, calibrate the ruler to your specific display. Use the auto-detect option for instant setup, or place a credit card against your screen and adjust the slider until it reads 85.6 mm. Without calibration, the centimeter marks will not reflect actual physical distances.</p>
+  <p><strong>Step 2: Select centimeters as your unit.</strong> RulerKit displays both cm and inches by default. Click the cm toggle to make centimeters your primary scale. The ruler will show bold numbers at each centimeter mark and thinner lines at each millimeter.</p>
+  <p><strong>Step 3: Align your object.</strong> Place the object you want to measure flat against your screen, flush with the ruler's zero mark at the left edge. Hold it steady with one hand while you read the measurement with your eyes level to the screen.</p>
+  <p><strong>Step 4: Read the measurement.</strong> The ruler shows the length in whole centimeters plus the number of millimeter marks past the last centimeter. For example, if an object spans from the zero mark to the 5 cm mark plus 3 small ticks, the measurement is 5.3 cm. Each small tick represents 1 millimeter (0.1 cm).</p>
+  <p><strong>Step 5: Verify with a known object.</strong> Check your measurement against a known reference. A standard credit card should read 8.56 cm across. An A4 sheet of paper should read 21.0 cm wide. If these match, your ruler is calibrated correctly.</p>
+
+  <h2 id="reading-cm-ruler">Reading a Centimeter Ruler — Understanding mm Marks</h2>
+  <p>A centimeter ruler is divided into two levels of marks. The longer lines with numbers above them indicate whole centimeters. Between each pair of centimeter marks, there are nine shorter lines representing millimeters. Each millimeter is one-tenth of a centimeter.</p>
+  <p>On RulerKit's cm ruler, the marks are drawn at physical intervals that match your screen's calibrated PPI. The 1 cm marks are approximately 0.394 inches apart on the physical screen, matching real-world centimeter spacing. The 0.5 cm (5 mm) mark is slightly longer than the individual mm marks to help you read measurements faster.</p>
+  <p>To read a measurement, count the number of whole centimeters first, then count the millimeter marks. For instance, if an object reaches just past the 7 cm mark and extends to the 4th millimeter line, the total measurement is 7.4 cm. The tenths digit always corresponds to the number of mm marks. This decimal system makes centimeter rulers easier to read than fractional-inch rulers, where you need to identify whether a mark is 1/8, 1/16, or 1/32 of an inch.</p>
+
+  <h2 id="centimeter-precision">Centimeter Precision — What You Can Accurately Measure</h2>
+  <p>A calibrated online cm ruler is accurate to approximately 1 millimeter (0.1 cm). This level of precision is adequate for most everyday measuring tasks. Here is what you can reliably measure:</p>
+  <ul>
+    <li><strong>Package and shipping dimensions:</strong> Boxes, envelopes, and labels are typically measured to the nearest cm or half-cm. A 1 mm error is insignificant for shipping cost calculations.</li>
+    <li><strong>Furniture dimensions:</strong> Most furniture measurements are given to the nearest centimeter. Even a 5 mm error is unlikely to matter when checking if a desk fits against a wall.</li>
+    <li><strong>Paper and print sizes:</strong> Standard paper sizes (A4, A3, letter) are defined in millimeters. You can verify print dimensions to within 1-2 mm using a calibrated screen ruler.</li>
+    <li><strong>Electronics and gadgets:</strong> Phone dimensions, tablet sizes, and monitor widths are usually specified in millimeters. A cm ruler with mm marks is precise enough to confirm these specifications.</li>
+    <li><strong>Clothing and accessories:</strong> Belt widths, bracelet lengths, and hat dimensions are commonly listed in centimeters. A screen ruler helps you check fit without a physical measuring tape.</li>
+  </ul>
+  <p>For measurements requiring precision beyond 1 mm, such as jewelry stone setting or circuit board component placement, a physical caliper or micrometer is more appropriate. Screen rulers are convenient tools for general measurement, but they cannot match the precision of dedicated measuring instruments.</p>
+
+  <h2 id="converting-cm">Converting cm to Other Units</h2>
+  <p>One of the strengths of the metric system is simple conversion. RulerKit shows equivalent measurements in multiple units simultaneously, so you do not need to do mental math. But knowing the basic conversion factors is still useful.</p>
+  <ul>
+    <li><strong>1 cm = 10 mm</strong> — The most basic conversion. Multiply centimeters by 10 to get millimeters.</li>
+    <li><strong>1 cm = 0.394 inches</strong> — Divide centimeters by 2.54 to get inches, or multiply by 0.394 for a quick estimate.</li>
+    <li><strong>1 inch = 2.54 cm</strong> — Multiply inches by 2.54 to convert to centimeters.</li>
+    <li><strong>1 meter = 100 cm:</strong> For larger measurements, divide centimeters by 100 to get meters.</li>
+  </ul>
+  <p>Here are some common conversions you might need:</p>
+  <ul>
+    <li>A sheet of A4 paper is 21.0 cm wide, which is 210 mm, or about 8.27 inches.</li>
+    <li>A 15.6-inch laptop screen measures 39.6 cm diagonally.</li>
+    <li>A standard credit card is 8.56 cm wide, or 85.6 mm, or about 3.37 inches.</li>
+    <li>A US letter sheet is 21.6 cm wide (216 mm / 8.5 inches).</li>
+  </ul>
+  <p>RulerKit automatically shows the converted values in the sidebar as you measure, so you always see cm, inches, and mm readings simultaneously.</p>
+
+  <h2 id="common-objects-cm">Common Objects Measured in Centimeters</h2>
+  <p>Knowing the typical sizes of everyday objects helps you develop an intuition for centimeter measurements. It also gives you convenient reference objects for verifying your ruler's calibration.</p>
+  <h3>A4 and letter paper</h3>
+  <p>A4 paper is the international standard at 21.0 cm by 29.7 cm. US letter paper (used in North America) is slightly wider and shorter at 21.6 cm by 27.9 cm. Both are excellent calibration references because they are readily available and have precisely defined dimensions. If you place a sheet of A4 against your screen and it measures 21 cm wide, your ruler is calibrated correctly.</p>
+  <h3>Phone and tablet screens</h3>
+  <p>Smartphone dimensions are commonly listed in centimeters or millimeters. The iPhone 15, for example, is 14.76 cm tall (147.6 mm) and 7.16 cm wide (71.6 mm). The Samsung Galaxy S24 is 14.70 cm tall and 7.06 cm wide. If you are shopping for a phone case or screen protector, you can measure your current phone against these specs to verify compatibility.</p>
+  <h3>Household items</h3>
+  <p>Many common household items have standardized dimensions:</p>
+  <ul>
+    <li>Standard dinner plate: approximately 26-28 cm in diameter</li>
+    <li>Standard coffee mug height: approximately 9-10 cm</li>
+    <li>Paperback book: approximately 13 cm by 20 cm</li>
+    <li>Brick (standard): 22.9 cm by 11.4 cm by 7.6 cm</li>
+    <li>Sticky note: 7.6 cm by 7.6 cm (3x3 inch Post-it)</li>
+  </ul>
+  <p>Having these reference points in mind makes it easier to estimate sizes visually and to spot-check your ruler's accuracy before important measurements.</p>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq space-y-4 not-prose">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Is a cm ruler more accurate than an inch ruler online?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Both are equally accurate because both depend on the same screen calibration. The accuracy of an online ruler is determined by how precisely the screen is calibrated, not by the unit system. The maximum precision is about 1 mm regardless of whether you read cm or inches.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Do I need to calibrate separately for centimeter measurements?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">No. Calibration is unit-independent. Once you calibrate your screen, the ruler is accurate for cm, inches, and mm. The PPI value used for calibration applies to all units. Switch between them freely without recalibrating.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Can I measure small objects in millimeters with the cm ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Yes. The cm ruler shows each millimeter as a small tick mark between centimeter lines. You can measure objects as small as 1 mm. For very small objects under 1 cm, switch the ruler to millimeter mode for clearer markings.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">What is the longest object I can measure with an online cm ruler?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">The maximum single-measurement length is the width of your screen. A 24-inch monitor gives you about 52 cm of usable ruler width. A 27-inch monitor gives about 60 cm. For longer objects, measure in segments and add the results.</div>
+      </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name" class="text-base font-semibold">Why does my cm ruler show different lengths on different websites?</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div itemprop="text" class="text-sm text-surface-600">Different online rulers may use different default PPI values. One site might assume 96 PPI while another assumes 72 PPI, producing different ruler scales. RulerKit calibrates to your specific screen, which eliminates this inconsistency. Always calibrate before comparing measurements across tools.</div>
+      </div>
+    </div>
+  </div>
+</ContentLayout>

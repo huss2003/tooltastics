@@ -1,0 +1,9 @@
+name = "tooltastics"
+compatibility_date = "2026-06-01"
+pages_build_output_dir = "dist"
+
+[env.production]
+routes = [{ pattern = "tooltastics.com", zone_id = "" }]
+
+[env.preview]
+routes = [{ pattern = "preview.tooltastics.com", zone_id = "" }]
