@@ -6,7 +6,7 @@
   "description": "Highest-quality online ruler and screen measurement website",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node -e \"const f=require('fs');const p='dist/_routes.json';let j=JSON.parse(f.readFileSync(p,'utf8'));j.exclude=j.exclude.filter(x=>!x.includes('/index.html')&&x!=='/#');f.writeFileSync(p,JSON.stringify(j,null,2));\"",
     "preview": "astro build && wrangler pages dev dist",
     "deploy": "astro build && wrangler pages deploy dist",
     "lint": "eslint . --report-unused-disable-directives",
